@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'auth-agenda' => \App\Http\Middleware\AdminAgendaMiddleware::class,
         'auth-survei' => \App\Http\Middleware\SurveiMiddleware::class,
         'auth-sketch' => \App\Http\Middleware\SketchMiddleware::class,
+        'auth-administrator' => \App\Http\Middleware\AdministratorMiddleware::class,
     ];
 }

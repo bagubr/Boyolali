@@ -37,4 +37,5 @@ Route::group([
     $router->resource('admin-surveis', AdminSurveiController::class);
     $router->resource('interrogation-reports', InterrogationReportController::class);
     $router->resource('admin-sketches', AdminSketchController::class);
+    $router->resource('administrators', AdministratorController::class);
 });

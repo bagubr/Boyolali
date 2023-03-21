@@ -52,6 +52,10 @@ return [
             'driver' => 'session',
             'provider' => 'admin_sketch',
         ],
+        'administrator' => [
+            'driver' => 'session',
+            'provider' => 'administrator',
+        ],
     ],
 
     /*
@@ -87,6 +91,10 @@ return [
         'admin_sketch' => [
             'driver' => 'eloquent',
             'model' => App\Models\AdminSketch::class,
+        ],
+        'administrator' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Administrator::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

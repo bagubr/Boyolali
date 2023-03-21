@@ -146,21 +146,27 @@
                         <!-- Basic Card Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <a href="#" class="btn btn-primary float-right" data-toggle="modal" data-target="#add" onclick="add({{ $user_information->id }}, {{ \App\Models\ReferenceType::whereNotIn('id',\App\Models\ApplicantReference::where('user_information_id', $user_information->id)->get()->pluck('reference_type_id'))->get()->pluck('file_type', 'id') }})">Keterangan Rencana</a>
+                                <a href="#" class="btn btn-primary float-right" data-toggle="modal" data-target="#add"
+                                    onclick="add({{ $user_information->id }}, {{ \App\Models\ReferenceType::whereNotIn('id',\App\Models\ApplicantReference::where('user_information_id', $user_information->id)->get()->pluck('reference_type_id'))->get()->pluck('file_type', 'id') }})">Keterangan
+                                    Rencana</a>
                                 <h6 class="m-0 font-weight-bold text-primary d-inline">File Gambar</h6>
                             </div>
                             <div class="card-body">
 
                                 <div class="card-footer">
-                                    <form action="{{ route('upload-file-sketch') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('upload-file-sketch') }}" method="POST"
+                                        enctype="multipart/form-data">
                                         @csrf
-                                        <input type="hidden" value="{{ $user_information->id }}" name="user_information_id">
+                                        <input type="hidden" value="{{ $user_information->id }}"
+                                            name="user_information_id">
                                         <input type="file" name="file" class="form-control">
                                         <br>
-                                        <img src="{{ asset('storage/'.$user_information->sketch_file->file) }}" alt="" class="img-thumbnail" width="200px">
+                                        <img src="{{ asset('storage/' . $user_information->sketch_file->file) }}"
+                                            alt="" class="img-thumbnail" width="200px">
                                         <div class="float-right">
-                                            <button class="btn btn-primary" type="submit" >Upload</button>
-                                            <button class="btn btn-success" type="button" onclick="approve('{{ $user_information->uuid }}')">Save</button>
+                                            <button class="btn btn-primary" type="submit">Upload</button>
+                                            <button class="btn btn-success" type="button"
+                                                onclick="approve('{{ $user_information->uuid }}')">Save</button>
                                         </div>
                                     </form>
                                 </div>
@@ -186,7 +192,7 @@
                                                         {{ $item->note }}
                                                     </td>
                                                     <td>
-                                                        @if (count($user_information->revision) == $key + 1)
+                                                        @if (count($user_information->revision->where('to', \App\Models\UserInformation::STATUS_SKETCH)) == $key + 1)
                                                             <i class="btn btn-primary">New</i>
                                                         @else
                                                             <i class="btn btn-secondary">Done</i>
@@ -288,4 +294,25 @@
     <script>
         $('select').selectpicker();
     </script>
-@endpush
+
+    <script>
+        function approve(uuid) {
+            swal({
+                    title: "Selesaikan ?",
+                    text: "Data Akan di Kirim ke proses gambar",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        swal("Berhasil!", {
+                            icon: "success",
+                        });
+                        location.replace(`{{ route('agenda-approve') }}?id=` + uuid)
+                    } else {
+                        swal("Cancel");
+                    }
+                });
+        }
+    @endpush

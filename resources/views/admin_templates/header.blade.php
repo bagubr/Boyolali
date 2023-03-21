@@ -138,7 +138,7 @@
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                 </a>
-                <form id="logout-form" action="{{ route(Request::route()->getPrefix().'-logout') }}" method="POST" style="display: none;">
+                <form id="logout-form" action="{{ route('administrator-logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
             </div>

@@ -75,7 +75,8 @@
                                 <tr>
                                     <td>Status Tanah / No Sertifikat</td>
                                     <td>:</td>
-                                    <td>{{ $user_information->land_status->name . ' / ' . $user_information->nomor_hak }}</td>
+                                    <td>{{ $user_information->land_status->name . ' / ' . $user_information->nomor_hak }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Alamat Lokasi</td>
@@ -209,7 +210,9 @@
                                         value="{{ $nomor_registration }}">
                                     <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
                                     <br>
-                                    <button type="submit" class="btn btn-success m-auto">Save</button>
+                                    @if (!$user_information->nomor_registration)
+                                        <button type="submit" class="btn btn-success m-auto">Save</button>
+                                    @endif
                                 </form>
                             </div>
                         </div>
@@ -233,8 +236,9 @@
                                                         {{ $item->note }}
                                                     </td>
                                                     <td>
-                                                        @if (count($user_information->revision) == $key + 1)
+                                                        @if (count($user_information->revision->where('to', \App\Models\UserInformation::STATUS_FILING)) == $key + 1)
                                                             <i class="btn btn-primary">New</i>
+                                                            <button class="btn btn-success float-right" onclick="approve('{{ $user_information->uuid }}')">Selesai</button>
                                                         @else
                                                             <i class="btn btn-secondary">Done</i>
                                                         @endif
@@ -259,4 +263,26 @@
 
     <!-- Page level custom scripts -->
     <script src="{{ url('sb-admin') }}/js/demo/datatables-demo.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        function approve(uuid) {
+            swal({
+                    title: "Selesaikan ?",
+                    text: "Data Akan di Kirim ke proses gambar",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        swal("Berhasil!", {
+                            icon: "success",
+                        });
+                        location.replace(`{{ route('agenda-approve') }}?id=` + uuid)
+                    } else {
+                        swal("Cancel");
+                    }
+                });
+        }
+    </script>
 @endpush

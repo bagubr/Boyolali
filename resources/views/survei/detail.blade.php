@@ -235,7 +235,7 @@
                                                         {{ $item->note }}
                                                     </td>
                                                     <td>
-                                                        @if (count($user_information->revision) == $key + 1)
+                                                        @if (count($user_information->revision->where('to', \App\Models\UserInformation::STATUS_SURVEI)) == $key + 1)
                                                             <i class="btn btn-primary">New</i>
                                                         @else
                                                             <i class="btn btn-secondary">Done</i>

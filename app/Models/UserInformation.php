@@ -40,7 +40,6 @@ class UserInformation extends Model
         'status',
         'nomor',
         'agenda_date',
-        'survei_date',
         'sketch_date',
     ];
 

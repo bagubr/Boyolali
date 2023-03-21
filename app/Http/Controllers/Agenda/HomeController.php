@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
-class HomeController extends Controller
+class   HomeController extends Controller
 {
     public function index()
     {
@@ -78,23 +78,23 @@ class HomeController extends Controller
             ]);
             $data['agenda_date'] = date('Y-m-d H:i:s');
         }
-        $data['status'] = UserInformation::STATUS_SURVEI;
-        $user_information->update($data);
+        $data['status'] = UserInformation::STATUS_SKETCH;
+        $user_information->update($data);           
         $user_information->refresh();
         ApplicantReference::where('user_information_id', $id)->update([
             'status' => ApplicantReference::STATUS_APPROVE
         ]);
         if(!$user_information->nomor_registration){
-            return redirect()->route('berkas-proses')->with('success', 'Berhasil buat Nomor Agenda');
+            return redirect()->route('agenda-berkas-proses')->with('success', 'Berhasil buat Nomor Agenda');
         }else{
-            return redirect()->route('berkas-proses')->with('success', 'Berhasil Revisi Agenda');
+            return redirect()->route('agenda-berkas-proses')->with('success', 'Berhasil Revisi Agenda');
         }
     }
 
     public function reference(Request $request)
     {
         $data = $this->validate($request, [
-            'user_information_id' => 'sometimes|exists:applicant_references',
+            'user_information_id' => 'sometimes',
             'reference_type_id' => 'sometimes',
             'file' => 'required|mimes:pdf|max:20000'
         ]);
@@ -116,5 +116,14 @@ class HomeController extends Controller
         $applicant_reference = ApplicantReference::find($id);
         $applicant_reference->delete();
         return redirect()->back()->with('success', 'Data berhasil di hapus');
+    }
+
+    public function approve(Request $request)
+    {
+        $uuid = $request->id;
+        UserInformation::where('uuid', $uuid)->update([
+            'status' => UserInformation::STATUS_SKETCH,
+        ]);
+        return redirect()->route('agenda-revisi')->with('success', 'Berhasil');
     }
 }
