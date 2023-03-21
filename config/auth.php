@@ -48,7 +48,7 @@ return [
             'driver' => 'session',
             'provider' => 'admin_survei',
         ],
-        'skecth' => [
+        'sketch' => [
             'driver' => 'session',
             'provider' => 'admin_sketch',
         ],

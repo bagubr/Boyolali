@@ -100,6 +100,11 @@ Route::prefix('sketch')->group(function () {
     Route::middleware(['auth-sketch'])->group(function () {
         Route::get('dashboard', [SketchHomeController::class, 'home'])->name('dashboard-sketch');
         Route::post('logout', [SketchHomeController::class, 'logout'])->name('sketch-logout');
+        Route::get('berkas-proses', [SketchHomeController::class, 'proses_berkas'])->name('sketch-berkas-proses');
+        Route::get('revisi', [SketchHomeController::class, 'revisi'])->name('sketch-revisi');
+        Route::get('detail', [SketchHomeController::class, 'detail'])->name('sketch-detail');
+        Route::post('upload', [SketchHomeController::class, 'upload'])->name('upload-file-sketch');
+        Route::get('sketch-approve', [SurveiHomeController::class, 'approve'])->name('sketch-approve');
     });
 });
 

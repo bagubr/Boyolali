@@ -41,6 +41,7 @@ class UserInformation extends Model
         'nomor',
         'agenda_date',
         'survei_date',
+        'sketch_date',
     ];
 
     protected $appends = [
@@ -115,5 +116,10 @@ class UserInformation extends Model
     public function interrogation_report()
     {
         return $this->hasOne(InterrogationReport::class);
+    }
+
+    public function sketch_file()
+    {
+        return $this->hasOne(SketchFile::class);
     }
 }
