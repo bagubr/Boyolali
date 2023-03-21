@@ -74,4 +74,18 @@ class HomeController extends Controller
         ],$data);
         return redirect()->back()->with('success', 'Data berhasil di simpan');
     }
+
+    public function approve(Request $request)
+    {
+        $uuid = $request->id;
+        UserInformation::where('uuid', $uuid)->update([
+            'status' => UserInformation::STATUS_KABID,
+        ]);
+        return redirect()->route('sketch-revisi')->with('success', 'Berhasil');
+    }
+
+    public function sketch_post(Request $request)
+    {
+        dd($request);
+    }
 }

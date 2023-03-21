@@ -124,8 +124,13 @@ Route::prefix('administrator')->group(function () {
         Route::get('agenda-revisi', [AgendaHomeController::class, 'revisi'])->name('agenda-revisi');
         Route::get('agenda-approve', [AgendaHomeController::class, 'approve'])->name('agenda-approve');
         // Route::post('delete-reference', [AgendaHomeController::class, 'delete_reference'])->name('agenda-delete-reference');
-
+        
         Route::get('berkas-proses-sketch', [SketchHomeController::class, 'proses_berkas'])->name('sketch-berkas-proses');
+        Route::get('sketch-detail', [SketchHomeController::class, 'detail'])->name('sketch-detail');
+        Route::post('sketch-upload', [SketchHomeController::class, 'upload'])->name('upload-file-sketch');
+        Route::get('sketch-approve', [SketchHomeController::class, 'approve'])->name('sketch-approve');
+        Route::post('sketch-post/{id}', [SketchHomeController::class, 'sketch_post'])->name('sketch-post');
+
         Route::get('berkas-proses-kabid', [SketchHomeController::class, 'proses_berkas'])->name('kabid-berkas-proses');
         Route::get('berkas-proses-kadis', [SketchHomeController::class, 'proses_berkas'])->name('kadis-berkas-proses');
         Route::get('sketch-revisi', [SketchHomeController::class, 'revisi'])->name('sketch-revisi');

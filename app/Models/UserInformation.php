@@ -9,12 +9,10 @@ class UserInformation extends Model
 {
     use HasFactory;
     const STATUS_FILING = 'FILING';
-    const STATUS_SURVEI = 'SURVEI';
     const STATUS_SKETCH = 'SKETCH';
-    const STATUS_REPORT = 'REPORT';
-    const STATUS_SIDANG = 'SIDANG';
-    const STATUS_PRINT = 'PRINT';
-    const STATUS_APPROVAL = 'APPROVAL';
+    const STATUS_KABID = 'KABID';
+    const STATUS_KADIS = 'KADIS';
+    const STATUS_CETAK = 'CETAK';
     const STATUS_SELESAI = 'SELESAI';
     
     protected $table = 'user_informations';

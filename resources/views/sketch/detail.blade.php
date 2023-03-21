@@ -1,7 +1,7 @@
 @extends('admin_templates.app')
 @push('css')
     <link href="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         td:first-child {
             width: 20%;
@@ -161,8 +161,10 @@
                                             name="user_information_id">
                                         <input type="file" name="file" class="form-control">
                                         <br>
-                                        <img src="{{ asset('storage/' . $user_information->sketch_file->file) }}"
-                                            alt="" class="img-thumbnail" width="200px">
+                                        @if (@$user_information->sketch_file->file)
+                                            <img src="{{ asset('storage/' . $user_information->sketch_file->file) }}"
+                                                alt="" class="img-thumbnail" width="200px">
+                                        @endif
                                         <div class="float-right">
                                             <button class="btn btn-primary" type="submit">Upload</button>
                                             <button class="btn btn-success" type="button"
@@ -223,6 +225,60 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="">Fungsi Bangunan yang di mohon</label>
+                            <select name="building_function" id="" class="form-control" id="select2" required>
+                                @foreach (\App\Models\BuildingFunction::get() as $item)
+                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <center><label for="">KBG</label></center>
+                            <textarea name="kbg" id="" class="form-control"></textarea>
+                            <center><label for="">KDB</label></center>
+                            <textarea name="kdb" id="" class="form-control"></textarea>
+                            <center><label for="">KLB</label></center>
+                            <textarea name="klb" id="" class="form-control"></textarea>
+                            <center><label for="">KDH</label></center>
+                            <textarea name="kdh" id="" class="form-control"></textarea>
+                            <center><label for="">PSU</label></center>
+                            <textarea name="psu" id="" class="form-control"></textarea>
+                            <center><label for="">KTB</label></center>
+                            <textarea name="ktb" id="" class="form-control"></textarea>
+                        </div>
+                        <div class="col-3">
+                            <center><label for="">JAP</label></center>
+                            <textarea name="jap" id="" class="form-control"></textarea>
+                            <center><label for="">JKP</label></center>
+                            <textarea name="jkp" id="" class="form-control"></textarea>
+                            <center><label for="">JKS</label></center>
+                            <textarea name="jks" id="" class="form-control"></textarea>
+                            <center><label for="">JLP</label></center>
+                            <textarea name="jlp" id="" class="form-control"></textarea>
+                            <center><label for="">JLS</label></center>
+                            <textarea name="jls" id="" class="form-control"></textarea>
+                            <center><label for="">Jling</label></center>
+                            <textarea name="jling" id="" class="form-control"></textarea>
+                        </div>
+                        <div class="col-6">
+                            <label for="">Jaringan Utilitas (Bebas Bangunan)</label>
+                            <textarea name="jaringan_utilitas" id="" class="form-control"></textarea>
+                            <label for="">Prasarana Jalan</label>
+                            <textarea name="prasarana_jalan" id="" class="form-control"></textarea>
+                            <label for="">Sungai Bertanggul</label>
+                            <input type="text" name="sungai_bertanggul" id="" class="form-control">
+                            <label for="">Sungai Tidak Bertanggul</label>
+                            <input type="text" name="sungai_tidak_bertanggul" id="" class="form-control">
+                            <label for="">Mata Air</label>
+                            <input type="text" name="mata_air" id="" class="form-control">
+                            <label for="">Waduk (titik pasang tertinggi)</label>
+                            <input type="text" name="waduk" id="" class="form-control">
+                            <label for="">Tol (dari pagar)</label>
+                            <input type="text" name="tol" id="" class="form-control">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -234,13 +290,14 @@
 @endsection
 @push('js')
     <!-- Page level plugins -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="{{ url('sb-admin') }}/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
     <script src="{{ url('sb-admin') }}/js/demo/datatables-demo.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         function approve(uuid) {
             swal({
@@ -264,35 +321,11 @@
     </script>
 
     <script>
-        // Declare street_name array
-        var street_names = [];
-        // Button functions
-        var street_name = '{{ @$interrogation_report->street_name ?? '' }}';
-        // console.log(JSON.parse(street_name.replace(/&quot;/g,'"')));
-        street_names = street_names.concat(JSON.parse(street_name.replace(/&quot;/g, '"')));
-
-        function addStreetName() {
-            street_name_input = document.getElementById("streetInput").value;
-            street_names.push(street_name_input);
-            console.log(street_name);
-            console.log(street_name_input);
-            console.log(street_names);
-            document.getElementById("streetInput").value = "";
-            document.getElementById("streetValue").value = JSON.stringify(street_names);
-            document.getElementById("streetView").innerHTML = JSON.stringify(street_names);
-        }
-
-        function resetStreet() {
-            street_names = [];
-            document.getElementById("streetInput").value = "";
-            document.getElementById("streetValue").value = "";
-            document.getElementById("streetView").innerHTML = "";
-        }
-    </script>
-
-
-    <script>
-        $('select').selectpicker();
+        // $('#select2').select2();
+        $(".select").select2({
+            tags: true,
+            dropdownParent: $('#add .modal-content')
+        });
     </script>
 
     <script>
@@ -315,4 +348,5 @@
                     }
                 });
         }
-    @endpush
+    </script>
+@endpush

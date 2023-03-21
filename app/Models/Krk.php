@@ -24,7 +24,7 @@ class Krk extends Model
         'waduk',
         'tol',
         'ktb',
-        'building_function_id',
+        'building_function',
     ];
 
     public function building_function()

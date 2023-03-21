@@ -39,7 +39,7 @@
                                     <td>{{ $item->district->name }}</td>
                                     <td>{{ $item->sub_district->name }}</td>
                                     <td>
-                                        <a class="btn btn-sm bg-primary text-white" href="{{ route(Request::route()->getPrefix().'-detail', ['id' => $item->uuid]) }}">Detail</a>
+                                        <a class="btn btn-sm bg-primary text-white" href="{{ route('sketch-detail', ['id' => $item->uuid]) }}">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach
