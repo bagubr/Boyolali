@@ -95,7 +95,7 @@ class AuthController extends Controller
                         'password' => Hash::make($user->id)
                     ]);
                     Auth::attempt(['email' => $newUser->email, 'password' => $user->id]);
-                    return redirect()->route('dashboard')->with('success', 'Login Berhasil');
+                    return redirect()->route('proses')->with('success', 'Login Berhasil');
                 }
             }
       

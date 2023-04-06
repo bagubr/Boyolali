@@ -13,6 +13,7 @@
 
     <!-- Custom fonts for this template-->
     <link href="{{ url('sb-admin') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -67,12 +68,16 @@
     <!-- Custom scripts for all pages-->
     <script src="{{ url('sb-admin') }}/js/sb-admin-2.min.js"></script>
 
-    {{-- <!-- Page level plugins -->
-    <script src="{{ url('sb-admin') }}/vendor/chart.js/Chart.min.js"></script>
+    <!-- Page level plugins -->
+    <script src="{{ url('sb-admin') }}/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="{{ url('sb-admin') }}/js/demo/chart-area-demo.js"></script>
-    <script src="{{ url('sb-admin') }}/js/demo/chart-pie-demo.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url('sb-admin') }}/js/demo/datatables-demo.js"></script>
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @stack('js')
 </body>
 

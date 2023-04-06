@@ -2,9 +2,10 @@
 @push('css')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.css" />
     <style>
         #map {
-            height: 300px;
+            height: 500px;
         }
 
         #regForm {
@@ -17,7 +18,9 @@
         }
 
         /* Mark input boxes that gets an error on validation: */
-        .form-control.invalid { background-color: #ffdddd; }
+        .form-control.invalid {
+            background-color: #ffdddd;
+        }
 
         /* Hide all steps by default: */
         .tab {
@@ -62,6 +65,14 @@
         .step.finish {
             background-color: #04AA6D;
         }
+
+        #resetButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            z-index: 400;
+        }
     </style>
 @endpush
 @section('header')
@@ -87,11 +98,23 @@
 
                 <div class="col-lg-12 mt-5 mt-lg-0">
                     @include('users.alert')
-                    <form action="{{ route('user_information') }}" method="post" role="form" class="php-email-form">
+                    <form action="{{ route('user_information') }}" method="post" role="form" class="php-email-form" enctype="multipart/form-data">
                         @csrf
                         <div class="tab">
                             <div class="section-title">
                                 <h2>Data Lokasi</h2>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label class="control-label">Luas Tanah</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control input" name="land_area" id="land_area"
+                                            required>
+                                        <div class="input-group-text">
+                                            <span>m <sup>2</sup></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="name">Alamat Lokasi</label>
@@ -99,7 +122,7 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="activity">Kecamatan</label>
-                                <select name="district_id" id="district_id" class="form-control input select2">
+                                <select name="district_id" id="district_id" class="form-control input">
                                     <option value="">PILIH</option>
                                     @foreach (\App\Models\District::get() as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -108,40 +131,36 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="activity">Kelurahan</label>
-                                <select name="sub_district_id" id="sub_district_id" class="form-control input select2">
+                                <select name="sub_district_id" id="sub_district_id" class="form-control input">
                                     <option value="">PILIH</option>
                                     @foreach (\App\Models\SubDistrict::get() as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <label for="">Draw Polygon</label>
                             <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label class="control-label">Luas Tanah</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control input" name="land_area" id="land_area" required>
-                                        <div class="input-group-text">
-                                            <span>m <sup>2</sup></span>
-                                        </div>
-                                    </div>
+                                <div class="form-group col-md-8">
+                                    <div class="mb-3" id="map"></div>
                                 </div>
-                            </div>
-                            <div class="mb-3" id="map"></div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="latitude" class="form-label">Latitude</label>
-                                    <input type="text" class="form-control input" id="latitude" aria-describedby="latitude"
-                                        name="latitude" required value="{{ old('latitude') }}" readonly="readonly">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="longitude" class="form-label">Longitude</label>
-                                    <input type="text" class="form-control input" id="longitude" aria-describedby="longitude"
-                                        name="longitude" required value="{{ old('longitude') }}" readonly="readonly">
+                                <div class="form-group col-md-4">
+                                    <button type="button" class="btn btn-secondary" onclick="resetButton()">Reset</button>
+                                    <table class="table koordinattable">
+                                        <thead>
+                                            <tr>
+                                                <th>X (Longitude)</th>
+                                                <th>Y (Latitude)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-body">
+
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="activity">Status Tanah</label>
-                                <select name="land_status_id" id="status_tanah" class="form-control input select2">
+                                <select name="land_status_id" id="status_tanah" class="form-control input">
                                     <option value="">PILIH</option>
                                     @foreach (\App\Models\LandStatus::get() as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -153,7 +172,7 @@
                                 <input type="text" class="form-control input" name="nomor_hak" id="nomor_hak" required>
                             </div>
                         </div>
-                        
+
                         <div class="tab">
                             <div class="section-title">
                                 <h2>Data Pemohon</h2>
@@ -162,6 +181,12 @@
                                 <label for="submitter">Nama Pemohon</label>
                                 <input type="text" class="form-control input" name="submitter" id="submitter" required>
                             </div>
+                            <div class="form-group col-md-12">
+                                <label for="submitter_optional">Nama Perusahaan</label>
+                                <input type="text" class="form-control input" name="submitter_optional"
+                                    id="submitter_optional" required>
+                                <small class="text-danger">* apabila bukan perorangan</small>
+                            </div>
                             <div class="form-group">
                                 <label for="nomor_ktp">NO KTP</label>
                                 <input type="text" class="form-control input" name="nomor_ktp" id="" required
@@ -169,44 +194,51 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="submitter_phone">Telepon Pemohon</label>
-                                <input type="text" class="form-control input" name="submitter_phone" id="submitter_phone"
-                                    required>
+                                <input type="text" class="form-control input" name="submitter_phone"
+                                    id="submitter_phone" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-12">
                                 <label for="address">Alamat Pemohon</label>
                                 <textarea type="text" class="form-control input" name="address" id="" required></textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-12">
                                 <label for="email">Email Pemohon</label>
                                 <input type="text" class="form-control input" name="email" id=""
                                     value="{{ Auth::user()->email }}" disabled>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="activity">Kegiatan yang dimohon</label>
-                                <input type="text" list="activity" name="activity_name" class="form-control input" />
-                                <datalist id="activity">
+                                <br>
+                                <select name="activity_name" style="width: 100%;" class="col-12 form-control input"
+                                    id="activity_name">
                                     @foreach (\App\Models\Activity::get() as $item)
                                         <option value="{{ $item->title }}">{{ $item->title }}</option>
                                     @endforeach
-                                </datalist>
+                                </select>
                             </div>
                         </div>
-                        
+
                         <div class="tab">
                             <div class="section-title">
-                                <h2>Data Kuasa (Optional)</h2>
+                                <h2>Data Berkas</h2>
                             </div>
-                            <div class="form-group">
-                                <label for="name_procuration">Nama Kuasa</label>
-                                <input type="text" class="form-control" name="name_procuration" id="">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone_procuration">Telepon Kuasa</label>
-                                <input type="text" class="form-control" name="phone_procuration" id="">
-                            </div>
-                            <div class="form-group">
-                                <label for="address_procuration">Alamat Kuasa</label>
-                                <textarea type="text" class="form-control" name="address_procuration" id=""></textarea>
+                            <div class="col-lg-12 col-md-6 portfolio-item filter-web">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Jenis Berkas</th>
+                                        <th>Penjelasan</th>
+                                        <th>Aksi</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                    @foreach (\App\Models\ReferenceType::orderBy('id')->get() as $item)
+                                        <tr>
+                                            <td>{{ $item->file_type }}</td>
+                                            <td style="width: 40%">{!! $item->content !!}</td>
+                                            <td><input type="file" name="{{ $item->id }}" id="" class="form-control"></td>
+                                            <td>{!! $item->note !!}</td>
+                                        </tr>
+                                    @endforeach
+                                </table>
                             </div>
                         </div>
 
@@ -296,7 +328,7 @@
                     // add an "invalid" class to the field:
                     y[i].className += " invalid";
                     // and set the current valid status to false
-                    valid = false;
+                    valid = true;
                 }
             }
             // If the valid status is true, mark the step as finished and valid:
@@ -321,11 +353,28 @@
 
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.js"></script>
+
+    <script>
+        $('#land_area').each(function(index) {
+            n = parseInt($(this).val().toString().replace(/\D/g, ''), 10) || "";
+            $(this).val(n.toLocaleString());
+        });
+
+        $("#land_area").on('keyup change', function() {
+            val = $(this).val() || 0;
+            var n = parseInt(val.replace(/\D/g, ''), 10);
+            $(this).val(n.toLocaleString());
+        });
+    </script>
+
     <script>
         $('#district_id').on('input', function(e) {
             $("#sub_district_id").removeAttr('disabled');
             $("#sub_district_id").html('<option value="">--PILIH--</option>');
         });
+        
         $('#district_id').select2({
             ajax: {
                 url: "{{ url('users/district?') }}",
@@ -350,6 +399,10 @@
                 },
                 cache: true
             }
+        });
+        $('#activity_name').select2({
+            tags: true,
+            width: 'resolve',
         });
         $('#sub_district_id').select2({
             ajax: {
@@ -392,36 +445,7 @@
                 $("#sub_district_id").val('').trigger('change');
             });
         });
-    </script>
-    <script>
-        // var map = L.map('map').setView([51.505, -0.09], 13);
-        const map = L.map('map', {
-            center: [-7.520530,110.595023],
-            zoom: 13
-        });
 
-        // const currentLoc = L.marker([-7.520530,110.595023]);
-        // currentLoc.addTo(map);
-
-        const latitude = window.document.querySelector("#latitude");
-        const longitude = window.document.querySelector("#longitude");
-
-        L.tileLayer(
-            "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
-                maxZoom: 20,
-                subdomains: ["mt0", "mt1", "mt2", "mt3"],
-            }
-        ).addTo(map);
-
-        const currentLoc = L.marker();
-        map.on('click', e => {
-            currentLoc.setLatLng([e.latlng.lat, e.latlng.lng]);
-            currentLoc.addTo(map);
-            latitude.value = e.latlng.lat;
-            longitude.value = e.latlng.lng;
-        });
-    </script>
-    <script>
         $("#status_tanah").change(function() {
             var val = $(this).val();
             console.log(val);
@@ -443,5 +467,58 @@
                 $('#nomor_hak').val('No.');
             }
         });
+    </script>
+    <script>
+        var polygon = '';
+
+        const map = L.map('map', {
+            center: [-7.520530, 110.595023],
+            zoom: 13
+        });
+
+
+        const latitude = window.document.querySelector("#latitude");
+        const longitude = window.document.querySelector("#longitude");
+        var table = window.document.querySelector(".koordinattable");
+
+        L.tileLayer(
+            "http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+                maxZoom: 20,
+                subdomains: ["mt0", "mt1", "mt2", "mt3"],
+            }
+        ).addTo(map);
+        
+
+
+        new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
+
+        map.on('draw:created', function(e) {
+            polygon = e.layer;
+            map.addLayer(polygon);
+            e.layer._latlngs[0].forEach(function callback(value, index) {
+                var row = table.insertRow(table.rows.length);
+                var celly = row.insertCell(0);
+                var cellx = row.insertCell(1);
+                celly.innerHTML = value.lng;
+                cellx.innerHTML = value.lat;
+                var form = $('.php-email-form');//retrieve the form as a DOM element
+                var inputlng = document.createElement('input');//prepare a new input DOM element
+                inputlng.setAttribute('name', "polygon[longitude][]");//set the param name
+                inputlng.setAttribute('value', value.lng);//set the value
+                inputlng.setAttribute('type', 'hidden')//set the type, like "hidden" or other
+                var inputlat = document.createElement('input');//prepare a new input DOM element
+                inputlat.setAttribute('name', "polygon[latitude][]");//set the param name
+                inputlat.setAttribute('value', value.lat);//set the value
+                inputlat.setAttribute('type', 'hidden')//set the type, like "hidden" or other
+
+                form.append(inputlng);//append the input to the form
+                form.append(inputlat);//append the input to the form
+            });
+        });
+        function resetButton(){
+            map.removeLayer(polygon);
+            new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
+            $('.koordinattable').find("tr:not(:first)").remove();
+        }
     </script>
 @endpush

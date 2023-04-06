@@ -19,7 +19,7 @@
 <body class="hold-transition register-page">
     <div class="register-box">
         <div class="card">
-            <div class="card-body register-card-body">
+            <div class="card-body">
                 <p class="login-box-msg">Registration</p>
                 <form action="{{ route('registration') }}" method="post">
                     @csrf

@@ -10,6 +10,6 @@
 @endif
 @if ($errors->any())
     @foreach ($errors->all() as $error)
-        <div class="btn btn-danger">{{ $error }}</div>
+        <div class="alert alert-danger">{{ $error }}</div>
     @endforeach
 @endif

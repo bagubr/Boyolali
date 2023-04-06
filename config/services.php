@@ -34,7 +34,7 @@ return [
     'google' => [
         'client_id' => '1089631358624-8q9nd970risprdmgna54dogkp970oavf.apps.googleusercontent.com',
         'client_secret' => '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',
-        'redirect' => 'http://localhost/Boyolali/public/users/authorized/google/callback',
+        'redirect' => 'https://localhost/Boyolali/public/users/authorized/google/callback',
     ],
 
 ];

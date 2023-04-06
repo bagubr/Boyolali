@@ -29,7 +29,7 @@
                             </tr>
                         </thead>
                         <tbody>  
-                            @foreach (\App\Models\UserInformation::whereNull('sketch_date')->whereStatus(\App\Models\UserInformation::STATUS_CEK)->orderBy('agenda_date')->get() as $item)
+                            @foreach (\App\Models\UserInformation::whereNull('kabid_date')->whereStatus(\App\Models\UserInformation::STATUS_KABID)->orderBy('sketch_date')->get() as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('Y-m-d', strtotime($item->agenda_date)) }}</td>
@@ -39,7 +39,7 @@
                                     <td>{{ $item->district->name }}</td>
                                     <td>{{ $item->sub_district->name }}</td>
                                     <td>
-                                        <a class="btn btn-sm bg-primary text-white" href="{{ route('sketch-detail', ['id' => $item->uuid]) }}">Detail</a>
+                                        <a class="btn btn-sm bg-primary text-white" href="{{ route('kabid-detail', ['id' => $item->uuid]) }}">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach

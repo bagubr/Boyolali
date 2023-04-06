@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Revision;
+use App\Models\Riwayat;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -15,7 +15,7 @@ class RevisionController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Revision';
+    protected $title = 'Riwayat';
 
     /**
      * Make a grid builder.
@@ -24,7 +24,7 @@ class RevisionController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Revision());
+        $grid = new Grid(new Riwayat());
 
         $grid->column('id', __('Id'));
         $grid->column('user_information_id', __('User information id'));
@@ -47,7 +47,7 @@ class RevisionController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Revision::findOrFail($id));
+        $show = new Show(Riwayat::findOrFail($id));
 
         $show->field('id', __('Id'));
         $show->field('user_information_id', __('User information id'));
@@ -69,7 +69,7 @@ class RevisionController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Revision());
+        $form = new Form(new Riwayat());
 
         $form->number('user_information_id', __('User information id'));
         $form->text('from', __('From'));

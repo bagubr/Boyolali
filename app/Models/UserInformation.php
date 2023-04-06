@@ -9,11 +9,17 @@ class UserInformation extends Model
 {
     use HasFactory;
     const STATUS_FILING = 'FILING';
-    const STATUS_SKETCH = 'SKETCH';
+    const STATUS_CEK = 'CEK';
+    const STATUS_SUBKOR = 'SUBKOR';
     const STATUS_KABID = 'KABID';
     const STATUS_KADIS = 'KADIS';
     const STATUS_CETAK = 'CETAK';
     const STATUS_SELESAI = 'SELESAI';
+    const STATUS_VALIDASI = [
+        self::STATUS_SUBKOR,
+        self::STATUS_KABID,
+        self::STATUS_KADIS,
+    ];
     
     protected $table = 'user_informations';
     protected $fillable = [
@@ -39,6 +45,7 @@ class UserInformation extends Model
         'nomor',
         'agenda_date',
         'sketch_date',
+        'kabid_date',
     ];
 
     protected $appends = [
@@ -56,10 +63,12 @@ class UserInformation extends Model
     {
         if($this->status == self::STATUS_FILING){
             return 'Tahap Berkas';
-        }elseif($this->status == self::STATUS_SURVEI){
-            return 'Tahap Survei';
-        }elseif($this->status == self::STATUS_SKETCH){
-            return 'Tahap Gambar';
+        }elseif(in_array($this->status, self::STATUS_VALIDASI)){
+            return 'Tahap Validasi';
+        }elseif($this->status == self::STATUS_CEK){
+            return 'Tahap Pengecekan Manual';
+        }elseif($this->status == self::STATUS_CETAK){
+            return 'Tahap Cetak';
         }else{
             return $this->status;
         }
@@ -107,7 +116,7 @@ class UserInformation extends Model
 
     public function revision()
     {
-        return $this->hasMany(Revision::class)->orderBy('created_at');
+        return $this->hasMany(Riwayat::class)->orderBy('created_at');
     }
 
     public function interrogation_report()
@@ -118,5 +127,20 @@ class UserInformation extends Model
     public function sketch_file()
     {
         return $this->hasOne(SketchFile::class);
+    }
+
+    public function krk()
+    {
+        return $this->hasOne(Krk::class, 'uuid', 'uuid');
+    }
+
+    public function gsb()
+    {
+        return $this->hasOne(Gsb::class, 'uuid', 'uuid');
+    }
+
+    public function polygons()
+    {
+        return $this->hasMany(Polygon::class)->orderBy('id');
     }
 }

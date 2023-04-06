@@ -25,12 +25,8 @@ class Krk extends Model
         'tol',
         'ktb',
         'building_function',
+        'zona',
     ];
-
-    public function building_function()
-    {
-        return $this->belongsTo(BuildingFunction::class);
-    }
 
     public function gsb()
     {

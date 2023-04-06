@@ -5,6 +5,7 @@ use App\Http\Controllers\Agenda\HomeController as AgendaHomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\Kabid\HomeController as KabidHomeController;
 use App\Http\Controllers\Users\HomeController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\Sketch\HomeController as SketchHomeController;
@@ -58,56 +59,6 @@ Route::prefix('users')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('user-logout');
     });
 });
-// Route::prefix('agenda')->group(function () {
-//     Route::get('/', function () {
-//         return view('agenda/index');
-//     })->name('agenda');
-//     Route::post('login', [AgendaHomeController::class, 'login'])->name('agenda-login');
-//     Route::middleware(['auth-agenda'])->group(function () {
-//         Route::get('dashboard', [AgendaHomeController::class, 'home'])->name('dashboard-agenda');
-//         Route::get('berkas-proses', [AgendaHomeController::class, 'proses_berkas'])->name('agenda-berkas-proses');
-//         Route::get('revisi', [AgendaHomeController::class, 'revisi'])->name('agenda-revisi');
-//         Route::get('detail', [AgendaHomeController::class, 'detail'])->name('agenda-detail');
-//         Route::post('agenda-post/{id}', [AgendaHomeController::class, 'agenda_post'])->name('agenda-post');
-//         Route::post('logout', [AgendaHomeController::class, 'logout'])->name('agenda-logout');
-        Route::post('reference', [AgendaHomeController::class, 'reference'])->name('agenda-reference');
-//         Route::post('delete-reference', [AgendaHomeController::class, 'delete_reference'])->name('agenda-delete-reference');
-//     });
-// });
-// Route::prefix('survei')->group(function () {
-//     Route::get('/', function () {
-//         return view('survei/index');
-//     })->name('survei');
-//     Route::post('login', [SurveiHomeController::class, 'login'])->name('survei-login');
-//     Route::middleware(['auth-survei'])->group(function () {
-//         Route::get('dashboard', [SurveiHomeController::class, 'home'])->name('dashboard-survei');
-//         Route::post('logout', [SurveiHomeController::class, 'logout'])->name('survei-logout');
-        
-//         Route::get('berkas-proses', [SurveiHomeController::class, 'proses_berkas'])->name('survei-berkas-proses');
-//         Route::get('revisi', [SurveiHomeController::class, 'revisi'])->name('survei-revisi');
-//         Route::get('detail', [SurveiHomeController::class, 'detail'])->name('survei-detail');
-//         Route::post('survei-bap', [SurveiHomeController::class, 'survei_bap'])->name('survei-bap');
-//         Route::get('survei-interrogation-report', [SurveiHomeController::class, 'survei_interrogation_report'])->name('survei-interrogation-report');
-//         Route::get('survei-approve', [SurveiHomeController::class, 'approve'])->name('survei-approve');
-//         Route::get('delete-bap', [SurveiHomeController::class, 'delete_bap'])->name('delete-bap');
-//     });
-// });
-
-// Route::prefix('sketch')->group(function () {
-//     Route::get('/', function () {
-//         return view('sketch/index');
-//     })->name('sketch');
-//     Route::post('login', [SketchHomeController::class, 'login'])->name('sketch-login');
-//     Route::middleware(['auth-sketch'])->group(function () {
-//         Route::get('dashboard', [SketchHomeController::class, 'home'])->name('dashboard-sketch');
-//         Route::post('logout', [SketchHomeController::class, 'logout'])->name('sketch-logout');
-//         Route::get('berkas-proses', [SketchHomeController::class, 'proses_berkas'])->name('sketch-berkas-proses');
-//         Route::get('revisi', [SketchHomeController::class, 'revisi'])->name('sketch-revisi');
-//         Route::get('detail', [SketchHomeController::class, 'detail'])->name('sketch-detail');
-//         Route::post('upload', [SketchHomeController::class, 'upload'])->name('upload-file-sketch');
-//         Route::get('sketch-approve', [SurveiHomeController::class, 'approve'])->name('sketch-approve');
-//     });
-// });
 
 Route::prefix('administrator')->group(function () {
     Route::get('/', function () {
@@ -117,24 +68,28 @@ Route::prefix('administrator')->group(function () {
     Route::middleware(['auth-administrator'])->group(function () {
         Route::get('dashboard', [AdministratorHomeController::class, 'home'])->name('administrator-dashboard');
         Route::post('logout', [AdministratorHomeController::class, 'logout'])->name('administrator-logout');
-
+        Route::get('approve', [AdministratorHomeController::class, 'approve'])->name('approve');
+        Route::get('save', [AdministratorHomeController::class, 'save'])->name('save');
+        Route::get('revision', [AdministratorHomeController::class, 'revision'])->name('revision');
+        
         Route::get('berkas-proses-agenda', [AgendaHomeController::class, 'proses_berkas'])->name('agenda-berkas-proses');
+        Route::get('berkas-selesai-agenda', [AgendaHomeController::class, 'berkas_selesai'])->name('agenda-berkas-selesai');
         Route::get('detail-agenda', [AgendaHomeController::class, 'detail'])->name('agenda-detail');
         Route::post('agenda-post/{id}', [AgendaHomeController::class, 'agenda_post'])->name('agenda-post');
         Route::get('agenda-revisi', [AgendaHomeController::class, 'revisi'])->name('agenda-revisi');
-        Route::get('agenda-approve', [AgendaHomeController::class, 'approve'])->name('agenda-approve');
-        // Route::post('delete-reference', [AgendaHomeController::class, 'delete_reference'])->name('agenda-delete-reference');
+        Route::post('reference', [AgendaHomeController::class, 'reference'])->name('agenda-reference');
         
-        Route::get('berkas-proses-sketch', [SketchHomeController::class, 'proses_berkas'])->name('sketch-berkas-proses');
-        Route::get('sketch-detail', [SketchHomeController::class, 'detail'])->name('sketch-detail');
+        // Route::get('berkas-proses-sketch', [SketchHomeController::class, 'proses_berkas'])->name('sketch-berkas-proses');
+        // Route::get('sketch-detail', [SketchHomeController::class, 'detail'])->name('sketch-detail');
         Route::post('sketch-upload', [SketchHomeController::class, 'upload'])->name('upload-file-sketch');
-        Route::get('sketch-approve', [SketchHomeController::class, 'approve'])->name('sketch-approve');
-        Route::post('sketch-post/{id}', [SketchHomeController::class, 'sketch_post'])->name('sketch-post');
-
-        Route::get('berkas-proses-kabid', [SketchHomeController::class, 'proses_berkas'])->name('kabid-berkas-proses');
+        Route::post('sketch-post', [SketchHomeController::class, 'sketch_post'])->name('sketch-post');
+        // Route::get('sketch-revisi', [SketchHomeController::class, 'revisi'])->name('sketch-revisi');
+        
+        Route::get('berkas-proses-kabid', [KabidHomeController::class, 'proses_berkas'])->name('kabid-berkas-proses');
+        Route::get('kabid-detail', [KabidHomeController::class, 'detail'])->name('kabid-detail');
+        Route::get('kabid-revisi', [KabidHomeController::class, 'revisi'])->name('kabid-revisi');
+        
         Route::get('berkas-proses-kadis', [SketchHomeController::class, 'proses_berkas'])->name('kadis-berkas-proses');
-        Route::get('sketch-revisi', [SketchHomeController::class, 'revisi'])->name('sketch-revisi');
-        Route::get('kabid-revisi', [SketchHomeController::class, 'revisi'])->name('kabid-revisi');
         Route::get('kadis-revisi', [SketchHomeController::class, 'revisi'])->name('kadis-revisi');
     });
 });

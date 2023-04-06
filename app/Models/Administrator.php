@@ -9,8 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Administrator extends Authenticatable
 {
     use HasFactory;
-    const ROLE_AGENDA = 'AGENDA';
-    const ROLE_GAMBAR = 'GAMBAR';
+    const ROLE_FILING = 'FILING';
+    const ROLE_CEK = 'CEK';
     const ROLE_KABID = 'KABID';
     const ROLE_KADIS = 'KADIS';
 
@@ -22,8 +22,8 @@ class Administrator extends Authenticatable
     public static function role()
     {
         return [
-            'AGENDA' => self::ROLE_AGENDA,
-            'GAMBAR' => self::ROLE_GAMBAR,
+            'FILING' => self::ROLE_FILING,
+            'CEK' => self::ROLE_CEK,
             'KABID' => self::ROLE_KABID,
             'KADIS' => self::ROLE_KADIS,
         ];

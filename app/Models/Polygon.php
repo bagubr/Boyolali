@@ -5,16 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Gsb extends Model
+class Polygon extends Model
 {
     use HasFactory;
+
+    protected $table = 'polygons';
     protected $fillable = [
-        'jap',
-        'jkp',
-        'jks',
-        'jlp',
-        'jls',
-        'jling',
-        'uuid'
+        'user_information_id', 'latitude', 'longitude'
     ];
 }

@@ -65,7 +65,7 @@ class   HomeController extends Controller
     public function detail(Request $request)
     {
         $user_information = UserInformation::whereUuid($request->id)->first();
-        return view('agenda/detail', compact('user_information'));
+        return view('admin_templates/detail', compact('user_information'));
     }
 
     public function agenda_post(Request $request, $id)
@@ -76,19 +76,13 @@ class   HomeController extends Controller
                 'nomor_registration' => 'required|unique:user_informations',
                 'nomor' => 'required'
             ]);
-            $data['agenda_date'] = date('Y-m-d H:i:s');
         }
-        $data['status'] = UserInformation::STATUS_SKETCH;
         $user_information->update($data);           
         $user_information->refresh();
         ApplicantReference::where('user_information_id', $id)->update([
             'status' => ApplicantReference::STATUS_APPROVE
         ]);
-        if(!$user_information->nomor_registration){
-            return redirect()->route('agenda-berkas-proses')->with('success', 'Berhasil buat Nomor Agenda');
-        }else{
-            return redirect()->route('agenda-berkas-proses')->with('success', 'Berhasil Revisi Agenda');
-        }
+        return redirect()->back()->with('success', 'Berhasil buat Nomor Agenda');
     }
 
     public function reference(Request $request)
@@ -116,14 +110,5 @@ class   HomeController extends Controller
         $applicant_reference = ApplicantReference::find($id);
         $applicant_reference->delete();
         return redirect()->back()->with('success', 'Data berhasil di hapus');
-    }
-
-    public function approve(Request $request)
-    {
-        $uuid = $request->id;
-        UserInformation::where('uuid', $uuid)->update([
-            'status' => UserInformation::STATUS_SKETCH,
-        ]);
-        return redirect()->route('agenda-revisi')->with('success', 'Berhasil');
     }
 }

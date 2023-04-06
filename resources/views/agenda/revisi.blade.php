@@ -1,7 +1,4 @@
 @extends('admin_templates.app')
-@push('css')
-<link href="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-@endpush
 @section('content')
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -52,11 +49,3 @@
     </div>
     <!-- /.container-fluid -->
 @endsection
-@push('js')
-        <!-- Page level plugins -->
-        <script src="{{ url('sb-admin') }}/vendor/datatables/jquery.dataTables.min.js"></script>
-        <script src="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    
-        <!-- Page level custom scripts -->
-        <script src="{{ url('sb-admin') }}/js/demo/datatables-demo.js"></script>
-@endpush

@@ -1,7 +1,4 @@
 @extends('admin_templates.app')
-@push('css')
-<link href="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-@endpush
 @section('content')
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -29,7 +26,7 @@
                             </tr>
                         </thead>
                         <tbody>  
-                            @foreach (\App\Models\UserInformation::whereNotNull('survei_date')->whereStatus(\App\Models\UserInformation::STATUS_SURVEI)->orderBy('created_at', 'desc')->get() as $item)
+                            @foreach (\App\Models\UserInformation::whereNotNull('sketch_date')->whereStatus(\App\Models\UserInformation::STATUS_CEK)->orderBy('created_at', 'desc')->get() as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('Y-m-d', strtotime($item->created_at)) }}</td>
@@ -39,7 +36,7 @@
                                     <td>{{ $item->district->name }}</td>
                                     <td>{{ $item->sub_district->name }}</td>
                                     <td>
-                                        <a class="badge bg-primary text-white" href="{{ route('survei-detail', ['id' => $item->uuid]) }}">Detail</a>
+                                        <a class="badge bg-primary text-white" href="{{ route('sketch-detail', ['id' => $item->uuid]) }}">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -52,11 +49,3 @@
     </div>
     <!-- /.container-fluid -->
 @endsection
-@push('js')
-        <!-- Page level plugins -->
-        <script src="{{ url('sb-admin') }}/vendor/datatables/jquery.dataTables.min.js"></script>
-        <script src="{{ url('sb-admin') }}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    
-        <!-- Page level custom scripts -->
-        <script src="{{ url('sb-admin') }}/js/demo/datatables-demo.js"></script>
-@endpush
