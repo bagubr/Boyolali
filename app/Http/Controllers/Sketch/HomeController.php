@@ -15,55 +15,6 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
-    public function login(Request $request)
-    {
-        $user = AdminSketch::whereUsername($request->username)->first();
-        if($user){
-            $check = Hash::check($request->password, $user->password);
-            if($check){
-                if(Auth::guard('sketch')->attempt(['username' => $request->username, 'password' => $request->password])){
-                    Auth::guard('sketch')->login($user);
-                    Session::put('user', $user);
-                    return redirect()->route('dashboard-sketch')->with('success', 'Login Berhasil');
-                }else{
-                    return redirect()->back()->with('error', 'Password yang anda masukan salah');
-                }
-            }else{
-                return redirect()->back()->with('error', 'Password yang anda masukan salah');
-            }
-        }else{
-            return redirect()->back()->with('error', 'Username yang anda masukan tidak terdaftar');
-        }
-    }
-
-    public function home()
-    {
-        return view('sketch/home');
-    }
-
-    public function proses_berkas()
-    {
-        return view('sketch/sketch');
-    }
-
-    public function revisi()
-    {
-        return view('sketch/revisi');
-    }
-
-    public function detail(Request $request)
-    {
-        $user_information = UserInformation::whereUuid($request->id)->first();
-        return view('admin_templates/detail', compact('user_information'));
-    }
-
-    public function logout()
-    {
-        Auth::guard('sketch')->logout();
-        Session::forget('user');
-        return redirect()->route('sketch')->with('success', 'Logout Berhasil');
-    }
-
     public function upload(Request $request)
     {
         $data = $this->validate($request, [

@@ -18,8 +18,8 @@ class DataController extends Controller
         $searchValue = @$search_arr['value']??''; 
         
         $user_informations = UserInformation::query();
-        $user_informations->whereStatus($request->status)
-        ->where('user_id', Auth::user()->id);
+        // $user_informations->whereStatus($request->status)
+        $user_informations->where('user_id', Auth::user()->id);
         $totalRecords = $user_informations
         ->count();
         $user_informations = $user_informations

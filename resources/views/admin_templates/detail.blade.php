@@ -7,6 +7,7 @@
         #map {
             height: 500px;
         }
+
         td:first-child {
             width: 20%;
         }
@@ -35,33 +36,229 @@
 
         <div class="row card">
             <div class="card-header">
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Detail Agenda</h1>
-                    <div class="">
-                        <button class="btn btn-primary" type="button"
-                            onclick="save('{{ $user_information->uuid }}')">Simpan</button>
-                        <button class="btn btn-success" type="button"
-                            onclick="approve('{{ $user_information->uuid }}')">Approve dan Kirim</button>
+                <div class="d-inline" style="left:10px">
+                    <div class="d-sm-flex mb-4 justify-content-between">
+                        <div>
+                            <h1 class="h3 mb-0 text-gray-800">Detail Agenda</h1>
+                        </div>
+                        <div>
+                            @php
+                                if (Route::is('agenda-detail')) {
+                                    $route = route('agenda-approve');
+                                    $role = \App\Models\UserInformation::STATUS_FILING;
+                                } elseif (Route::is('selesai-detail')) {
+                                    $route = route('selesai-approve');
+                                    $role = \App\Models\UserInformation::STATUS_CEK;
+                                } elseif (Route::is('subkor-detail')) {
+                                    $route = route('subkor-approve');
+                                    $role = \App\Models\UserInformation::STATUS_SUBKOR;
+                                } elseif (Route::is('kabid-detail')) {
+                                    $route = route('kabid-approve');
+                                    $role = \App\Models\UserInformation::STATUS_KABID;
+                                } elseif (Route::is('kadis-detail')) {
+                                    $route = route('kadis-approve');
+                                    $role = \App\Models\UserInformation::STATUS_KADIS;
+                                }
+                            @endphp
+                            @if (isset($route))
+                                {!! Form::open(['url' => $route, 'method' => 'post', 'id' => 'formNextProses']) !!}
+                                {!! Form::hidden('uuid', $user_information->uuid) !!}
+                                <select name="to" id="" class="form-control w-50 d-inline" required>
+                                    <option value="">--PILIH--</option>
+                                    @foreach (\App\Models\UserInformation::user_alur($role) as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
+                                </select>
+                                <button class="btn btn-primary w-30" type="button" id="nextProses">Selanjutnya</button>
+                                {!! Form::close() !!}
+                            @endif
+                            @if (Route::is('berkas-selesai-detail'))
+                                <a  href="{{ route('generate-file') }}" class="btn btn-primary w-30">Generate File</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
-            <ul class="nav nav-tabs d-flex m-3" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="lokasi-tab" data-bs-toggle="tab" data-bs-target="#lokasi"
-                        type="button" role="tab" aria-controls="lokasi" aria-selected="true">Data Lokasi</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pemohon-tab" data-bs-toggle="tab" data-bs-target="#pemohon" type="button"
-                        role="tab" aria-controls="pemohon" aria-selected="true">Data Pemohon</button>
-                </li>
+            <div class="card-body">
+                {!! Form::open(['url' => route('agenda-pemohon'), 'method' => 'post', 'id' => 'agenda-lokasi']) !!}
+                {!! Form::hidden('uuid', $user_information->uuid) !!}
+                <table class="table">
+                    <tbody>
+
+                        <tr>
+                            <td>Pemohon</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::text('submitter', $user_information->submitter, ['class' => 'form-control']) !!}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No KTP</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::text('nomor_ktp', $user_information->nomor_ktp, ['class' => 'form-control']) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Telepon Pemohon</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::text('submitter_phone', $user_information->submitter_phone, ['class' => 'form-control']) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Email Pemohon</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::text('email', $user_information->user->email, ['class' => 'form-control', 'disabled']) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Alamat Pemohon</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::textarea('address', $user_information->address, ['class' => 'form-control']) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Kegiatan yang dimohon</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::select(
+                                    'activity_name',
+                                    [\App\Models\Activity::get()->pluck('title', 'title')],
+                                    $user_information->activity_name,
+                                    ['class' => 'form-control', 'id' => 'activity_name', 'style' => 'width:100%'],
+                                ) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Luas Tanah</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::text('land_area', $user_information->land_area, ['class' => 'form-control', 'id' => 'land_area']) !!}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Alamat Lokasi</td>
+                            <td>:</td>
+                            <td> {!! Form::textarea('location_address', $user_information->location_address, ['class' => 'form-control']) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Kecamatan</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::select(
+                                    'district_id',
+                                    [\App\Models\District::get()->pluck('name', 'id')],
+                                    $user_information->district_id,
+                                    ['class' => 'form-control input', 'id' => 'district_id'],
+                                ) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Desa / Kelurahan</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::select(
+                                    'sub_district_id',
+                                    [\App\Models\SubDistrict::get()->pluck('name', 'id')],
+                                    $user_information->sub_district_id,
+                                    ['class' => 'form-control input', 'id' => 'sub_district_id'],
+                                ) !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Status Tanah</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::select(
+                                    'land_status_id',
+                                    [\App\Models\LandStatus::get()->pluck('name', 'id')],
+                                    $user_information->land_status_id,
+                                    ['class' => 'form-control input', 'id' => 'land_status_id'],
+                                ) !!}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No Sertifikat</td>
+                            <td>:</td>
+                            <td>
+                                {!! Form::text('nomor_hak', $user_information->nomor_hak, ['class' => 'form-control', 'id' => 'nomor_hak']) !!}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Koordinat</td>
+                            <td>:</td>
+                            <td>
+                                <table class="table table-striped w-50" border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>X (Longitude)</th>
+                                            <th>Y (Latitude)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($user_information->polygons as $item)
+                                            <tr>
+                                                <td>{{ $item->latitude }}</td>
+                                                <td>{{ $item->longitude }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr class="koordinattable">
+                            <td class="d-none">Koordinat Baru</td>
+                            <td class="d-none">:</td>
+                            <td class="d-none">
+                                <table class="table table-striped tablekoordinat w-50" border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>X (Longitude)</th>
+                                            <th>Y (Latitude)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-body">
+                                        @foreach ($user_information->polygons as $item)
+                                            <tr>
+                                                <td>{{ $item->latitude }}</td>
+                                                <td>{{ $item->longitude }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="map-wrapper" style="width: 100%;
+                position: relative;">
+                    <div class="mt-3 mb-3" id="map"></div>
+                    <div id="button-wrapper" class="card d-inline p-2"
+                        style="position: absolute; top: 10px; right:10px; z-index:1000;margin:10px;">
+                        <button type="button" class="btn btn-primary" onclick="editButton()">Edit</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelButton()">Reset</button>
+                        <div class="form-check">
+                            <input class="form-check-input" id="viewPolygon" type="checkbox" onclick="viewPolygon()"
+                                checked>
+                            <label class="form-check-label" for="flexCheckChecked">
+                                Lihat Polygon
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                    <button class="btn btn-primary float-right" type="submit">Submit</button>
+                @endif
+                {!! Form::close() !!}
+            </div>
+        </div>
+        <div class="row card mt-3">
+            <div class="card-header">
+                <ul class="nav nav-tabs d-flex m-3" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="agenda-tab" data-bs-toggle="tab" data-bs-target="#agenda"
+                            type="button" role="tab" aria-controls="agenda" aria-selected="false">Buat
+                            Agenda</button>
+                    </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="berkas-tab" data-bs-toggle="tab" data-bs-target="#berkas"
                             type="button" role="tab" aria-controls="berkas" aria-selected="false">Berkas</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="agenda-tab" data-bs-toggle="tab" data-bs-target="#agenda"
-                            type="button" role="tab" aria-controls="agenda" aria-selected="false">Buat Agenda</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="gambar-tab" data-bs-toggle="tab" data-bs-target="#gambar"
@@ -70,188 +267,93 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="krk-tab" data-bs-toggle="tab" data-bs-target="#krk" type="button"
-                            role="tab" aria-controls="krk" aria-selected="false">Keterangan Rencana</button>
-                    </li>
-                @endif
-                @if (Auth::guard('administrator')->user()->role == 'KABID')
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="gambar-tab" data-bs-toggle="tab" data-bs-target="#gambar"
-                            type="button" role="tab" aria-controls="gambar" aria-selected="false">Gambar</button>
+                            role="tab" aria-controls="krk" aria-selected="false">Keterangan
+                            Rencana</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="krk-tab" data-bs-toggle="tab" data-bs-target="#krk" type="button"
-                            role="tab" aria-controls="krk" aria-selected="false">Keterangan Rencana</button>
+                        <button class="nav-link" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat" type="button"
+                            role="tab" aria-controls="riwayat" aria-selected="false">Riwayat</button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="berkas-tab" data-bs-toggle="tab" data-bs-target="#berkas"
-                            type="button" role="tab" aria-controls="berkas" aria-selected="false">Berkas</button>
-                    </li>
-                @endif
-            </ul>
+                </ul>
+            </div>
 
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="lokasi" role="tabpanel" aria-labelledby="lokasi-tab">
+
+                <div class="tab-pane fade show active" id="agenda" role="tabpanel" aria-labelledby="agenda-tab">
+
                     <div class="card-body">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>Luas Tanah</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::text('land_area', $user_information->land_area, ['class' => 'form-control', 'id' => 'land_area']) !!}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Alamat Lokasi</td>
-                                    <td>:</td>
-                                    <td> {!! Form::textarea('location_address', $user_information->location_address, ['class' => 'form-control']) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td>Kecamatan</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::select(
-                                            'district_id',
-                                            [\App\Models\District::get()->pluck('name', 'id')],
-                                            $user_information->district_id,
-                                            ['class' => 'form-control input', 'id' => 'district_id'],
-                                        ) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td>Desa / Kelurahan</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::select(
-                                            'district_id',
-                                            [\App\Models\SubDistrict::get()->pluck('name', 'id')],
-                                            $user_information->sub_district_id,
-                                            ['class' => 'form-control input', 'id' => 'sub_district_id'],
-                                        ) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td>Status Tanah</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::select(
-                                            'district_id',
-                                            [\App\Models\LandStatus::get()->pluck('name', 'id')],
-                                            $user_information->land_status_id,
-                                            ['class' => 'form-control input', 'id' => 'land_status_id'],
-                                        ) !!}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>No Sertifikat</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::text('nomor_hak', $user_information->nomor_hak, ['class' => 'form-control', 'id' => 'nomor_hak']) !!}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Koordinat</td>
-                                    <td>:</td>
-                                    <td>
-                                        <table class="table table-striped w-50" border="1">
-                                            <thead>
-                                                <tr>
-                                                    <th>X (Longitude)</th>
-                                                    <th>Y (Latitude)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($user_information->polygons as $item)
-                                                    <tr>
-                                                        <td>{{ $item->latitude }}</td>
-                                                        <td>{{ $item->longitude }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr class="koordinattable">
-                                    <td class="d-none">Koordinat Baru</td>
-                                    <td class="d-none">:</td>
-                                    <td class="d-none">
-                                        <table class="table table-striped tablekoordinat w-50" border="1">
-                                            <thead>
-                                                <tr>
-                                                    <th>X (Longitude)</th>
-                                                    <th>Y (Latitude)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-body">
-                                                @foreach ($user_information->polygons as $item)
-                                                    <tr>
-                                                        <td>{{ $item->latitude }}</td>
-                                                        <td>{{ $item->longitude }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button type="button" class="btn btn-primary" onclick="editButton()">Edit</button>
-                        <button type="button" class="btn btn-secondary" onclick="cancelButton()">Reset</button>
-                        <div class="form-check">
-                            <input class="form-check-input" id="viewPolygon" type="checkbox"  onclick="viewPolygon()" checked>
-                            <label class="form-check-label" for="flexCheckChecked">
-                              Lihat Polygon
-                            </label>
-                          </div>
-                        <div class="mt-3" id="map"></div>
+                        <form action="{{ route('agenda-post', $user_information->id) }}" method="post">
+                            @csrf
+                            @php
+                                $nomor = \App\Models\UserInformation::orderBy('nomor', 'desc')->first()->nomor ?? 0;
+                                $default = \App\Models\Setting::whereGroup('NO_REG')
+                                    ->orderBy('id')
+                                    ->get()
+                                    ->pluck('value');
+                                
+                                $nomor = str_pad($nomor, 4, '0', STR_PAD_LEFT);
+                                $nomor_registration_before = $default[0] . '/' . $nomor . '/' . date('n') . '/' . date('Y');
+                                if (!$user_information->nomor_registration) {
+                                    $nomor = $nomor + 1;
+                                } else {
+                                    $nomor = $nomor;
+                                }
+                                $nomor = str_pad($nomor, 4, '0', STR_PAD_LEFT);
+                                $nomor_registration = $default[0] . '/' . $nomor . '/' . date('n') . '/' . date('Y');
+                            @endphp
+                            <label for="">Nomor Registrasi Sebelumnya</label>
+                            <input type="text" class="form-control" name="nomor_registration_before"
+                                value="{{ $nomor_registration_before }}" disabled>
+                            <br>
+                            <label for="">Nomor Registrasi</label>
+                            <input type="text" class="form-control" name="nomor_registration"
+                                value="{{ $nomor_registration }}">
+                            <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
+                            <br>
+                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                                @if (!$user_information->nomor_registration)
+                                    <button type="submit" class="btn btn-success m-auto">Save</button>
+                                @endif
+                            @endif
+                        </form>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="pemohon" role="tabpanel" aria-labelledby="pemohon-tab">
-                    <div class="card-body">
-                        <table class="table">
-                            <tbody>
+                <div class="tab-pane fade" id="berkas" role="tabpanel" aria-labelledby="berkas-tab">
+                    @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                        <a href="#" class="btn btn-success float-right m-3" data-toggle="modal"
+                            data-target="#addReferensi"
+                            onclick="add({{ $user_information->id }}, {{ \App\Models\ReferenceType::whereNotIn('id',\App\Models\ApplicantReference::where('user_information_id', $user_information->id)->get()->pluck('reference_type_id'))->get()->pluck('file_type', 'id') }})">Tambah</a>
+                    @endif
+                    <div class="card-body" id="dataBerkas">
+                        <div class="section-title">
+                            <h2>Data Berkas</h2>
+                        </div>
+                        <div class="col-lg-12 col-md-6 portfolio-item filter-web">
+                            <table class="table table-striped">
                                 <tr>
-                                    <td>Pemohon</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::text('submitter', $user_information->submitter, ['class' => 'form-control']) !!}
-                                    </td>
+                                    <th>Jenis Berkas</th>
+                                    <th>Penjelasan</th>
+                                    <th>Aksi</th>
+                                    <th>Keterangan</th>
                                 </tr>
-                                <tr>
-                                    <td>No KTP</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::text('nomor_ktp', $user_information->nomor_ktp, ['class' => 'form-control']) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td>Telepon Pemohon</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::text('submitter_phone', $user_information->submitter_phone, ['class' => 'form-control']) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td>Email Pemohon</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::text('email', $user_information->user->email, ['class' => 'form-control', 'disabled']) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td>Alamat Pemohon</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::textarea('address', $user_information->address, ['class' => 'form-control']) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td>Kegiatan yang dimohon</td>
-                                    <td>:</td>
-                                    <td>
-                                        {!! Form::select(
-                                            'activity_name',
-                                            [\App\Models\Activity::get()->pluck('title', 'title')],
-                                            $user_information->activity_name,
-                                            ['class' => 'form-control', 'id' => 'activity_name', 'style' => 'width:100%'],
-                                        ) !!}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                @foreach ($user_information->applicant_reference as $item)
+                                    <tr>
+                                        <td>{{ @$item->reference_type->file_type ?? '' }}</td>
+                                        <td style="width: 40%">{!! @$item->reference_type->content ?? '' !!}</td>
+                                        <td>
+                                            <a href="{{ url('storage/' . $item->file) }}" class="btn btn-primary"
+                                                target="_blank">Lihat</a>
+                                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                                                <a href="#" class="btn btn-info" data-toggle="modal"
+                                                    data-target="#updateReferensi"
+                                                    onclick="edit({{ $item->id }})">Edit</a>
+                                            @endif
+                                        </td>
+                                        <td>{!! @$item->reference_type->note ?? '' !!}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="gambar" role="tabpanel" aria-labelledby="gambar-tab">
@@ -265,58 +367,16 @@
                                 <br>
                                 @if (@$user_information->sketch_file->file)
                                     <img src="{{ asset('storage/' . $user_information->sketch_file->file) }}"
-                                        alt="" class="img-thumbnail" width="200px">
+                                        alt="" class="img-fluid rounded mx-auto d-block" width="500px">
                                 @endif
                                 <div class="float-right m-3 ">
-                                    <button class="btn btn-primary" type="submit">Upload</button>
+                                    @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                                        <button class="btn btn-primary" type="submit">Upload</button>
+                                    @endif
                                 </div>
                             </form>
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
-                    @if (count($user_information->revision) > 0)
-                        <div class="card-body">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <th>Tanggal</th>
-                                        <th>Proses</th>
-                                        <th>Petugas</th>
-                                        <th>Keterangan</th>
-                                        <th>Ke Petugas</th>
-                                        <th>Ke Proses</th>
-                                        <th>Jenis</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    @foreach ($user_information->revision as $key => $item)
-                                        <tr>
-                                            <td>{{ date('d-m-Y H:i:s', strtotime($item->created_at)) }}</td>
-                                            <td>{{ $item->from }}</td>
-                                            <td>{{ @$item->dari->name }}</td>
-                                            <td>{{ $item->note }}</td>
-                                            <td>{{ @$item->ke->name }}</td>
-                                            <td>{{ $item->to }}</td>
-                                            @if (count($user_information->revision) == $key + 1)
-                                                <td>
-                                                    <i class="btn btn-primary">New</i>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-success"
-                                                        onclick="revision('{{ $user_information->uuid }}', '{{ $item->from }}')">Selesai</button>
-                                                </td>
-                                            @else
-                                                <td>
-                                                    <i class="btn btn-secondary">Done</i>
-                                                </td>
-                                            @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
                 </div>
                 <div class="tab-pane fade" id="krk" role="tabpanel" aria-labelledby="krk-tab">
                     <form action="{{ route('sketch-post') }}" method="post">
@@ -402,72 +462,33 @@
                             </div>
                         </div>
                         <div class="card-footer float-right">
-                            <button class="btn btn-primary" type="submit">Submit</button>
+                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                            @endif
                         </div>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="agenda" role="tabpanel" aria-labelledby="agenda-tab">
-
-                    <div class="card-body">
-                        <form action="{{ route('agenda-post', $user_information->id) }}" method="post">
-                            @csrf
-                            @php
-                                $nomor = \App\Models\UserInformation::orderBy('nomor', 'desc')->first()->nomor ?? 0;
-                                $default = \App\Models\Setting::whereGroup('NO_REG')
-                                    ->orderBy('id')
-                                    ->get()
-                                    ->pluck('value');
-                                $nomor_registration_before = $default[0] . '/' . $nomor . '/' . $default[1];
-                                
-                                if (!$user_information->nomor_registration) {
-                                    $nomor_registration = $default[0] . '/' . $nomor + 1 . '/' . $default[1];
-                                    $nomor = $nomor + 1;
-                                } else {
-                                    $nomor_registration = $default[0] . '/' . $nomor . '/' . $default[1];
-                                    $nomor = $nomor;
-                                }
-                            @endphp
-                            <label for="">Nomor Registrasi Sebelumnya</label>
-                            <input type="text" class="form-control" name="nomor_registration_before"
-                                value="{{ $nomor_registration_before }}" disabled>
-                            <br>
-                            <label for="">Nomor Registrasi</label>
-                            <input type="text" class="form-control" name="nomor_registration"
-                                value="{{ $nomor_registration }}">
-                            <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
-                            <br>
-                            @if (!$user_information->nomor_registration)
-                                <button type="submit" class="btn btn-success m-auto">Save</button>
-                            @endif
-                        </form>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="berkas" role="tabpanel" aria-labelledby="berkas-tab">
-                    <a href="#" class="btn btn-success float-right m-3" data-toggle="modal"
-                        data-target="#addReferensi"
-                        onclick="add({{ $user_information->id }}, {{ \App\Models\ReferenceType::whereNotIn('id',\App\Models\ApplicantReference::where('user_information_id', $user_information->id)->get()->pluck('reference_type_id'))->get()->pluck('file_type', 'id') }})">Tambah</a>
+                <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                     <div class="card-body" id="dataBerkas">
                         <div class="section-title">
-                            <h2>Data Berkas</h2>
+                            <h2>Riwayat</h2>
                         </div>
                         <div class="col-lg-12 col-md-6 portfolio-item filter-web">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>Jenis Berkas</th>
-                                    <th>Penjelasan</th>
-                                    <th>Aksi</th>
+                                    <th style="width: 5%">No</th>
+                                    <th>Tanggal</th>
+                                    <th>Petugas</th>
                                     <th>Keterangan</th>
+                                    <th>Petugas Selanjutnya</th>
                                 </tr>
-                                @foreach ($user_information->applicant_reference as $item)
+                                @foreach ($user_information->riwayat as $item)
                                     <tr>
-                                        <td>{{ $item->reference_type->file_type }}</td>
-                                        <td style="width: 40%">{!! $item->reference_type->content !!}</td>
-                                        <td>
-                                            <a href="{{ url('storage/' . $item->file) }}" class="btn btn-primary"
-                                                target="_blank">Lihat</a>
-                                            <a href="#" class="btn btn-info" data-toggle="modal" data-target="#updateReferensi" onclick="edit({{ $item->id }})">Edit</a>
-                                        </td>
-                                        <td>{!! $item->reference_type->note !!}</td>
+                                        <td style="width: 5%">{{ $loop->iteration }}</td>
+                                        <td>{{ date('d-m-Y H:i:s', strtotime($item->created_at)) }}</td>
+                                        <td style="width: 10%">{{ $item->dari->name }}</td>
+                                        <td style="width: 60%">{{ $item->note }}</td>
+                                        <td style="width: 10%">{{ $item->keterangan_status }}</td>
                                     </tr>
                                 @endforeach
                             </table>
@@ -475,7 +496,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -558,7 +578,8 @@
         });
     </script>
     <script>
-        function approve(uuid) {
+        $('#nextProses').click(function(e) {
+            e.preventDefault();
             swal({
                     title: "Kirimkan ?",
                     text: "Data Akan di Kirim ke proses selanjutnya",
@@ -577,65 +598,27 @@
                             swal("Berhasil!", {
                                 icon: "success",
                             });
+                            var formNextProses = $('#formNextProses');
+                            var noteInput = document.createElement('input');
+                            noteInput.setAttribute('name', "note");
+                            noteInput.setAttribute('value', willDelete);
+                            noteInput.setAttribute('type', 'hidden');
+                            formNextProses.append(noteInput);
+                            formNextProses.submit();
                         }
-                        location.replace(`{{ route('approve') }}?id=` + uuid + `&note=` + willDelete)
                     } else {
                         swal("Catatan Kosong");
                     }
                 }).catch(err => {
                     if (err) {
+                        console.log(err);
                         swal("Oh noes!", "The AJAX request failed!", "error");
                     } else {
                         swal.stopLoading();
                         swal.close();
                     }
                 });
-        }
-    </script>
-    <script>
-        function save(uuid) {
-            swal({
-                    title: "Selesaikan ?",
-                    text: "Data Akan di Simpan ke proses selanjutnya",
-                    icon: "warning",
-                    buttons: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        location.replace(`{{ route('save') }}?id=` + uuid)
-                    } else {
-                        swal("Cancel");
-                    }
-                }).catch(err => {
-                    if (err) {
-                        swal("Oh noes!", "The AJAX request failed!", "error");
-                    } else {
-                        swal.stopLoading();
-                        swal.close();
-                    }
-                });
-        }
-    </script>
-    <script>
-        function revision(uuid, from) {
-            swal({
-                    title: "Selesaikan ?",
-                    text: "Data Akan di Kirim ke " + from,
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        swal("Berhasil!", {
-                            icon: "success",
-                        });
-                        location.replace(`{{ route('revision') }}?id=` + uuid)
-                    } else {
-                        swal("Cancel");
-                    }
-                });
-        }
+        });
     </script>
 
     <script>
@@ -684,11 +667,19 @@
 
         var array_polygons = {!! $user_information->polygons->pluck('longitude', 'latitude') !!};
         const entries = Object.entries(array_polygons);
-
+        if (entries.length <= 0) {
+            entries[0] = [-7.520530, 110.595023];
+        }
         const map = L.map('map', {
             center: entries[0],
             zoom: 15
         });
+
+        if (entries.length > 0) {
+            var polyLayers = L.polygon(entries).setStyle({
+                color: '#1CC88A'
+            }).addTo(map);
+        }
 
         const latitude = window.document.querySelector("#latitude");
         const longitude = window.document.querySelector("#longitude");
@@ -702,57 +693,66 @@
             }
         ).addTo(map);
 
-        var polyLayers = L.polygon(entries).setStyle({color: '#1CC88A'}).addTo(map);
-
         // new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
 
         map.on('draw:created', function(e) {
             new_polygon = L.polygon(e.layer._latlngs).addTo(map);
             $('td').removeClass('d-none');
             e.layer._latlngs[0].forEach(function callback(value, index) {
-                $(".koordinattable .table-body").remove(); 
+                $(".koordinattable .table-body").remove();
                 var row = table.insertRow(table.rows.length);
                 var celly = row.insertCell(0);
                 var cellx = row.insertCell(1);
-                celly.innerHTML = value.lng;
-                cellx.innerHTML = value.lat;
-                var form = $('.php-email-form');
+                var form = $('#agenda-lokasi');
                 var inputlng = document.createElement('input');
                 inputlng.setAttribute('name', "polygon[longitude][]");
                 inputlng.setAttribute('value', value.lng);
+                inputlng.setAttribute('id', "polygon_longitude");
                 inputlng.setAttribute('type', 'hidden');
                 var inputlat = document.createElement('input');
                 inputlat.setAttribute('name', "polygon[latitude][]");
                 inputlat.setAttribute('value', value.lat);
+                inputlat.setAttribute('id', "polygon_latitude");
                 inputlat.setAttribute('type', 'hidden')
+                celly.innerHTML = value.lng;
+                cellx.innerHTML = value.lat;
 
                 form.append(inputlng);
                 form.append(inputlat);
             });
         });
-        function cancelButton(){
-            if(new_polygon){
+
+
+        $(document).ready(function() {
+            $('#viewPolygon').click(function(e) {
+                if ($(this).is(":checked")) {
+                    map.addLayer(polyLayers);
+                } else {
+                    map.removeLayer(polyLayers);
+                }
+            });
+        });
+
+        function cancelButton() {
+            if (new_polygon) {
                 map.removeLayer(new_polygon);
+                $('input[name="polygon[longitude][]"]').remove()
+                $('input[name="polygon[latitude][]"]').remove()
             }
             $('.koordinattable').addClass('d-none');
             $('.koordinattable').find("tr:not(:first)").remove();
-            // new L.Draw.Polygon(map, );
             DrawPolygon.disable();
         }
-        function editButton(){
-            if(new_polygon){
+
+        function editButton() {
+            if (new_polygon) {
                 map.removeLayer(new_polygon);
+                $('input[name="polygon[longitude][]"]').remove()
+                $('input[name="polygon[latitude][]"]').remove()
             }
             $('.koordinattable').removeClass('d-none');
             $('.koordinattable').find("tr:not(:first)").remove();
             DrawPolygon.enable();
-        }
-        function viewPolygon(){
-            if($('#viewPolygon').is(":checked")){
-                map.addLayer(polyLayers);
-            }else{
-                map.removeLayer(polyLayers);
-            }
         }
     </script>
 @endpush

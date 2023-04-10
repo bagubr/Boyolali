@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Agenda;
 use App\Http\Controllers\Controller;
 use App\Models\AdminAgenda;
 use App\Models\ApplicantReference;
+use App\Models\Polygon;
+use App\Models\Riwayat;
 use App\Models\UserInformation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class   HomeController extends Controller
 {
@@ -57,9 +61,14 @@ class   HomeController extends Controller
         return view('agenda/agenda');
     }
 
-    public function revisi()
+    public function selesai()
     {
-        return view('agenda/revisi');
+        return view('agenda/selesai');
+    }
+    
+    public function berkas_selesai()
+    {
+        return view('agenda/berkas-selesai');
     }
 
     public function detail(Request $request)
@@ -110,5 +119,86 @@ class   HomeController extends Controller
         $applicant_reference = ApplicantReference::find($id);
         $applicant_reference->delete();
         return redirect()->back()->with('success', 'Data berhasil di hapus');
+    }
+
+    public function pemohon(Request $request)
+    {
+        $data = $this->validate($request, [
+            'uuid' => 'required',
+            'submitter' => 'required|string',
+            'submitter_phone' => 'required|string',
+            'nomor_ktp' => 'required|string',
+            'address' => 'required|string',
+            'activity_name' => 'required|string',
+            'location_address' => 'required',
+            'land_area' => 'required',
+            'district_id' => 'required',
+            'sub_district_id' => 'required',
+            'land_status_id' => 'required',
+            'nomor_hak' => 'required',
+            'polygon' => 'sometimes|array',
+        ]);
+        $filter_data = Arr::except($data, ['polygon']);
+        $user_information = UserInformation::whereUuid($data['uuid'])->first();
+        if(isset($data['polygon'])){
+            $filter_data['latitude'] = $data['polygon']['latitude'][0];
+            $filter_data['longitude'] = $data['polygon']['longitude'][0];
+        }
+        $user_information->update($filter_data);
+        if(isset($data['polygon'])){
+            $filter_data['latitude'] = $data['polygon']['latitude'][0];
+            $filter_data['longitude'] = $data['polygon']['longitude'][0];
+            Polygon::where('user_information_id', $user_information->id)->delete();
+            foreach ($data['polygon']['longitude'] as $key => $value) {
+                Polygon::create([
+                    'latitude' => $data['polygon']['latitude'][$key],
+                    'longitude' => $value,
+                    'user_information_id' => $user_information->id,
+                ]);
+            }
+        }
+        return redirect()->back()->with('success', 'Data berhasil di simpan');
+    }
+
+    public function agenda_approve(Request $request)
+    {
+        $data = $this->validate($request, [
+            'uuid' => 'required',
+            'to' => 'required',
+            'note' => 'required',
+        ],[
+            'to' => 'Belum pilih proses selanjutnya',
+            'note' => 'Catatan blm di isi',
+        ]);
+        $user_information = UserInformation::where('uuid', $data['uuid'])->first();
+        $data['user_information_id'] = $user_information->id;
+        $data['from'] = Auth::guard('administrator')->user()->role;
+        $data['from_id'] = Auth::guard('administrator')->user()->id;
+        Riwayat::create($data);
+        $data_information['agenda_date'] = date('Y-m-d H:i:s');
+        $data_information['status'] = $data['to'];
+        $user_information->update($data_information);
+        return redirect()->route('agenda-berkas-proses')->with('success', 'Berhasil');
+    }
+    
+    public function selesai_approve(Request $request)
+    {
+        $data = $this->validate($request, [
+            'uuid' => 'required',
+            'to' => 'required',
+            'note' => 'required',
+        ],[
+            'to' => 'Belum pilih proses selanjutnya',
+            'note' => 'Catatan blm di isi',
+        ]);
+        $user_information = UserInformation::where('uuid', $data['uuid'])->first();
+        $data['user_information_id'] = $user_information->id;
+        $data['from'] = Auth::guard('administrator')->user()->role;
+        $data['from_id'] = Auth::guard('administrator')->user()->id;
+        Riwayat::create($data);
+        $data_information['agenda_date'] = date('Y-m-d H:i:s');
+        $data_information['status'] = $data['to'];
+        $user_information->update($data_information);
+        return redirect()->route('agenda-selesai')->with('success', 'Berhasil');
     }
 }

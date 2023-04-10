@@ -29,7 +29,7 @@
                             </tr>
                         </thead>
                         <tbody>  
-                            @foreach (\App\Models\UserInformation::whereNull('kabid_date')->whereStatus(\App\Models\UserInformation::STATUS_KABID)->orderBy('sketch_date')->get() as $item)
+                            @foreach (\App\Models\UserInformation::whereStatus(\App\Models\UserInformation::STATUS_KABID)->orderBy('created_at')->get() as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('Y-m-d', strtotime($item->agenda_date)) }}</td>

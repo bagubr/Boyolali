@@ -42,7 +42,6 @@ class HomeController extends Controller
     {
         try {
         $data = $request->validate([
-            'nomor_hak' => 'required',
             'submitter' => 'required',
             'submitter_optional' => 'sometimes',
             'address' => 'required',

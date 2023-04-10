@@ -1,15 +1,19 @@
 <?php
 
+use App\Admin\Controllers\AdministratorController;
 use App\Http\Controllers\Administrator\HomeController as AdministratorHomeController;
 use App\Http\Controllers\Agenda\HomeController as AgendaHomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Cetak\HomeController as CetakHomeController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\Kabid\HomeController as KabidHomeController;
+use App\Http\Controllers\Kadis\HomeController as KadisHomeController;
 use App\Http\Controllers\Users\HomeController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\Sketch\HomeController as SketchHomeController;
 use App\Http\Controllers\SubDistrictController;
+use App\Http\Controllers\Subkor\HomeController as SubkorHomeController;
 use App\Http\Controllers\Survei\HomeController as SurveiHomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -68,29 +72,43 @@ Route::prefix('administrator')->group(function () {
     Route::middleware(['auth-administrator'])->group(function () {
         Route::get('dashboard', [AdministratorHomeController::class, 'home'])->name('administrator-dashboard');
         Route::post('logout', [AdministratorHomeController::class, 'logout'])->name('administrator-logout');
-        Route::get('approve', [AdministratorHomeController::class, 'approve'])->name('approve');
-        Route::get('save', [AdministratorHomeController::class, 'save'])->name('save');
-        Route::get('revision', [AdministratorHomeController::class, 'revision'])->name('revision');
         
-        Route::get('berkas-proses-agenda', [AgendaHomeController::class, 'proses_berkas'])->name('agenda-berkas-proses');
+        Route::post('approve', [AdministratorHomeController::class, 'approve'])->name('approve');
+        Route::get('agenda-berkas-proses', [AgendaHomeController::class, 'proses_berkas'])->name('agenda-berkas-proses');
         Route::get('berkas-selesai-agenda', [AgendaHomeController::class, 'berkas_selesai'])->name('agenda-berkas-selesai');
+        Route::get('berkas-selesai-detail', [AgendaHomeController::class, 'detail'])->name('berkas-selesai-detail');
         Route::get('detail-agenda', [AgendaHomeController::class, 'detail'])->name('agenda-detail');
         Route::post('agenda-post/{id}', [AgendaHomeController::class, 'agenda_post'])->name('agenda-post');
-        Route::get('agenda-revisi', [AgendaHomeController::class, 'revisi'])->name('agenda-revisi');
+        Route::post('agenda-approve', [AgendaHomeController::class, 'agenda_approve'])->name('agenda-approve');
+        Route::post('selesai-approve', [AgendaHomeController::class, 'selesai_approve'])->name('selesai-approve');
+        Route::get('agenda-selesai', [AgendaHomeController::class, 'selesai'])->name('agenda-selesai');
+        Route::get('detail-selesai', [AgendaHomeController::class, 'detail'])->name('selesai-detail');
         Route::post('reference', [AgendaHomeController::class, 'reference'])->name('agenda-reference');
-        
-        // Route::get('berkas-proses-sketch', [SketchHomeController::class, 'proses_berkas'])->name('sketch-berkas-proses');
-        // Route::get('sketch-detail', [SketchHomeController::class, 'detail'])->name('sketch-detail');
+        Route::post('pemohon', [AgendaHomeController::class, 'pemohon'])->name('agenda-pemohon');
         Route::post('sketch-upload', [SketchHomeController::class, 'upload'])->name('upload-file-sketch');
         Route::post('sketch-post', [SketchHomeController::class, 'sketch_post'])->name('sketch-post');
-        // Route::get('sketch-revisi', [SketchHomeController::class, 'revisi'])->name('sketch-revisi');
+        
+        Route::get('berkas-proses-subkor', [SubkorHomeController::class, 'proses_berkas'])->name('subkor-berkas-proses');
+        Route::get('subkor-detail', [SubkorHomeController::class, 'detail'])->name('subkor-detail');
+        Route::post('subkor-approve', [SubkorHomeController::class, 'approve'])->name('subkor-approve');
+        Route::get('subkor-cek', [SubkorHomeController::class, 'cek'])->name('subkor-cek');
+        Route::get('subkor-cek-detail', [SubkorHomeController::class, 'detail'])->name('subkor-cek-detail');
         
         Route::get('berkas-proses-kabid', [KabidHomeController::class, 'proses_berkas'])->name('kabid-berkas-proses');
         Route::get('kabid-detail', [KabidHomeController::class, 'detail'])->name('kabid-detail');
-        Route::get('kabid-revisi', [KabidHomeController::class, 'revisi'])->name('kabid-revisi');
+        Route::post('kabid-approve', [KabidHomeController::class, 'approve'])->name('kabid-approve');
+        Route::get('kabid-cek', [KabidHomeController::class, 'cek'])->name('kabid-cek');
+        Route::get('kabid-cek-detail', [KabidHomeController::class, 'detail'])->name('kabid-cek-detail');
         
-        Route::get('berkas-proses-kadis', [SketchHomeController::class, 'proses_berkas'])->name('kadis-berkas-proses');
-        Route::get('kadis-revisi', [SketchHomeController::class, 'revisi'])->name('kadis-revisi');
+        Route::get('berkas-proses-kadis', [KadisHomeController::class, 'proses_berkas'])->name('kadis-berkas-proses');
+        Route::get('kadis-detail', [KadisHomeController::class, 'detail'])->name('kadis-detail');
+        Route::post('kadis-approve', [KadisHomeController::class, 'approve'])->name('kadis-approve');
+        Route::get('kadis-cek', [KadisHomeController::class, 'cek'])->name('kadis-cek');
+        Route::get('kadis-cek-detail', [KadisHomeController::class, 'detail'])->name('kadis-cek-detail');
+
+        Route::get('generate-file', [CetakHomeController::class, 'generate'])->name('generate-file');
+
+
     });
 });
 

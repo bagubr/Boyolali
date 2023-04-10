@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Kabid;
+namespace App\Http\Controllers\Kadis;
 
 use App\Http\Controllers\Controller;
 use App\Models\Riwayat;
@@ -12,12 +12,12 @@ class HomeController extends Controller
 {
     public function proses_berkas()
     {
-        return view('kabid/kabid');
+        return view('kadis/kadis');
     }
 
     public function cek()
     {
-        return view('kabid/cek');
+        return view('kadis/cek');
     }
 
     public function detail(Request $request)
@@ -43,6 +43,6 @@ class HomeController extends Controller
         Riwayat::create($data);
         $data_information['status'] = $data['to'];
         $user_information->update($data_information);
-        return redirect()->route('kabid-berkas-proses')->with('success', 'Berhasil');
+        return redirect()->route('kadis-berkas-proses')->with('success', 'Berhasil');
     }
 }

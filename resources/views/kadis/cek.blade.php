@@ -26,7 +26,8 @@
                             </tr>
                         </thead>
                         <tbody>  
-                            @foreach (\App\Models\UserInformation::whereStatus(\App\Models\UserInformation::STATUS_FILING)->orderBy('created_at')->get() as $item)
+                            @foreach (\App\Models\UserInformation::
+                            whereStatus(\App\Models\UserInformation::STATUS_CEK)->orderBy('created_at')->get() as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('Y-m-d', strtotime($item->created_at)) }}</td>
@@ -36,7 +37,7 @@
                                     <td>{{ $item->district->name }}</td>
                                     <td>{{ $item->sub_district->name }}</td>
                                     <td>
-                                        <a class="btn btn-sm badge bg-primary text-white" href="{{ route('agenda-detail', ['id' => $item->uuid]) }}">Detail</a>
+                                        <a class="btn btn-sm badge bg-primary text-white" href="{{ route('kadis-cek-detail', ['id' => $item->uuid]) }}">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach

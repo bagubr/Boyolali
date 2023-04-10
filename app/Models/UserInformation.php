@@ -44,8 +44,6 @@ class UserInformation extends Model
         'status',
         'nomor',
         'agenda_date',
-        'sketch_date',
-        'kabid_date',
     ];
 
     protected $appends = [
@@ -142,5 +140,55 @@ class UserInformation extends Model
     public function polygons()
     {
         return $this->hasMany(Polygon::class)->orderBy('id');
+    }
+
+    public function riwayat()
+    {
+        return $this->hasMany(Riwayat::class)->orderBy('created_at');
+    }
+
+    public static function user_alur($status)
+    {
+        if($status == self::STATUS_FILING){
+            return [
+                self::STATUS_CEK
+            ];
+        }elseif($status == self::STATUS_CEK){
+            return [
+                self::STATUS_SUBKOR,
+                self::STATUS_FILING,
+            ];
+        }elseif($status == self::STATUS_SUBKOR){
+            return [
+                self::STATUS_CEK,
+                self::STATUS_FILING,
+                self::STATUS_KABID,
+            ];
+        }elseif($status == self::STATUS_KABID){
+            return [
+                self::STATUS_CEK,
+                self::STATUS_FILING,
+                self::STATUS_SUBKOR,
+                self::STATUS_KADIS,
+            ];
+        }elseif($status == self::STATUS_KADIS){
+            return [
+                self::STATUS_CEK,
+                self::STATUS_FILING,
+                self::STATUS_SUBKOR,
+                self::STATUS_KABID,
+                self::STATUS_CETAK,
+            ];
+        }else{
+            return [
+                self::STATUS_CEK,
+                self::STATUS_FILING,
+                self::STATUS_SUBKOR,
+                self::STATUS_KABID,
+                self::STATUS_KADIS,
+                self::STATUS_CETAK,
+                self::STATUS_SELESAI,
+            ];
+        }
     }
 }
