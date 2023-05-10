@@ -23,7 +23,7 @@ class DataController extends Controller
         $totalRecords = $user_informations
         ->count();
         $user_informations = $user_informations
-        ->orderBy('created_at', 'desc')
+        ->orderBy('id')
         ->skip($start)
         ->take($rowperpage)
         ->get();

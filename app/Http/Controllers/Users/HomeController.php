@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ApplicantReference;
 use App\Models\Polygon;
 use App\Models\Procuration;
+use App\Models\ReferenceType;
 use App\Models\UserInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +57,11 @@ class HomeController extends Controller
             'nomor_hak' => 'required',
             'polygon' => 'required',
         ]);
+        // foreach (ReferenceType::orderBy('id')->get() as $key => $image) {
+        //     $data = $request->validate([
+        //         $key => 'mimes:pdf|max:2000',
+        //     ]); 
+        // }
         if ($data['submitter_optional']) {
             $data['submitter'] .= ' ( ' . $data['submitter_optional'] . ' )';
         }

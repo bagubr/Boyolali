@@ -26,7 +26,7 @@
                             </tr>
                         </thead>
                         <tbody>  
-                            @foreach (\App\Models\UserInformation::whereStatus(\App\Models\UserInformation::STATUS_CEK)->orderBy('agenda_date', 'desc')->get() as $item)
+                            @foreach (\App\Models\UserInformation::whereStatus(\App\Models\UserInformation::STATUS_CEK)->orderBy('agenda_date')->get() as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('Y-m-d', strtotime($item->created_at)) }}</td>

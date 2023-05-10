@@ -4,6 +4,14 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.css" />
     <style>
+        .leaflet-div-icon {
+            width: 10px !important;
+            height: 10px !important;
+            margin: auto !important;
+            margin-left: -5px !important;
+            margin-top: -5px !important;
+        }
+
         #map {
             height: 500px;
         }
@@ -98,7 +106,8 @@
 
                 <div class="col-lg-12 mt-5 mt-lg-0">
                     @include('users.alert')
-                    <form action="{{ route('user_information') }}" method="post" role="form" class="php-email-form" enctype="multipart/form-data">
+                    <form action="{{ route('user_information') }}" method="post" role="form" class="php-email-form"
+                        enctype="multipart/form-data">
                         @csrf
                         <div class="tab">
                             <div class="section-title">
@@ -108,12 +117,13 @@
                                 <div class="form-group col-md-12">
                                     <label class="control-label">Luas Tanah</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control input" name="land_area" id="land_area"
-                                            required>
+                                        <input type="text" class="form-control input" name="land_area"
+                                            data-mask='#,##0.00' required>
                                         <div class="input-group-text">
                                             <span>m <sup>2</sup></span>
                                         </div>
                                     </div>
+                                    <small>* Luas Tanah Sesuai Dengan Luas Pada Surat Tanah</small>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -170,6 +180,7 @@
                             <div class="form-group col-md-12">
                                 <label for="name">Nomor Setifikat </label>
                                 <input type="text" class="form-control input" name="nomor_hak" id="nomor_hak" required>
+                                <small>Contoh : HM.12345 ( HM = Hak Milik, HGB = Hak Guna Bangunan )</small>
                             </div>
                         </div>
 
@@ -189,13 +200,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="nomor_ktp">NO KTP</label>
-                                <input type="text" class="form-control input" name="nomor_ktp" id="" required
-                                    minlength="16" maxlength="16">
+                                <input type="text" class="form-control input" name="nomor_ktp" id="nomor_ktp"
+                                    required minlength="16" maxlength="16">
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="submitter_phone">Telepon Pemohon</label>
                                 <input type="text" class="form-control input" name="submitter_phone"
-                                    id="submitter_phone" required>
+                                    id="submitter_phone" id="submitter_phone" required minlength="11" maxlength="13">
+                                <small>* Contoh : 0851234567890</small>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="address">Alamat Pemohon</label>
@@ -210,7 +222,8 @@
                                 <label for="activity">Kegiatan yang dimohon</label>
                                 <br>
                                 <select name="activity_name" style="width: 100%;" class="col-12 form-control input"
-                                    id="activity_name">
+                                    id="activity_name" required>
+                                    <option value="">PILIH</option>
                                     @foreach (\App\Models\Activity::get() as $item)
                                         <option value="{{ $item->title }}">{{ $item->title }}</option>
                                     @endforeach
@@ -234,7 +247,9 @@
                                         <tr>
                                             <td>{{ $item->file_type }}</td>
                                             <td style="width: 40%">{!! $item->content !!}</td>
-                                            <td><input type="file" name="{{ $item->id }}" id="" class="form-control"></td>
+                                            <td><input type="file" name="{{ $item->id }}" id=""
+                                                    class="form-control" onChange="validateAndUpload(this);" required><br>
+                                                </td>
                                             <td>{!! $item->note !!}</td>
                                         </tr>
                                     @endforeach
@@ -355,17 +370,43 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.js"></script>
+    <script src="https://jsuites.net/v4/jsuites.js"></script>
 
     <script>
-        $('#land_area').each(function(index) {
-            n = parseInt($(this).val().toString().replace(/\D/g, ''), 10) || "";
-            $(this).val(n.toLocaleString());
-        });
+        function validateAndUpload(input) {
+            const fi = input;
+            // Check if any file is selected.
+            if (fi.files.length > 0) {
+                for (const i = 0; i <= fi.files.length - 1; i++) {
 
-        $("#land_area").on('keyup change', function() {
+                    const fsize = fi.files.item(i).size;
+                    const file = Math.round((fsize / 1024));
+                    // The size of the file.
+                    if (file >= 2048) {
+                        // fi.val("");
+                        console.log(fi);
+                        alert("File too Big, please select a file less than 2mb");
+                    } else {
+                        document.getElementById('size').innerHTML = '<b>' +
+                            file + '</b> KB';
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        $("#nomor_ktp").on('keyup change', function() {
             val = $(this).val() || 0;
-            var n = parseInt(val.replace(/\D/g, ''), 10);
-            $(this).val(n.toLocaleString());
+            if (isNaN(val)) {
+                $(this).val("");
+            }
+        });
+        $("#submitter_phone").on('keyup change', function() {
+            val = $(this).val() || 0;
+            if (isNaN(val)) {
+                $(this).val("");
+            }
         });
     </script>
 
@@ -374,7 +415,7 @@
             $("#sub_district_id").removeAttr('disabled');
             $("#sub_district_id").html('<option value="">--PILIH--</option>');
         });
-        
+
         $('#district_id').select2({
             ajax: {
                 url: "{{ url('users/district?') }}",
@@ -487,7 +528,7 @@
                 subdomains: ["mt0", "mt1", "mt2", "mt3"],
             }
         ).addTo(map);
-        
+
 
 
         new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
@@ -499,23 +540,27 @@
                 var row = table.insertRow(table.rows.length);
                 var celly = row.insertCell(0);
                 var cellx = row.insertCell(1);
-                celly.innerHTML = value.lng;
-                cellx.innerHTML = value.lat;
-                var form = $('.php-email-form');//retrieve the form as a DOM element
-                var inputlng = document.createElement('input');//prepare a new input DOM element
-                inputlng.setAttribute('name', "polygon[longitude][]");//set the param name
-                inputlng.setAttribute('value', value.lng);//set the value
-                inputlng.setAttribute('type', 'hidden')//set the type, like "hidden" or other
-                var inputlat = document.createElement('input');//prepare a new input DOM element
-                inputlat.setAttribute('name', "polygon[latitude][]");//set the param name
-                inputlat.setAttribute('value', value.lat);//set the value
-                inputlat.setAttribute('type', 'hidden')//set the type, like "hidden" or other
+                
+                var longitude = String(value.lng).substr(0, 10);
+                var latitude = String(value.lat).substr(0, 10);
+                celly.innerHTML = longitude;
+                cellx.innerHTML = latitude;
+                var form = $('.php-email-form'); //retrieve the form as a DOM element
+                var inputlng = document.createElement('input'); //prepare a new input DOM element
+                inputlng.setAttribute('name', "polygon[longitude][]"); //set the param name
+                inputlng.setAttribute('value',  longitude); //set the value
+                inputlng.setAttribute('type', 'hidden') //set the type, like "hidden" or other
+                var inputlat = document.createElement('input'); //prepare a new input DOM element
+                inputlat.setAttribute('name', "polygon[latitude][]"); //set the param name
+                inputlat.setAttribute('value', latitude); //set the value
+                inputlat.setAttribute('type', 'hidden') //set the type, like "hidden" or other
 
-                form.append(inputlng);//append the input to the form
-                form.append(inputlat);//append the input to the form
+                form.append(inputlng); //append the input to the form
+                form.append(inputlat); //append the input to the form
             });
         });
-        function resetButton(){
+
+        function resetButton() {
             map.removeLayer(polygon);
             new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
             $('.koordinattable').find("tr:not(:first)").remove();

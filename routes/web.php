@@ -15,7 +15,10 @@ use App\Http\Controllers\Sketch\HomeController as SketchHomeController;
 use App\Http\Controllers\SubDistrictController;
 use App\Http\Controllers\Subkor\HomeController as SubkorHomeController;
 use App\Http\Controllers\Survei\HomeController as SurveiHomeController;
+use App\Mail\TestEmail;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,32 +31,35 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes(['verify' => true]);
 Route::get('/', function () {
-    return view('index');
-});
-Route::get('virtual-office', function () {
     return view('welcome');
 });
+Route::get('virtual-office', function () {
+    return view('index');
+});
+Route::get('test-email', function () {
+    try {
+        Mail::to(User::find(39))->send(new TestEmail());
+        return 'Test email sent.';
+    } catch (\Throwable $th) {
+        return $th;
+    }
+});
 Route::prefix('users')->group(function () {
-    Route::get('/', function () {
-        return view('users/index');
-    });
-    Route::get('login', function () {
-        return view('users/login');
-    })->name('user-login');
+    Route::get('/', function () {return view('users/index');})->name('users');
+    Route::get('login', function () {return view('users/login');})->name('user-login');
     Route::get('authorized/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google-auth-callback');
     Route::get('authorized/google', [AuthController::class, 'redirectToGoogle'])->name('google-auth');
-    Route::get('registration', function ()
-    {
-        return view('users/registration');
-    })->name('registration');
+    Route::get('registration', function () {return view('users/registration');})->name('registration');
     Route::get('district', [DistrictController::class, 'district'])->name('district');
     Route::get('sub-district', [SubDistrictController::class, 'sub_district'])->name('sub-district');
     Route::post('login', [AuthController::class, 'login'])->name('user-login-post');
     Route::post('registration', [AuthController::class, 'registration'])->name('registration-post');
-    Route::middleware(['auth-users'])->group(function () {
-        Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
+    
+    Route::group(['middleware' => ['auth', 'verified']], function () {
+        Route::get('dashboard', [HomeController::class, 'index'])->name('home');
         Route::get('data', [DataController::class, 'data'])->name('data');
         Route::get('daftar', [HomeController::class, 'daftar'])->name('daftar');
         Route::get('proses', [HomeController::class, 'proses'])->name('proses');
@@ -72,7 +78,7 @@ Route::prefix('administrator')->group(function () {
     Route::middleware(['auth-administrator'])->group(function () {
         Route::get('dashboard', [AdministratorHomeController::class, 'home'])->name('administrator-dashboard');
         Route::post('logout', [AdministratorHomeController::class, 'logout'])->name('administrator-logout');
-        
+
         Route::post('approve', [AdministratorHomeController::class, 'approve'])->name('approve');
         Route::get('agenda-berkas-proses', [AgendaHomeController::class, 'proses_berkas'])->name('agenda-berkas-proses');
         Route::get('berkas-selesai-agenda', [AgendaHomeController::class, 'berkas_selesai'])->name('agenda-berkas-selesai');
@@ -87,19 +93,19 @@ Route::prefix('administrator')->group(function () {
         Route::post('pemohon', [AgendaHomeController::class, 'pemohon'])->name('agenda-pemohon');
         Route::post('sketch-upload', [SketchHomeController::class, 'upload'])->name('upload-file-sketch');
         Route::post('sketch-post', [SketchHomeController::class, 'sketch_post'])->name('sketch-post');
-        
+
         Route::get('berkas-proses-subkor', [SubkorHomeController::class, 'proses_berkas'])->name('subkor-berkas-proses');
         Route::get('subkor-detail', [SubkorHomeController::class, 'detail'])->name('subkor-detail');
         Route::post('subkor-approve', [SubkorHomeController::class, 'approve'])->name('subkor-approve');
         Route::get('subkor-cek', [SubkorHomeController::class, 'cek'])->name('subkor-cek');
         Route::get('subkor-cek-detail', [SubkorHomeController::class, 'detail'])->name('subkor-cek-detail');
-        
+
         Route::get('berkas-proses-kabid', [KabidHomeController::class, 'proses_berkas'])->name('kabid-berkas-proses');
         Route::get('kabid-detail', [KabidHomeController::class, 'detail'])->name('kabid-detail');
         Route::post('kabid-approve', [KabidHomeController::class, 'approve'])->name('kabid-approve');
         Route::get('kabid-cek', [KabidHomeController::class, 'cek'])->name('kabid-cek');
         Route::get('kabid-cek-detail', [KabidHomeController::class, 'detail'])->name('kabid-cek-detail');
-        
+
         Route::get('berkas-proses-kadis', [KadisHomeController::class, 'proses_berkas'])->name('kadis-berkas-proses');
         Route::get('kadis-detail', [KadisHomeController::class, 'detail'])->name('kadis-detail');
         Route::post('kadis-approve', [KadisHomeController::class, 'approve'])->name('kadis-approve');
@@ -107,9 +113,10 @@ Route::prefix('administrator')->group(function () {
         Route::get('kadis-cek-detail', [KadisHomeController::class, 'detail'])->name('kadis-cek-detail');
 
         Route::get('generate-file', [CetakHomeController::class, 'generate'])->name('generate-file');
-
-
     });
 });
 
+// Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

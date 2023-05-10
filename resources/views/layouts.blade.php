@@ -11,7 +11,9 @@
 
     <!-- Favicons -->
     {{-- <link href="{{ url('') }}/assets/img/favicon.png" rel="icon">
+    <script src="{{ url('') }}/vendor/php-email-form/validate.js"></script>
   <link href="{{ url('') }}/assets/img/apple-touch-icon.png" rel="apple-touch-icon"> --}}
+  <script src="{{ url('') }}/vendor/php-email-form/validate.js"></script>
 
     <!-- Google Fonts -->
     <link
@@ -29,6 +31,7 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ url('') }}/assets/css/style.css" rel="stylesheet">
+    <script src="{{ url('') }}/vendor/php-email-form/validate.js"></script>
 
     <!-- =======================================================
   * Template Name: Arsha - v4.11.0
@@ -47,16 +50,6 @@
 
     </main><!-- End #main -->
 
-    <!-- ======= Footer ======= -->
-    <footer id="footer">
-        @yield('footer')
-        <div class="container footer-bottom clearfix">
-            <div class="copyright">
-                &copy; Copyright <strong><span>DPUPR BOYOLALI {{ date('Y') }}</span></strong>. All Rights Reserved
-            </div>
-        </div>
-    </footer><!-- End Footer -->
-
     <div id="preloader"></div>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
@@ -71,6 +64,7 @@
     <script src="{{ url('/') }}/vendor/php-email-form/validate.js"></script>
 
     <!-- Template Main JS File -->
+    <script src="{{ url('') }}/vendor/php-email-form/validate.js"></script>
     <script src="{{ url('') }}/assets/js/main.js"></script>
     @stack('js')
 

@@ -84,7 +84,7 @@
                         Sign up using Google
                     </a>
                 </div>
-                <a href="{{ route('user-login') }}" class="text-center">I already have a account</a>
+                <a href="{{ route('users') }}" class="text-center">I already have a account</a>
             </div>
 
         </div>

@@ -32,9 +32,9 @@ return [
     ],
 
     'google' => [
-        'client_id' => '1089631358624-8q9nd970risprdmgna54dogkp970oavf.apps.googleusercontent.com',
-        'client_secret' => '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',
-        'redirect' => 'https://localhost/Boyolali/public/users/authorized/google/callback',
+        'client_id' => '1089631358624-0sdu6l3vau0ujisfr7v790q5g2g5kjqu.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => 'https://boyolali.me/users/authorized/google/callback',
     ],
 
 ];

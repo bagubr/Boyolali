@@ -22,7 +22,7 @@ class AuthController extends Controller
             if($check){
                 if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
                     Auth::login($user);
-                    return redirect()->route('dashboard')->with('success', 'Login Berhasil');
+                    return redirect()->route('home')->with('success', 'Login Berhasil');
                 }else{
                     return redirect()->back()->with('error', 'Password yang anda masukan salah');
                 }
@@ -36,6 +36,7 @@ class AuthController extends Controller
 
     public function registration(Request $request)
     {
+        $user = User::whereEmail('bagubragowo3@gmail.com')->first();
         try {
             DB::beginTransaction();
             $data = $request->validate([
@@ -43,23 +44,23 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users',
                 'password' => 'required|confirmed'
             ]);
+            event(new Registered($user));
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
             // DO IT Sand Email
-            // event(new Registered($user));
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
         }
         
         
-        return redirect()->route('user-login')->with('success', 'Registrasi Berhasil silahkan konfirmasi email anda!');
+        return redirect()->route('users')->with('success', 'Registrasi Berhasil silahkan konfirmasi email anda!');
     }
 
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('user-login')->with('success', 'Logout Berhasil');
+        return redirect()->route('users')->with('success', 'Logout Berhasil');
     }
 
     public function redirectToGoogle()
@@ -70,33 +71,21 @@ class AuthController extends Controller
     public function handleGoogleCallback()
     {
         try {
-      
             $user = Socialite::driver('google')->stateless()->user();
-            $finduser = User::where('google_id', $user->id)->first();
-       
+            $finduser = User::where('email', $user->email)->first();
+            
             if($finduser){
-                if(Auth::attempt(['email' => $finduser->email, 'password' => $user->id])){
-                    Auth::login($user);
-                    return redirect()->route('dashboard')->with('success', 'Login Berhasil');
-                }else{
-                    return redirect()->back()->with('error', 'Password yang anda masukan salah');
-                }
-                
+                auth()->login($finduser, true);
+                return redirect()->route('home')->with('success', 'Login Berhasil');
             }else{
-                $finduser = User::where('email', $user->email)->first();
-                if($finduser){
-                    Auth::attempt(['email' => $finduser->email, 'password' => $user->id]);
-                    return redirect()->route('dashboard')->with('success', 'Login Berhasil');
-                }else{
-                    $newUser = User::create([
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'google_id'=> $user->id,
-                        'password' => Hash::make($user->id)
-                    ]);
-                    Auth::attempt(['email' => $newUser->email, 'password' => $user->id]);
-                    return redirect()->route('proses')->with('success', 'Login Berhasil');
-                }
+                $newUser = User::create([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'google_id'=> $user->id,
+                    'password' => Hash::make($user->id)
+                ]);
+                auth()->login($newUser, true);
+                return redirect()->route('home')->with('success', 'Login Berhasil');
             }
       
         } catch (Exception $e) {

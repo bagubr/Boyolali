@@ -3,7 +3,16 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/libs/leaflet.min.css">
     <style>
+        .leaflet-div-icon {
+            width: 10px !important;
+            height: 10px !important;
+            margin: auto !important;
+            margin-left: -5px !important;
+            margin-top: -5px !important;
+        }
+
         #map {
             height: 500px;
         }
@@ -65,15 +74,16 @@
                                 {!! Form::hidden('uuid', $user_information->uuid) !!}
                                 <select name="to" id="" class="form-control w-50 d-inline" required>
                                     <option value="">--PILIH--</option>
-                                    @foreach (\App\Models\UserInformation::user_alur($role) as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach (\App\Models\UserInformation::user_alur($role) as $key => $item)
+                                        <option value="{{ $key }}">{{ $item }}</option>
                                     @endforeach
                                 </select>
                                 <button class="btn btn-primary w-30" type="button" id="nextProses">Selanjutnya</button>
                                 {!! Form::close() !!}
                             @endif
                             @if (Route::is('berkas-selesai-detail'))
-                                <a  href="{{ route('generate-file') }}" class="btn btn-primary w-30">Generate File</a>
+                                <a href="{{ route('generate-file', ['id' => $user_information->uuid]) }}"
+                                    class="btn btn-primary w-30" target="_blank">Generate File</a>
                             @endif
                         </div>
                     </div>
@@ -86,7 +96,7 @@
                     <tbody>
 
                         <tr>
-                            <td>Pemohon</td>
+                            <td>Nama Pemohon</td>
                             <td>:</td>
                             <td>
                                 {!! Form::text('submitter', $user_information->submitter, ['class' => 'form-control']) !!}
@@ -131,7 +141,21 @@
                             <td>Luas Tanah</td>
                             <td>:</td>
                             <td>
-                                {!! Form::text('land_area', $user_information->land_area, ['class' => 'form-control', 'id' => 'land_area']) !!}
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        {{-- <input type="text" class="form-control input" name="land_area"
+                                            data-mask='#,##0.00' required> --}}
+                                        {!! Form::text('land_area', $user_information->land_area, [
+                                            'class' => 'form-control',
+                                            'id' => 'land_area',
+                                            'data-mask' => '#,##0.00',
+                                            'required',
+                                        ]) !!}
+                                        <div class="input-group-text">
+                                            <span>m <sup>2</sup></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -242,7 +266,9 @@
                         </div>
                     </div>
                 </div>
-                @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                @if (Auth::guard('administrator')->user()->role == 'FILING' ||
+                        Auth::guard('administrator')->user()->role == 'CEK' ||
+                        Auth::guard('administrator')->user()->role == 'ADMIN')
                     <button class="btn btn-primary float-right" type="submit">Submit</button>
                 @endif
                 {!! Form::close() !!}
@@ -266,13 +292,13 @@
                             Gambar</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="krk-tab" data-bs-toggle="tab" data-bs-target="#krk" type="button"
-                            role="tab" aria-controls="krk" aria-selected="false">Keterangan
+                        <button class="nav-link" id="krk-tab" data-bs-toggle="tab" data-bs-target="#krk"
+                            type="button" role="tab" aria-controls="krk" aria-selected="false">Keterangan
                             Rencana</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat" type="button"
-                            role="tab" aria-controls="riwayat" aria-selected="false">Riwayat</button>
+                        <button class="nav-link" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat"
+                            type="button" role="tab" aria-controls="riwayat" aria-selected="false">Riwayat</button>
                     </li>
                 </ul>
             </div>
@@ -310,7 +336,9 @@
                                 value="{{ $nomor_registration }}">
                             <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
                             <br>
-                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
+                                    Auth::guard('administrator')->user()->role == 'CEK' ||
+                                    Auth::guard('administrator')->user()->role == 'ADMIN')
                                 @if (!$user_information->nomor_registration)
                                     <button type="submit" class="btn btn-success m-auto">Save</button>
                                 @endif
@@ -319,7 +347,9 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="berkas" role="tabpanel" aria-labelledby="berkas-tab">
-                    @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                    @if (Auth::guard('administrator')->user()->role == 'FILING' ||
+                            Auth::guard('administrator')->user()->role == 'CEK' ||
+                            Auth::guard('administrator')->user()->role == 'ADMIN')
                         <a href="#" class="btn btn-success float-right m-3" data-toggle="modal"
                             data-target="#addReferensi"
                             onclick="add({{ $user_information->id }}, {{ \App\Models\ReferenceType::whereNotIn('id',\App\Models\ApplicantReference::where('user_information_id', $user_information->id)->get()->pluck('reference_type_id'))->get()->pluck('file_type', 'id') }})">Tambah</a>
@@ -343,7 +373,9 @@
                                         <td>
                                             <a href="{{ url('storage/' . $item->file) }}" class="btn btn-primary"
                                                 target="_blank">Lihat</a>
-                                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
+                                                    Auth::guard('administrator')->user()->role == 'CEK' ||
+                                                    Auth::guard('administrator')->user()->role == 'ADMIN')
                                                 <a href="#" class="btn btn-info" data-toggle="modal"
                                                     data-target="#updateReferensi"
                                                     onclick="edit({{ $item->id }})">Edit</a>
@@ -370,7 +402,9 @@
                                         alt="" class="img-fluid rounded mx-auto d-block" width="500px">
                                 @endif
                                 <div class="float-right m-3 ">
-                                    @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                                    @if (Auth::guard('administrator')->user()->role == 'FILING' ||
+                                            Auth::guard('administrator')->user()->role == 'CEK' ||
+                                            Auth::guard('administrator')->user()->role == 'ADMIN')
                                         <button class="btn btn-primary" type="submit">Upload</button>
                                     @endif
                                 </div>
@@ -397,7 +431,7 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <label for="">Zona / SubZona</label>
+                                    <label for="">Pola Ruang / SubZona</label>
                                     <select name="zona" id="" class="form-control" id="select2" required>
                                         <option value="">PILIH</option>
                                         @foreach (\App\Models\Zona::get() as $item)
@@ -411,58 +445,165 @@
                             <div class="row">
                                 <div class="col-3">
                                     <center><label for="">KBG</label></center>
-                                    <textarea name="kbg" id="" class="form-control">{{ @$user_information->krk->kbg }}</textarea>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <span>Maks.</span>
+                                        </div>
+                                        <input name="kbg" id="" class="form-control"
+                                            value="{{ @$user_information->krk->kbg }}">
+                                        <div class="input-group-text">
+                                            <span>Lantai</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">KDB</label></center>
-                                    <textarea name="kdb" id="" class="form-control">{{ @$user_information->krk->kdb }}</textarea>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <span>Maks.</span>
+                                        </div>
+                                        <input name="kdb" id="" class="form-control"
+                                            value="{{ @$user_information->krk->kdb }}">
+                                        <div class="input-group-text">
+                                            <span>%</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">KLB</label></center>
-                                    <textarea name="klb" id="" class="form-control">{{ @$user_information->krk->klb }}</textarea>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <span>Maks.</span>
+                                        </div>
+                                        <input name="klb" id="" class="form-control"
+                                            value="{{ @$user_information->krk->klb }}">
+                                        <div class="input-group-text">
+                                            <span>%</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">KDH</label></center>
-                                    <textarea name="kdh" id="" class="form-control">{{ @$user_information->krk->kdh }}</textarea>
+                                    <div class="input-group">
+                                        <input name="kdh" id="" class="form-control"
+                                            value="{{ @$user_information->krk->kdh }}">
+                                        <div class="input-group-text">
+                                            <span>%</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">PSU</label></center>
-                                    <textarea name="psu" id="" class="form-control">{{ @$user_information->krk->psu }}</textarea>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <span>Min.</span>
+                                        </div>
+                                        <input name="psu" id="" class="form-control"
+                                            value="{{ @$user_information->krk->psu }}">
+                                    </div>
                                     <center><label for="">KTB</label></center>
-                                    <textarea name="ktb" id="" class="form-control">{{ @$user_information->krk->ktb }}</textarea>
+                                    <div class="input-group">
+                                        <input name="ktb" id="" class="form-control"
+                                            value="{{ @$user_information->krk->ktb }}">
+                                        <div class="input-group-text">
+                                            <span>%</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-3">
                                     <center><label for="">JAP</label></center>
-                                    <textarea name="jap" id="" class="form-control">{{ @$user_information->gsb->jap }}</textarea>
+                                    <div class="input-group">
+                                        <input name="jap" id="" class="form-control"
+                                            value="{{ @$user_information->gsb->jap }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">JKP</label></center>
-                                    <textarea name="jkp" id="" class="form-control">{{ @$user_information->gsb->jkp }}</textarea>
+                                    <div class="input-group">
+                                        <input name="jkp" id="" class="form-control"
+                                            value="{{ @$user_information->gsb->jkp }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">JKS</label></center>
-                                    <textarea name="jks" id="" class="form-control">{{ @$user_information->gsb->jks }}</textarea>
+                                    <div class="input-group">
+                                        <input name="jks" id="" class="form-control"
+                                            value="{{ @$user_information->gsb->jks }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">JLP</label></center>
-                                    <textarea name="jlp" id="" class="form-control">{{ @$user_information->gsb->jlp }}</textarea>
+                                    <div class="input-group">
+                                        <input name="jlp" id="" class="form-control"
+                                            value="{{ @$user_information->gsb->jlp }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">JLS</label></center>
-                                    <textarea name="jls" id="" class="form-control">{{ @$user_information->gsb->jls }}</textarea>
+                                    <div class="input-group">
+                                        <input name="jls" id="" class="form-control"
+                                            value="{{ @$user_information->gsb->jls }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
                                     <center><label for="">Jling</label></center>
-                                    <textarea name="jling" id="" class="form-control">{{ @$user_information->gsb->jling }}</textarea>
+                                    <div class="input-group">
+                                        <input name="jling" id="" class="form-control"
+                                            value="{{ @$user_information->gsb->jling }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-3">
+                                    <center><label for="">Sungai Bertanggul</label></center>
+                                    <div class="input-group">
+                                        <input type="text" name="sungai_bertanggul" id=""
+                                            class="form-control"
+                                            value="{{ @$user_information->krk->sungai_bertanggul }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
+                                    <center><label for="">Sungai Tidak Bertanggul</label></center>
+                                    <div class="input-group">
+                                        <input type="text" name="sungai_tidak_bertanggul" id=""
+                                            class="form-control"
+                                            value="{{ @$user_information->krk->sungai_tidak_bertanggul }}">
+                                        <div class="input-group-text">
+                                            <span>meter</span>
+                                        </div>
+                                    </div>
+                                    <center><label for="">Mata Air</label></center>
+                                    <input type="text" name="mata_air" id="" class="form-control"
+                                        value="{{ @$user_information->krk->mata_air }}">
+                                    <center><label for="">Waduk (titik pasang tertinggi)</label></center>
+                                    <input type="text" name="waduk" id="" class="form-control"
+                                        value="{{ @$user_information->krk->waduk }}">
+                                    <center><label for="">Tol (dari pagar)</label></center>
+                                    <input type="text" name="tol" id="" class="form-control"
+                                        value="{{ @$user_information->krk->tol }}">
+                                </div>
+                                <div class="col-3">
+                                    <center><label for="">SRP</label></center>
+                                    <input type="text" name="srp" id="" class="form-control"
+                                        value="{{ @$user_information->krk->srp }}">
+                                    <center><label for="">KKOP</label></center>
+                                    <input type="text" name="kkop" id="" class="form-control"
+                                        value="{{ @$user_information->krk->kkop }}">
+                                    <center><label for="">Tambahan</label></center>
+                                    <textarea name="tambahan" id="" class="form-control">{{ @$user_information->krk->tambahan }}</textarea>
+                                </div>
+                                <br>
+                                <div class="col-12">
                                     <label for="">Jaringan Utilitas (Bebas Bangunan)</label>
                                     <textarea name="jaringan_utilitas" id="" class="form-control">{{ @$user_information->krk->jaringan_utilitas }}</textarea>
                                     <label for="">Prasarana Jalan</label>
                                     <textarea name="prasarana_jalan" id="" class="form-control">{{ @$user_information->krk->prasarana_jalan }}</textarea>
-                                    <label for="">Sungai Bertanggul</label>
-                                    <input type="text" name="sungai_bertanggul" id="" class="form-control"
-                                        value="{{ @$user_information->krk->sungai_bertanggul }}">
-                                    <label for="">Sungai Tidak Bertanggul</label>
-                                    <input type="text" name="sungai_tidak_bertanggul" id=""
-                                        class="form-control"
-                                        value="{{ @$user_information->krk->sungai_tidak_bertanggul }}">
-                                    <label for="">Mata Air</label>
-                                    <input type="text" name="mata_air" id="" class="form-control"
-                                        value="{{ @$user_information->krk->mata_air }}">
-                                    <label for="">Waduk (titik pasang tertinggi)</label>
-                                    <input type="text" name="waduk" id="" class="form-control"
-                                        value="{{ @$user_information->krk->waduk }}">
-                                    <label for="">Tol (dari pagar)</label>
-                                    <input type="text" name="tol" id="" class="form-control"
-                                        value="{{ @$user_information->krk->tol }}">
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer float-right">
-                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK')
+                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
+                                    Auth::guard('administrator')->user()->role == 'CEK' ||
+                                    Auth::guard('administrator')->user()->role == 'ADMIN')
                                 <button class="btn btn-primary" type="submit">Submit</button>
                             @endif
                         </div>
@@ -662,6 +803,8 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet-simple-map-screenshoter"></script>
     <script>
         var new_polygon = '';
 
@@ -670,9 +813,14 @@
         if (entries.length <= 0) {
             entries[0] = [-7.520530, 110.595023];
         }
+        var getCentroid = function(arr) {
+            return arr.reduce(function(x, y) {
+                return [x[0] + y[0] / arr.length, x[1] + y[1] / arr.length]
+            }, [0, 0])
+        }
         const map = L.map('map', {
-            center: entries[0],
-            zoom: 15
+            center: getCentroid(entries),
+            zoom: 18
         });
 
         if (entries.length > 0) {
@@ -686,12 +834,18 @@
         var table = window.document.querySelector(".tablekoordinat");
         var DrawPolygon = new L.Draw.Polygon(map, new L.Control.Draw().options.polygon);
 
+        L.simpleMapScreenshoter().addTo(map)
         L.tileLayer(
-            "http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+            "https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
                 maxZoom: 20,
                 subdomains: ["mt0", "mt1", "mt2", "mt3"],
             }
         ).addTo(map);
+        // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //     maxZoom: 19,
+        //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // }).addTo(map);
+
 
         // new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
 
@@ -704,18 +858,20 @@
                 var celly = row.insertCell(0);
                 var cellx = row.insertCell(1);
                 var form = $('#agenda-lokasi');
+                var longitude = String(value.lng).substr(0, 10);
+                var latitude = String(value.lat).substr(0, 10);
                 var inputlng = document.createElement('input');
                 inputlng.setAttribute('name', "polygon[longitude][]");
-                inputlng.setAttribute('value', value.lng);
+                inputlng.setAttribute('value', longitude);
                 inputlng.setAttribute('id', "polygon_longitude");
                 inputlng.setAttribute('type', 'hidden');
                 var inputlat = document.createElement('input');
                 inputlat.setAttribute('name', "polygon[latitude][]");
-                inputlat.setAttribute('value', value.lat);
+                inputlat.setAttribute('value', latitude);
                 inputlat.setAttribute('id', "polygon_latitude");
                 inputlat.setAttribute('type', 'hidden')
-                celly.innerHTML = value.lng;
-                cellx.innerHTML = value.lat;
+                celly.innerHTML = longitude;
+                cellx.innerHTML = latitude;
 
                 form.append(inputlng);
                 form.append(inputlat);

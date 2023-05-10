@@ -26,6 +26,9 @@ class Krk extends Model
         'ktb',
         'building_function',
         'zona',
+        'srp',
+        'kkop',
+        'tambahan',
     ];
 
     public function gsb()
@@ -41,5 +44,10 @@ class Krk extends Model
     public function other_technical_information()
     {
         return $this->hasOne(OtherTechnicalInformation::class);
+    }
+
+    public function zona()
+    {
+        return $this->hasOne(Zona::class, 'id', 'zona');
     }
 }

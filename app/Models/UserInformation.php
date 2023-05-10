@@ -44,6 +44,7 @@ class UserInformation extends Model
         'status',
         'nomor',
         'agenda_date',
+        'print_date',
     ];
 
     protected $appends = [
@@ -151,43 +152,43 @@ class UserInformation extends Model
     {
         if($status == self::STATUS_FILING){
             return [
-                self::STATUS_CEK
+                self::STATUS_CEK => 'Cek Manual',
             ];
         }elseif($status == self::STATUS_CEK){
             return [
-                self::STATUS_SUBKOR,
-                self::STATUS_FILING,
+                self::STATUS_SUBKOR => 'Sub Koordinator',
+                self::STATUS_FILING => 'Agenda',
             ];
         }elseif($status == self::STATUS_SUBKOR){
             return [
-                self::STATUS_CEK,
-                self::STATUS_FILING,
-                self::STATUS_KABID,
+                self::STATUS_CEK => 'Cek Manual',
+                self::STATUS_FILING => 'Agenda',
+                self::STATUS_KABID => 'Kepala Bidang',
             ];
         }elseif($status == self::STATUS_KABID){
             return [
-                self::STATUS_CEK,
-                self::STATUS_FILING,
-                self::STATUS_SUBKOR,
-                self::STATUS_KADIS,
+                self::STATUS_CEK => 'Cek Manual',
+                self::STATUS_FILING => 'Agenda',
+                self::STATUS_SUBKOR => 'Sub Koordinator',
+                self::STATUS_KADIS => 'Kepala Dinas',
             ];
         }elseif($status == self::STATUS_KADIS){
             return [
-                self::STATUS_CEK,
-                self::STATUS_FILING,
-                self::STATUS_SUBKOR,
-                self::STATUS_KABID,
-                self::STATUS_CETAK,
+                self::STATUS_CEK => 'Cek Manual',
+                self::STATUS_FILING => 'Agenda',
+                self::STATUS_SUBKOR => 'Sub Koordinator',
+                self::STATUS_KABID => 'Kepala Bidang',
+                self::STATUS_CETAK => 'SK',
             ];
         }else{
             return [
-                self::STATUS_CEK,
-                self::STATUS_FILING,
-                self::STATUS_SUBKOR,
-                self::STATUS_KABID,
-                self::STATUS_KADIS,
-                self::STATUS_CETAK,
-                self::STATUS_SELESAI,
+                self::STATUS_CEK => 'Cek Manual',
+                self::STATUS_FILING => 'Agenda',
+                self::STATUS_SUBKOR => 'Sub Koordinator',
+                self::STATUS_KABID => 'Kepala Bidang',
+                self::STATUS_KADIS => 'Kepala Dinas',
+                self::STATUS_CETAK => 'SK',
+                self::STATUS_SELESAI => 'Selesai',
             ];
         }
     }

@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::table('krks', function (Blueprint $table) {
             $table->string('zona');
+            $table->string('srp')->nullable();
+            $table->string('kkop')->nullable();
+            $table->string('tambahan')->nullable();
         });
     }
 

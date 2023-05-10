@@ -1,6 +1,12 @@
 @extends('layouts')
 @push('css')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
 @endpush
 @section('header')
     <!-- ======= Header ======= -->
@@ -43,7 +49,8 @@
                                     <i>{{ $user_information->sub_district->name ?? '-' }}</i>
                                 </li>
                                 <li class="list-group-item">Kecamatan :
-                                    <i>{{ $user_information->district->name ?? '-' }}</i></li>
+                                    <i>{{ $user_information->district->name ?? '-' }}</i>
+                                </li>
                                 <li class="list-group-item">Alamat Lokasi :
                                     <i>{{ $user_information->location_address ?? '-' }}</i>
                                 </li>
@@ -95,12 +102,13 @@
                                     <td>{{ $user_information->longitude }}</td>
                                 </tr>
                             </table>
-                            <div class="col-lg-12 col-md-6 footer-contact">
-                                <h3>Lokasi</h3>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3>Lokasi</h3>
+                                    {{-- <a href="https://google.com/maps/?q={{ $user_information->latitude }},{{ $user_information->longitude }}" target="_blank" class="btn btn-success"> Direct Location</a> --}}
+                                    <div id="map"></div>
+                                </div>
                             </div>
-                            <a href="https://google.com/maps/?q={{ $user_information->latitude }},{{ $user_information->longitude }}"
-                                target="_blank" class="btn btn-success"> Direct Location</a>
-                            {{-- DO IT MAP IFRAME --}}
                         </div>
                     </div>
                 </div>
@@ -119,15 +127,17 @@
                                 <td>{{ $item->file_type }}</td>
                                 <td>{{ $item->content }}</td>
                                 <td>
-                                    <p href="#" class="badge bg-{{ (@$item->user_information_reference($user_information->id)->is_upload == 1)?'success':'secondary' }}">
-                                    {{ (@$item->user_information_reference($user_information->id)->is_upload == 1)?'Sudah Upload':'Belum Upload' }}
+                                    <p href="#"
+                                        class="badge bg-{{ @$item->user_information_reference($user_information->id)->is_upload == 1 ? 'success' : 'secondary' }}">
+                                        {{ @$item->user_information_reference($user_information->id)->is_upload == 1 ? 'Sudah Upload' : 'Belum Upload' }}
                                     </p>
                                 </td>
-                                <td>{{ $item->user_information_reference($user_information->id)->status??'-' }}</td>
+                                <td>{{ $item->user_information_reference($user_information->id)->status ?? '-' }}</td>
                                 <td>
                                     @if (!$item->user_information_reference($user_information->id))
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#upload" id="myModal" data-id="{{ $item->id }}" onclick="upload({{ $item->id }})">Upload</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#upload" id="myModal" data-id="{{ $item->id }}"
+                                            onclick="upload({{ $item->id }})">Upload</button>
                                     @endif
                                 </td>
                                 <td>{{ $item->note }}</td>
@@ -171,9 +181,30 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script>
         function upload(params) {
             $('#reference_type_id').val(params);
         }
+    </script>
+
+    <script>
+        var array_polygons = {!! $user_information->polygons->pluck('longitude', 'latitude') !!};
+        const entries = Object.entries(array_polygons);
+        var polymarker = L.polygon(entries).getBounds().getCenter();
+        const map = L.map('map', {
+            center: [polymarker.lat, polymarker.lng],
+            zoom: 16
+        });
+        L.tileLayer(
+            "http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+                maxZoom: 20,
+                subdomains: ["mt0", "mt1", "mt2", "mt3"],
+            }
+        ).addTo(map);
+        var marker = new L.Marker([polymarker.lat, polymarker.lng]);
+        marker.addTo(map);
+        
     </script>
 @endpush
