@@ -36,12 +36,15 @@ Auth::routes(['verify' => true]);
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('login', function () {
+    return view('users/index');
+})->name('login');
 Route::get('virtual-office', function () {
     return view('index');
 });
 Route::get('test-email', function () {
     try {
-        Mail::to(User::find(39))->send(new TestEmail());
+        Mail::to('bagubragowo3@gmail.com')->send(new TestEmail());
         return 'Test email sent.';
     } catch (\Throwable $th) {
         return $th;
@@ -83,8 +86,10 @@ Route::prefix('administrator')->group(function () {
         Route::get('agenda-berkas-proses', [AgendaHomeController::class, 'proses_berkas'])->name('agenda-berkas-proses');
         Route::get('berkas-selesai-agenda', [AgendaHomeController::class, 'berkas_selesai'])->name('agenda-berkas-selesai');
         Route::get('berkas-selesai-detail', [AgendaHomeController::class, 'detail'])->name('berkas-selesai-detail');
+        Route::post('berkas-selesai', [AgendaHomeController::class, 'berkas_selesai_post'])->name('berkas-selesai');
         Route::get('detail-agenda', [AgendaHomeController::class, 'detail'])->name('agenda-detail');
         Route::post('agenda-post/{id}', [AgendaHomeController::class, 'agenda_post'])->name('agenda-post');
+        Route::post('nomorsk-post/{id}', [AgendaHomeController::class, 'nomorsk_post'])->name('nomorsk-post');
         Route::post('agenda-approve', [AgendaHomeController::class, 'agenda_approve'])->name('agenda-approve');
         Route::post('selesai-approve', [AgendaHomeController::class, 'selesai_approve'])->name('selesai-approve');
         Route::get('agenda-selesai', [AgendaHomeController::class, 'selesai'])->name('agenda-selesai');
@@ -112,7 +117,7 @@ Route::prefix('administrator')->group(function () {
         Route::get('kadis-cek', [KadisHomeController::class, 'cek'])->name('kadis-cek');
         Route::get('kadis-cek-detail', [KadisHomeController::class, 'detail'])->name('kadis-cek-detail');
 
-        Route::get('generate-file', [CetakHomeController::class, 'generate'])->name('generate-file');
+        Route::post('generate-file', [CetakHomeController::class, 'generate'])->name('generate-file');
     });
 });
 

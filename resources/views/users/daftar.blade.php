@@ -247,9 +247,10 @@
                                         <tr>
                                             <td>{{ $item->file_type }}</td>
                                             <td style="width: 40%">{!! $item->content !!}</td>
-                                            <td><input type="file" name="{{ $item->id }}" id=""
-                                                    class="form-control" onChange="validateAndUpload(this);" required><br>
-                                                </td>
+                                            <td>
+                                                <input type="file" name="{{ $item->id }}" id="" class="form-control {{ ($item->note == 'Wajib Upload')?'input':'' }}" onChange="validateAndUpload(this,{{ $item->max_upload }});" required>
+                                                <small style="color:red;">* Max Upload {{ $item->max_upload }} mb</small>
+                                            </td>
                                             <td>{!! $item->note !!}</td>
                                         </tr>
                                     @endforeach
@@ -373,8 +374,9 @@
     <script src="https://jsuites.net/v4/jsuites.js"></script>
 
     <script>
-        function validateAndUpload(input) {
+        function validateAndUpload(input, max_upload) {
             const fi = input;
+            max_uploads = max_upload * 1000;
             // Check if any file is selected.
             if (fi.files.length > 0) {
                 for (const i = 0; i <= fi.files.length - 1; i++) {
@@ -382,10 +384,9 @@
                     const fsize = fi.files.item(i).size;
                     const file = Math.round((fsize / 1024));
                     // The size of the file.
-                    if (file >= 2048) {
-                        // fi.val("");
-                        console.log(fi);
-                        alert("File too Big, please select a file less than 2mb");
+                    if (file >= max_uploads) {
+                        fi.value = "";
+                        alert("File too Big, please select a file less than "+max_upload+" mb");
                     } else {
                         document.getElementById('size').innerHTML = '<b>' +
                             file + '</b> KB';

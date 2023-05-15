@@ -180,6 +180,10 @@ class UserInformation extends Model
                 self::STATUS_KABID => 'Kepala Bidang',
                 self::STATUS_CETAK => 'SK',
             ];
+        }elseif($status == self::STATUS_CETAK){
+            return [
+                self::STATUS_SELESAI => 'Selesai',
+            ];
         }else{
             return [
                 self::STATUS_CEK => 'Cek Manual',

@@ -67,6 +67,9 @@
                                 } elseif (Route::is('kadis-detail')) {
                                     $route = route('kadis-approve');
                                     $role = \App\Models\UserInformation::STATUS_KADIS;
+                                } elseif (Route::is('berkas-selesai-detail')) {
+                                    $route = route('berkas-selesai');
+                                    $role = \App\Models\UserInformation::STATUS_CETAK;
                                 }
                             @endphp
                             @if (isset($route))
@@ -81,15 +84,19 @@
                                 <button class="btn btn-primary w-30" type="button" id="nextProses">Selanjutnya</button>
                                 {!! Form::close() !!}
                             @endif
-                            @if (Route::is('berkas-selesai-detail'))
-                                <a href="{{ route('generate-file', ['id' => $user_information->uuid]) }}"
-                                    class="btn btn-primary w-30" target="_blank">Generate File</a>
-                            @endif
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card-body">
+                
+                @if (Route::is('berkas-selesai-detail') && $user_information->nomor_krk)
+                <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal" data-target="#exampleModal">Generate File</a>
+                @if (file_exists(public_path('storage/krks/'.$user_information->uuid.'.pdf')))
+                    <a href="{{ asset('storage/krks/'.$user_information->uuid.'.pdf') }}" class="btn btn-primary w-30 float-right mr-2" download>Download</a>
+                    <a href="{{ asset('storage/krks/'.$user_information->uuid.'.pdf') }}" class="btn btn-primary w-30 float-right mr-2" target="_blank">View</a>
+                @endif
+                @endif
                 {!! Form::open(['url' => route('agenda-pemohon'), 'method' => 'post', 'id' => 'agenda-lokasi']) !!}
                 {!! Form::hidden('uuid', $user_information->uuid) !!}
                 <table class="table">
@@ -300,6 +307,12 @@
                         <button class="nav-link" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat"
                             type="button" role="tab" aria-controls="riwayat" aria-selected="false">Riwayat</button>
                     </li>
+                    @if (Route::is('berkas-selesai-detail'))
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="nomorsk-tab" data-bs-toggle="tab" data-bs-target="#nomorsk"
+                            type="button" role="tab" aria-controls="nomorsk" aria-selected="false">Nomor SK</button>
+                    </li>
+                    @endif
                 </ul>
             </div>
 
@@ -332,16 +345,25 @@
                                 value="{{ $nomor_registration_before }}" disabled>
                             <br>
                             <label for="">Nomor Registrasi</label>
-                            <input type="text" class="form-control" name="nomor_registration"
-                                value="{{ $nomor_registration }}">
-                            <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
+                            @if (!$user_information->nomor_registration)
+                                    <input type="text" class="form-control" name="nomor_registration"
+                                        value="{{ $nomor_registration }}">
+                                    <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
+                            @else
+                                <input type="text" class="form-control" name="nomor_registration"
+                                    value="{{ $nomor_registration }}" readonly>
+                                <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
+                            @endif
                             <br>
                             @if (Auth::guard('administrator')->user()->role == 'FILING' ||
                                     Auth::guard('administrator')->user()->role == 'CEK' ||
                                     Auth::guard('administrator')->user()->role == 'ADMIN')
                                 @if (!$user_information->nomor_registration)
                                     <button type="submit" class="btn btn-success m-auto">Save</button>
+                                @else
+                                    <button type="submit" class="btn btn-success m-auto">Kirim Email</button>
                                 @endif
+
                             @endif
                         </form>
                     </div>
@@ -636,9 +658,51 @@
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="nomorsk" role="tabpanel" aria-labelledby="nomorsk-tab">
+
+                    <div class="card-body">
+                        <form action="{{ route('nomorsk-post', $user_information->id) }}" method="post">
+                            @csrf
+                            <label for="">Nomor SK</label>
+                            <input type="text" class="form-control" name="nomor_krk" value="{{ $user_information->nomor_krk }}">
+                            <br>
+                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'ADMIN')
+                                <button type="submit" class="btn btn-success m-auto">Save</button>
+                            @endif
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Dasar Hukum</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('generate-file', ['id' => $user_information->uuid]) }}" method="post">
+                    @csrf
+                    @foreach (\App\Models\DasarHukum::get() as $item)
+                        {!! Form::checkbox('dasar_hukum[]', $item->content, true, ['style' => 'float:left;margin:5px;']) !!}
+                        <p>{{ $item->content }}</p>
+                        @endforeach
+                        <textarea name="dasar_hukum[]" id="" style="width: 100%" class="form-control"></textarea>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success">Generate</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection
 @push('js')
     <script>

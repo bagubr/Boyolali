@@ -36,7 +36,6 @@ class AuthController extends Controller
 
     public function registration(Request $request)
     {
-        $user = User::whereEmail('bagubragowo3@gmail.com')->first();
         try {
             DB::beginTransaction();
             $data = $request->validate([
@@ -44,17 +43,18 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users',
                 'password' => 'required|confirmed'
             ]);
-            event(new Registered($user));
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
+            event(new Registered($user));
             // DO IT Sand Email
             DB::commit();
+            return redirect()->route('users')->with('success', 'Registrasi Berhasil silahkan konfirmasi email anda!');
         } catch (\Throwable $th) {
             DB::rollBack();
+            return redirect()->route('users')->with('error', 'Registrasi Gagal silahkan coba kembali!');
         }
         
         
-        return redirect()->route('users')->with('success', 'Registrasi Berhasil silahkan konfirmasi email anda!');
     }
 
     public function logout()

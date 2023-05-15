@@ -33,11 +33,12 @@ class DataController extends Controller
             $data_arr[] = array(
                 "id" => $id++,
                 "created_at" => date('d-M-Y', strtotime($value->created_at)),
+                "nomor_registration" => $value->nomor_registration,
                 "submitter" => $value->submitter,
                 "submitter_phone" => $value->submitter_phone,
                 "location_address" => $value->location_address,
                 "status" => $value->keterangan_status,
-                "action" => $this->action($value->id)
+                "action" => $this->action($value->uuid)
             );
         }
 
@@ -53,6 +54,11 @@ class DataController extends Controller
 
     function action($id)
     {
+        $user_information = UserInformation::where('uuid', $id)->first();
+        $id = $user_information->id;
+        if($user_information->nomor_krk){
+            return "<a href='".route('detail', ['id' => $id])."' class='badge bg-primary' style='text-decoration: none;'>Detail</a><a href='#' class='badge bg-success' style='text-decoration: none;'>Download</a>";
+        }
         return "<a href='".route('detail', ['id' => $id])."' class='badge bg-primary' style='text-decoration: none;'>Detail</a>";
     }
 }

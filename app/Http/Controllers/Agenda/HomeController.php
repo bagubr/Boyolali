@@ -8,10 +8,12 @@ use App\Models\ApplicantReference;
 use App\Models\Polygon;
 use App\Models\Riwayat;
 use App\Models\UserInformation;
+use App\Notifications\AgendaCreate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -71,6 +73,27 @@ class   HomeController extends Controller
         return view('agenda/berkas-selesai');
     }
 
+    public function berkas_selesai_post(Request $request)
+    {
+        $data = $this->validate($request, [
+            'uuid' => 'required',
+            'to' => 'required',
+            'note' => 'required',
+        ],[
+            'to' => 'Belum pilih proses selanjutnya',
+            'note' => 'Catatan blm di isi',
+        ]);
+        $user_information = UserInformation::where('uuid', $data['uuid'])->first();
+        $data['user_information_id'] = $user_information->id;
+        $data['from'] = Auth::guard('administrator')->user()->role;
+        $data['from_id'] = Auth::guard('administrator')->user()->id;
+        Riwayat::create($data);
+        $data_information['agenda_date'] = date('Y-m-d H:i:s');
+        $data_information['status'] = $data['to'];
+        $user_information->update($data_information);
+        return redirect()->route('berkas-selesai-detail')->with('success', 'Berhasil');
+    }
+
     public function detail(Request $request)
     {
         $user_information = UserInformation::whereUuid($request->id)->first();
@@ -85,13 +108,28 @@ class   HomeController extends Controller
                 'nomor_registration' => 'required|unique:user_informations',
                 'nomor' => 'required'
             ]);
+            $user_information->update($data);
+            $user_information->refresh();
         }
-        $user_information->update($data);           
-        $user_information->refresh();
         ApplicantReference::where('user_information_id', $id)->update([
             'status' => ApplicantReference::STATUS_APPROVE
         ]);
-        return redirect()->back()->with('success', 'Berhasil buat Nomor Agenda');
+        try {
+            Notification::send($user_information->user, new AgendaCreate($user_information));
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Berhasil buat Nomor Agenda, Email tidak terkirim');
+        }
+        return redirect()->back()->with('success', 'Berhasil');
+    }
+    
+    public function nomorsk_post(Request $request, $id)
+    {
+        $user_information = UserInformation::find($id);
+        $data = $this->validate($request, [
+            'nomor_krk' => 'required|unique:user_informations'
+        ]);
+        $user_information->update($data);
+        return redirect()->back()->with('success', 'Berhasil buat Nomor SK');
     }
 
     public function reference(Request $request)

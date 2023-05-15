@@ -28,6 +28,7 @@
                         <tr>
                             <th>No</th>
                             <th>Tanggal Pengajuan</th>
+                            <th>Nomor Agenda</th>
                             <th>Nama Pemohon</th>
                             <th>Telpon Pemohon</th>
                             <th>Alamat Lokasi</th>
@@ -64,6 +65,7 @@
             columns: [ 
                 { data: 'id' }, 
                 { data: 'created_at' },
+                { data: 'nomor_registration' }, 
                 { data: 'submitter' }, 
                 { data: 'submitter_phone' }, 
                 { data: 'location_address' },

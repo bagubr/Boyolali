@@ -29,6 +29,7 @@ class ReferenceTypeController extends AdminController
         $grid->column('file_type', __('File type'));
         $grid->column('note', __('Note'));
         $grid->column('content', __('Content'));
+        $grid->column('max_upload', __('Max Upload'));
         $grid->disableFilter();
         $grid->disableBatchActions();
         $grid->disablePagination();
@@ -55,6 +56,7 @@ class ReferenceTypeController extends AdminController
         $show->field('file_type', __('File type'));
         $show->field('note', __('Note'));
         $show->field('content', __('Content'));
+        $show->field('max_upload', __('Max Upload'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -73,6 +75,7 @@ class ReferenceTypeController extends AdminController
         $form->text('file_type', __('File type'));
         $form->text('note', __('Note'));
         $form->textarea('content', __('Content'));
+        $form->number('max_upload', __('Max Upload (mb)'));
         $form->disableCreatingCheck();
         $form->disableEditingCheck();
         $form->disableViewCheck();

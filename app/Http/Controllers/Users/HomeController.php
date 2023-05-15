@@ -57,11 +57,6 @@ class HomeController extends Controller
             'nomor_hak' => 'required',
             'polygon' => 'required',
         ]);
-        // foreach (ReferenceType::orderBy('id')->get() as $key => $image) {
-        //     $data = $request->validate([
-        //         $key => 'mimes:pdf|max:2000',
-        //     ]); 
-        // }
         if ($data['submitter_optional']) {
             $data['submitter'] .= ' ( ' . $data['submitter_optional'] . ' )';
         }

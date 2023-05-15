@@ -10,7 +10,7 @@ class ReferenceType extends Model
     use HasFactory;
 
     protected $fillable = [
-        'file_type', 'content', 'note'
+        'file_type', 'content', 'note', 'max_upload'
     ];
 
 
