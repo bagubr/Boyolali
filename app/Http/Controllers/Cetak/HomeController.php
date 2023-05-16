@@ -29,7 +29,7 @@ class HomeController extends Controller
         }
         $pdf = FacadePdf::loadView('pdf_view', $data);
         $pdf->setPaper('A4');
-        return $pdf->stream(); // Lihat Hasil Pdf
+        // return $pdf->stream(); // Lihat Hasil Pdf
         $content = $pdf->download()->getOriginalContent();
         Storage::put('krks/'.$data['user_information']->uuid.'.pdf',$content);
         try {
