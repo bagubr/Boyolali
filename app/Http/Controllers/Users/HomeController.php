@@ -39,6 +39,16 @@ class HomeController extends Controller
         return view('users/detail', compact('user_information'));
     }
 
+    public function detail_approval(Request $request)
+    {
+        $id = $request->id;
+        $user_information = UserInformation::whereUuid($id)->first();
+        if ($user_information->user_id != Auth::user()->id) {
+            return redirect()->route('proses');
+        }
+        return view('users/approval', compact('user_information'));
+    }
+
     public function user_information(Request $request)
     {
         try {

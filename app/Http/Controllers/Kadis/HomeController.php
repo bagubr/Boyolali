@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Kadis;
 
 use App\Http\Controllers\Controller;
+use App\Models\Approval;
 use App\Models\Riwayat;
 use App\Models\UserInformation;
 use Illuminate\Http\Request;
@@ -41,6 +42,13 @@ class HomeController extends Controller
         $data['from'] = Auth::guard('administrator')->user()->role;
         $data['from_id'] = Auth::guard('administrator')->user()->id;
         Riwayat::create($data);
+        if($data['to'] == UserInformation::STATUS_CETAK){
+            $approval['approval_name'] = Auth::guard('administrator')->user()->name;
+            $approval['user_id'] = Auth::guard('administrator')->user()->id;
+            $approval['uuid'] = $user_information->uuid;
+            $approval['approval_date'] = date('d-m-Y H:i:s');
+            Approval::create($approval);
+        }
         $data_information['status'] = $data['to'];
         $user_information->update($data_information);
         return redirect()->route('kadis-berkas-proses')->with('success', 'Berhasil');

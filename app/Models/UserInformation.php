@@ -148,6 +148,11 @@ class UserInformation extends Model
         return $this->hasMany(Riwayat::class)->orderBy('created_at');
     }
 
+    public function approval()
+    {
+        return $this->hasOne(Approval::class, 'uuid', 'uuid');
+    }
+
     public static function user_alur($status)
     {
         if($status == self::STATUS_FILING){

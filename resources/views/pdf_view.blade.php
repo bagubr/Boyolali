@@ -26,7 +26,7 @@
 </head>
 
 <body>
-    <header>
+    <header style="margin-top: -30px">
         <table style="width: 100%;">
             <tr>
                 <td width="20%" align="center">
@@ -51,11 +51,10 @@
             </tr>
         </table>
     
-        <hr style="line-height: 0.5; text-align: center; border: 3px solid black;">
-        <hr style="line-height: 0.5; text-align: center;">
+        <hr style="line-height: 0.1; text-align: center; border: 3px solid black;">
     </header>
 
-    <p style="text-align: center;line-height: 0.5;"><strong style="line-height: 0.5;"><span style="font-size: 14px; line-height: 0.5;">KETERANGAN RENCANA KABUPATEN</span></strong></p>
+    <p style="text-align: center;line-height: 0.5;"><strong style="line-height: 0.5;"><span style="font-size: 12px; line-height: 0.5;">KETERANGAN RENCANA KABUPATEN</span></strong></p>
     <table style="margin-left: auto; margin-right:auto;line-height: 0.5;">
         <tr>
             <td>NOMOR</td>
@@ -69,18 +68,18 @@
         </tr>
     </table>
 
-    <p style="text-align: justify; line-height: 0.1;"><span style="font-size: 14px; line-height: 0.5;">DASAR HUKUM :
+    <p style="text-align: justify; line-height: 0.1;"><span style="font-size: 12px; line-height: 0.5;">DASAR HUKUM :
             &nbsp;</span></p>
     <ol style="margin-top: -15px">
         @foreach ($dasar_hukum as $item)
-            @if (empty($item))
-            <li style="text-align: justify; font-size: 14px;">
+            @if (!empty($item))
+            <li style="text-align: justify; font-size: 12px;">
                 {{ $item }}
             </li>
             @endif
         @endforeach
     </ol>
-    <p style="text-align: justify;line-height: 0.1; "><span style="font-size: 14px; line-height: 0.5;">DATA PEMOHON :
+    <p style="text-align: justify;line-height: 0.1; "><span style="font-size: 12px; line-height: 0.5;">DATA PEMOHON :
             &nbsp;</span></p>
     <table border="1" style="width: 100%;margin-top: -15px">
         <tr>
@@ -125,7 +124,7 @@
             <td>{{ $user_information['activity_name'] }}</td>
         </tr>
     </table>
-    <p style="line-height: 0.1;"><span style="font-size: 14px;">KETERANGAN RENCANA : &nbsp;</span></p>
+    <p style="line-height: 0.1;"><span style="font-size: 12px;">KETERANGAN RENCANA : &nbsp;</span></p>
     <div style="float-left;width: 100%;margin-top: -15px">
         <table style="width: 100%;" border="1">
             <tbody>
@@ -223,22 +222,23 @@
             </tbody>
         </table>
     </div>
-    <table style="float:right;">
-        <td>
-            <center>
-                <h5>
-                    KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
-                </h5>
-                <br>
-                <p>
-                    <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
-                    <small>Pembina Utama Muda</small><br>
-                    NIP. 19730415 199403 1 007
-                </p>
-            </center>
-        </td>
-    </table>
+        <table style="float:right;">
+            <td>
+                <center>
+                    <h5>
+                        KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
+                    </h5>
+                    <img src="data:image/png;base64, {!! $approval !!}">
+                    <p>
+                        <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
+                        <small>Pembina Utama Muda</small><br>
+                        NIP. 19730415 199403 1 007
+                    </p>
+                </center>
+            </td>
+        </table>
     <p style="page-break-before: always">
+
     <center>
         <h4>LAMPIRAN PETA <br> KETERANGAN RENCANA KABUPATEN</h4>
     </center>
@@ -286,29 +286,55 @@
                 </td>
             </tr>
         </table>
+        <div style="margin:15px">
+            <img src="data:image/png;base64, {!! $qrcode !!}">
+        </div>
     </div>
     <br>
     <br>
     <br>
     <br>
     <br>
-    <table style="float:right;">
-        <td>
-            <center>
-                <h5>
-                    KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
-                </h5>
-                <br>
-                <br>
-                <br>
-                <p>
-                    <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
-                    <small>Pembina Utama Muda</small><br>
-                    NIP. 19730415 199403 1 007
-                </p>
-            </center>
-        </td>
-    </table>
+    <footer>
+        <table style="float:right;">
+            <td>
+                <center>
+                    <h5>
+                        KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
+                    </h5>
+                    <img src="data:image/png;base64, {!! $approval !!}">
+                    <br>
+                    <p>
+                        <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
+                        <small>Pembina Utama Muda</small><br>
+                        NIP. 19730415 199403 1 007
+                    </p>
+                </center>
+            </td>
+        </table>
+    </footer>
 </body>
+{{-- <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+    var array_polygons = {!! $user_information->polygons->pluck('longitude', 'latitude') !!};
+    const entries = Object.entries(array_polygons);
+    var polymarker = L.polygon(entries).getBounds().getCenter();
+    var link = "https://www.google.com/maps/?q=" + polymarker.lat + "," + polymarker.lng;
+    const qrCode = new QRCodeStyling({
+        width: 200,
+        height: 200,
+        type: "png",
+        data: link,
+        imageOptions: {
+            crossOrigin: "anonymous",
+            margin: -50
+        },
+        dotsOptions: {
+            // type: "dots"
+        },
+    });
+    qrCode.append(document.getElementById("canvas"));
+</script> --}}
 
 </html>

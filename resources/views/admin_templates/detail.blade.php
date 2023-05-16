@@ -89,13 +89,16 @@
                 </div>
             </div>
             <div class="card-body">
-                
+
                 @if (Route::is('berkas-selesai-detail') && $user_information->nomor_krk)
-                <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal" data-target="#exampleModal">Generate File</a>
-                @if (file_exists(public_path('storage/krks/'.$user_information->uuid.'.pdf')))
-                    <a href="{{ asset('storage/krks/'.$user_information->uuid.'.pdf') }}" class="btn btn-primary w-30 float-right mr-2" download>Download</a>
-                    <a href="{{ asset('storage/krks/'.$user_information->uuid.'.pdf') }}" class="btn btn-primary w-30 float-right mr-2" target="_blank">View</a>
-                @endif
+                    <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
+                        data-target="#exampleModal">Generate File</a>
+                    @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
+                        <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
+                            class="btn btn-primary w-30 float-right mr-2" download>Download</a>
+                        <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
+                            class="btn btn-primary w-30 float-right mr-2" target="_blank">View</a>
+                    @endif
                 @endif
                 {!! Form::open(['url' => route('agenda-pemohon'), 'method' => 'post', 'id' => 'agenda-lokasi']) !!}
                 {!! Form::hidden('uuid', $user_information->uuid) !!}
@@ -308,10 +311,11 @@
                             type="button" role="tab" aria-controls="riwayat" aria-selected="false">Riwayat</button>
                     </li>
                     @if (Route::is('berkas-selesai-detail'))
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="nomorsk-tab" data-bs-toggle="tab" data-bs-target="#nomorsk"
-                            type="button" role="tab" aria-controls="nomorsk" aria-selected="false">Nomor SK</button>
-                    </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="nomorsk-tab" data-bs-toggle="tab" data-bs-target="#nomorsk"
+                                type="button" role="tab" aria-controls="nomorsk" aria-selected="false">Nomor
+                                SK</button>
+                        </li>
                     @endif
                 </ul>
             </div>
@@ -346,9 +350,9 @@
                             <br>
                             <label for="">Nomor Registrasi</label>
                             @if (!$user_information->nomor_registration)
-                                    <input type="text" class="form-control" name="nomor_registration"
-                                        value="{{ $nomor_registration }}">
-                                    <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
+                                <input type="text" class="form-control" name="nomor_registration"
+                                    value="{{ $nomor_registration }}">
+                                <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
                             @else
                                 <input type="text" class="form-control" name="nomor_registration"
                                     value="{{ $nomor_registration }}" readonly>
@@ -363,7 +367,6 @@
                                 @else
                                     <button type="submit" class="btn btn-success m-auto">Kirim Email</button>
                                 @endif
-
                             @endif
                         </form>
                     </div>
@@ -664,9 +667,12 @@
                         <form action="{{ route('nomorsk-post', $user_information->id) }}" method="post">
                             @csrf
                             <label for="">Nomor SK</label>
-                            <input type="text" class="form-control" name="nomor_krk" value="{{ $user_information->nomor_krk }}">
+                            <input type="text" class="form-control" name="nomor_krk"
+                                value="{{ $user_information->nomor_krk }}">
                             <br>
-                            @if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'ADMIN')
+                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
+                                    Auth::guard('administrator')->user()->role == 'CEK' ||
+                                    Auth::guard('administrator')->user()->role == 'ADMIN')
                                 <button type="submit" class="btn btn-success m-auto">Save</button>
                             @endif
                         </form>
@@ -675,34 +681,38 @@
             </div>
         </div>
     </div>
-      
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Dasar Hukum</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('generate-file', ['id' => $user_information->uuid]) }}" method="post">
-                    @csrf
-                    @foreach (\App\Models\DasarHukum::get() as $item)
-                        {!! Form::checkbox('dasar_hukum[]', $item->content, true, ['style' => 'float:left;margin:5px;']) !!}
-                        <p>{{ $item->content }}</p>
-                        @endforeach
-                        <textarea name="dasar_hukum[]" id="" style="width: 100%" class="form-control"></textarea>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Dasar Hukum</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success">Generate</button>
-            </form>
+                <div class="modal-body">
+                    <form action="{{ route('generate-file', ['id' => $user_information->uuid]) }}" method="post">
+                        @csrf
+                        @foreach (\App\Models\DasarHukum::get() as $item)
+                            <input type="text" name="dasar_hukum[]" id="" value="{{ $item->content }}"
+                                class="form-control mb-2">
+                        @endforeach
+                        <div class="form-group input-create">
+                            <input type="text" name="dasar_hukum[]" id="" class="form-control mb-2">
+                        </div>
+                        <button type="button" class="btn btn-success" id="create">Add</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Generate</button>
+                    </form>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
 @endsection
 @push('js')
     <script>
@@ -974,5 +984,10 @@
             $('.koordinattable').find("tr:not(:first)").remove();
             DrawPolygon.enable();
         }
+    </script>
+    <script>
+        $('#create').on('click', function() {
+            $('.input-create').append(`<input type="text" name="dasar_hukum[]" id="" class="form-control mb-2">`);
+        })
     </script>
 @endpush

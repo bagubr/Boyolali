@@ -57,7 +57,7 @@ class DataController extends Controller
         $user_information = UserInformation::where('uuid', $id)->first();
         $id = $user_information->id;
         if($user_information->nomor_krk){
-            return "<a href='".route('detail', ['id' => $id])."' class='badge bg-primary' style='text-decoration: none;'>Detail</a><a href='#' class='badge bg-success' style='text-decoration: none;'>Download</a>";
+            return "<a href='".route('detail', ['id' => $id])."' class='badge bg-primary' style='text-decoration: none;'>Detail</a><a href='".asset('storage/krks/' . $user_information->uuid . '.pdf')."' class='badge bg-success' style='text-decoration: none;' target='_blank'>Download</a>";
         }
         return "<a href='".route('detail', ['id' => $id])."' class='badge bg-primary' style='text-decoration: none;'>Detail</a>";
     }
