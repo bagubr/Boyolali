@@ -30,7 +30,8 @@
         <table style="width: 100%;">
             <tr>
                 <td width="20%" align="center">
-                    <img src="{{ asset('uploads/' . App\Models\Setting::whereGroup('LOGO')->first()->value) }}" width="90px" height="120px" alt="" srcset="">
+                    <img src="{{ asset('uploads/' . App\Models\Setting::whereGroup('LOGO')->first()->value) }}"
+                        width="90px" height="120px" alt="" srcset="">
                 </td>
                 <td width="80%" align="center">
                     <p>
@@ -40,7 +41,8 @@
                                 <div style="line-height: 0.5;font-size: 22px;">DINAS PEKERJAAN UMUM DAN PENATAAN RUANG
                                 </div> <br>
                             </strong>
-                            <div style="line-height: 0.5;font-size: 14px;">Jalan Perintis Kemerdekaan No. 250 Boyolali 57316
+                            <div style="line-height: 0.5;font-size: 14px;">Jalan Perintis Kemerdekaan No. 250 Boyolali
+                                57316
                                 Provinsi Jawa Tengah</div>
                             <br>
                             <div style="line-height: 0.5;font-size: 14px;">Telp\Fax : [0276] 321049, Email :
@@ -50,11 +52,12 @@
                 </td>
             </tr>
         </table>
-    
+
         <hr style="line-height: 0.1; text-align: center; border: 3px solid black;">
     </header>
 
-    <p style="text-align: center;line-height: 0.5;"><strong style="line-height: 0.5;"><span style="font-size: 12px; line-height: 0.5;">KETERANGAN RENCANA KABUPATEN</span></strong></p>
+    <p style="text-align: center;line-height: 0.5;"><strong style="line-height: 0.5;"><span
+                style="font-size: 12px; line-height: 0.5;">KETERANGAN RENCANA KABUPATEN</span></strong></p>
     <table style="margin-left: auto; margin-right:auto;line-height: 0.5;">
         <tr>
             <td>NOMOR</td>
@@ -73,9 +76,9 @@
     <ol style="margin-top: -15px">
         @foreach ($dasar_hukum as $item)
             @if (!empty($item))
-            <li style="text-align: justify; font-size: 12px;">
-                {{ $item }}
-            </li>
+                <li style="text-align: justify; font-size: 12px;">
+                    {{ $item }}
+                </li>
             @endif
         @endforeach
     </ol>
@@ -116,7 +119,8 @@
         </tr>
         <tr>
             <td style="width:30%">KOORDINAT (Polygon)</td>
-            <td style="width:30%">({{ substr($user_information->latitude, 0, 10) }}, {{ substr($user_information->longitude, 0, 10) }})
+            <td style="width:30%">({{ substr($user_information->latitude, 0, 10) }},
+                {{ substr($user_information->longitude, 0, 10) }})
             </td>
         </tr>
         <tr>
@@ -182,18 +186,18 @@
                     </tr>
                 @else
                     <tr>
-                        <td></td>
-                        <td></td>
                         <td> <strong>6. KDH </strong></td>
                         <td>{{ @!$user_information->krk->kdh ? '-' : @$user_information->krk->kdh . ' %' }}</td>
                         <td>JLS</td>
                         <td>{{ @!$user_information->gsb->jls ? '-' : @$user_information->gsb->jls }}</td>
                         <td colspan="2">Mata Air</td>
-                        <td colspan="2">{{ @!$user_information->krk->mata_air ? '-' : @$user_information->krk->mata_air }}
+                        <td colspan="2">
+                            {{ @!$user_information->krk->mata_air ? '-' : @$user_information->krk->mata_air }}
                         </td>
                     </tr>
                 @endif
                 <tr>
+                    <td colspan="2"></td>
                     <td> <strong> 8. KTB </strong> </td>
                     <td>{{ @!$user_information->krk->ktb ? '-' : @$user_information->krk->ktb }}
                     </td>
@@ -201,12 +205,11 @@
                     <td colspan="2">{{ @!$user_information->krk->tol ? '-' : @$user_information->krk->tol }}</td>
                 </tr>
                 <tr>
-                    <td> <strong>7. Jaringan Utilitas (bebas bangunan)</strong> </td>
-                </td>
-            </tr>
-            <tr>
-                    <td>{{ @!$user_information->krk->jaringan_utilitas ? '-' : @$user_information->krk->jaringan_utilitas }}
-
+                    <td colspan="8"> <strong>7. Jaringan Utilitas (bebas bangunan)</strong> </td>
+                </tr>
+                <tr>
+                    <td colspan="8">{{ @!$user_information->krk->jaringan_utilitas ? '-' : @$user_information->krk->jaringan_utilitas }}
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="8"><strong>9. Prasarana Jalan</strong></td>
@@ -232,26 +235,26 @@
             </tbody>
         </table>
     </div>
-        <table style="float:right;">
-            <td>
-                <center>
-                    <h5>
-                        KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
-                    </h5>
-                    <img src="data:image/png;base64, {!! $approval !!}">
-                    <p>
-                        <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
-                        <small>Pembina Utama Muda</small><br>
-                        NIP. 19730415 199403 1 007
-                    </p>
-                </center>
-            </td>
-        </table>
+    <table style="float:right;">
+        <td>
+            <center>
+                <h5>
+                    KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
+                </h5>
+                <img src="data:image/png;base64, {!! $approval !!}">
+                <p>
+                    <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
+                    <small>Pembina Utama Muda</small><br>
+                    NIP. 19730415 199403 1 007
+                </p>
+            </center>
+        </td>
+    </table>
     <p style="page-break-before: always">
 
-    <center>
-        <h4>LAMPIRAN PETA <br> KETERANGAN RENCANA KABUPATEN</h4>
-    </center>
+        <center>
+            <h4>LAMPIRAN PETA <br> KETERANGAN RENCANA KABUPATEN</h4>
+        </center>
     <table style="margin-left: auto; margin-right:auto; line-height:1;">
         <tr>
             <td style="font-size: 14px">NOMOR</td>
@@ -274,8 +277,8 @@
                 @php
                     $image = @\App\Models\SketchFile::where('user_information_id', $user_information['id'])->first()->file;
                 @endphp
-                <td style="width: 50%"> <img class="img-thumbnail" width="400px" src="{{ asset('storage/' . $image) }}"
-                        alt="" srcset=""></td>
+                <td style="width: 50%"> <img class="img-thumbnail" width="400px"
+                        src="{{ asset('storage/' . $image) }}" alt="" srcset=""></td>
                 <td style="width: 50%">
                     <table style="font-size: 11px;margin:auto;">
                         <tbody>
