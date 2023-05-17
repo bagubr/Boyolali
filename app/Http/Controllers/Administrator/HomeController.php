@@ -53,4 +53,28 @@ class HomeController extends Controller
         Session::forget('user');
         return redirect()->route('administrator')->with('success', 'Logout Berhasil');
     }
+
+    public function admin_profile(Request $request)
+    {
+        if (!empty($request->all())) {
+            $data = $this->validate($request,[
+                'name' => 'string',
+                'username' => 'string',
+                'phone' => 'string',
+                'avatar' => 'file',
+                'password' => 'sometimes|confirmed'
+            ]);
+            if(isset($data['avatar'])){
+                $data['avatar'] = $request->file('avatar')->store('avatar');
+            }
+            if(isset($data['password'])){
+                $data['password'] = Hash::make($data['password']);
+            }
+            $administrator = Administrator::find(Auth::guard('administrator')->user()->id);
+            $administrator->update(array_filter($data));
+            return redirect()->back()->with('success', 'Berhasil update Profile');
+        }
+        return view('administrator.profile');
+    }
+
 }

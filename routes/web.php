@@ -119,6 +119,8 @@ Route::prefix('administrator')->group(function () {
         Route::get('kadis-cek-detail', [KadisHomeController::class, 'detail'])->name('kadis-cek-detail');
 
         Route::post('generate-file', [CetakHomeController::class, 'generate'])->name('generate-file');
+        Route::get('admin-profile', [AdministratorHomeController::class, 'admin_profile'])->name('admin-profile');
+        Route::post('admin-profile', [AdministratorHomeController::class, 'admin_profile'])->name('admin-profile-post');
     });
 });
 
