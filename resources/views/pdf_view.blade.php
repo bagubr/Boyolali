@@ -83,45 +83,45 @@
             &nbsp;</span></p>
     <table border="1" style="width: 100%;margin-top: -15px">
         <tr>
-            <td>NO. REGISTER</td>
-            <td>{{ $user_information['nomor_registration'] }}</td>
+            <td style="width:30%">NO. REGISTER</td>
+            <td style="width:70%">{{ $user_information['nomor_registration'] }}</td>
         </tr>
         <tr>
-            <td>PEMOHON</td>
-            <td>{{ $user_information['submitter'] }}</td>
+            <td style="width:30%">PEMOHON</td>
+            <td style="width:70%">{{ $user_information['submitter'] }}</td>
         </tr>
         <tr>
-            <td>ALAMAT PEMOHON</td>
-            <td>{{ $user_information['address'] }}</td>
+            <td style="width:30%">ALAMAT PEMOHON</td>
+            <td style="width:70%">{{ $user_information['address'] }}</td>
         </tr>
         <tr>
-            <td>LUAS LAHAN</td>
-            <td>{{ $user_information['land_area'] }} M<sup>2</sup></td>
+            <td style="width:30%">LUAS LAHAN</td>
+            <td style="width:70%">{{ $user_information['land_area'] }} M<sup>2</sup></td>
         </tr>
         <tr>
-            <td>STATUS HAK / NO</td>
-            <td>{{ $user_information['nomor_hak'] }}</td>
+            <td style="width:30%">STATUS HAK / NO</td>
+            <td style="width:70%">{{ $user_information['nomor_hak'] }}</td>
         </tr>
         <tr>
-            <td>ALAMAT LOKASI</td>
-            <td>{{ $user_information['location_address'] }}</td>
+            <td style="width:30%">ALAMAT LOKASI</td>
+            <td style="width:70%">{{ $user_information['location_address'] }}</td>
         </tr>
         <tr>
-            <td>DESA / KELURAHAN</td>
-            <td>{{ \App\Models\SubDistrict::find($user_information['sub_district_id'])->name }}</td>
+            <td style="width:30%">DESA / KELURAHAN</td>
+            <td style="width:70%">{{ \App\Models\SubDistrict::find($user_information['sub_district_id'])->name }}</td>
         </tr>
         <tr>
-            <td>KECAMATAN</td>
-            <td>{{ \App\Models\District::find($user_information['district_id'])->name }}</td>
+            <td style="width:30%">KECAMATAN</td>
+            <td style="width:70%">{{ \App\Models\District::find($user_information['district_id'])->name }}</td>
         </tr>
         <tr>
-            <td>KOORDINAT (Polygon)</td>
-            <td>({{ substr($user_information->latitude, 0, 10) }}, {{ substr($user_information->longitude, 0, 10) }})
+            <td style="width:30%">KOORDINAT (Polygon)</td>
+            <td style="width:30%">({{ substr($user_information->latitude, 0, 10) }}, {{ substr($user_information->longitude, 0, 10) }})
             </td>
         </tr>
         <tr>
-            <td>KEGIATAN YANG DI MOHON</td>
-            <td>{{ $user_information['activity_name'] }}</td>
+            <td style="width:30%">KEGIATAN YANG DI MOHON</td>
+            <td style="width:70%">{{ $user_information['activity_name'] }}</td>
         </tr>
     </table>
     <p style="line-height: 0.1;"><span style="font-size: 12px;">KETERANGAN RENCANA : &nbsp;</span></p>
@@ -170,53 +170,63 @@
                         {{ @!$user_information->krk->sungai_tidak_bertanggul ? '-' : @$user_information->krk->sungai_tidak_bertanggul }}
                     </td>
                 </tr>
+                @if ($user_information->activity_name == \App\Models\Activity::find(4)->name)
+                    <tr>
+                        <td> <strong> 6. PSU </strong></td>
+                        <td>{{ @!$user_information->krk->psu ? '-' : 'Min ' . @$user_information->krk->psu }}</td>
+                        <td>JLing</td>
+                        <td>{{ @!$user_information->gsb->jling ? '-' : @$user_information->gsb->jling }}</td>
+                        <td colspan="2">Waduk (titik pasang tertinggi)</td>
+                        <td colspan="2">{{ @!$user_information->krk->waduk ? '-' : @$user_information->krk->waduk }}
+                        </td>
+                    </tr>
+                @else
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td> <strong>6. KDH </strong></td>
+                        <td>{{ @!$user_information->krk->kdh ? '-' : @$user_information->krk->kdh . ' %' }}</td>
+                        <td>JLS</td>
+                        <td>{{ @!$user_information->gsb->jls ? '-' : @$user_information->gsb->jls }}</td>
+                        <td colspan="2">Mata Air</td>
+                        <td colspan="2">{{ @!$user_information->krk->mata_air ? '-' : @$user_information->krk->mata_air }}
+                        </td>
+                    </tr>
+                @endif
                 <tr>
-                    <td> <strong>6. KDH </strong></td>
-                    <td>{{ @!$user_information->krk->kdh ? '-' : @$user_information->krk->kdh . ' %' }}</td>
-                    <td>JLS</td>
-                    <td>{{ @!$user_information->gsb->jls ? '-' : @$user_information->gsb->jls }}</td>
-                    <td colspan="2">Mata Air</td>
-                    <td colspan="2">{{ @!$user_information->krk->mata_air ? '-' : @$user_information->krk->mata_air }}
-                    </td>
-                </tr>
-                <tr>
-                    <td> <strong> 7. PSU </strong></td>
-                    <td>{{ @!$user_information->krk->psu ? '-' : 'Min ' . @$user_information->krk->psu }}</td>
-                    <td>JLing</td>
-                    <td>{{ @!$user_information->gsb->jling ? '-' : @$user_information->gsb->jling }}</td>
-                    <td colspan="2">Waduk (titik pasang tertinggi)</td>
-                    <td colspan="2">{{ @!$user_information->krk->waduk ? '-' : @$user_information->krk->waduk }}
-                    </td>
-                </tr>
-                <tr>
-                    <td> <strong>8. Jaringan Utilitas (bebas bangunan)</strong> </td>
-                    <td>{{ @!$user_information->krk->jaringan_utilitas ? '-' : @$user_information->krk->jaringan_utilitas }}
-                    </td>
-                    <td> <strong> 9. KTB </strong> </td>
+                    <td> <strong> 8. KTB </strong> </td>
                     <td>{{ @!$user_information->krk->ktb ? '-' : @$user_information->krk->ktb }}
                     </td>
                     <td colspan="2">Tol (dari pagar)</td>
                     <td colspan="2">{{ @!$user_information->krk->tol ? '-' : @$user_information->krk->tol }}</td>
                 </tr>
                 <tr>
-                    <td colspan="8"><strong>10. Prasarana Jalan</strong></td>
+                    <td> <strong>7. Jaringan Utilitas (bebas bangunan)</strong> </td>
+                </td>
+            </tr>
+            <tr>
+                    <td>{{ @!$user_information->krk->jaringan_utilitas ? '-' : @$user_information->krk->jaringan_utilitas }}
+
+                </tr>
+                <tr>
+                    <td colspan="8"><strong>9. Prasarana Jalan</strong></td>
                 </tr>
                 <tr>
                     <td colspan="8">{{ @$user_information->krk->prasarana_jalan }}</td>
                 </tr>
                 <tr>
-                    <td colspan="8"><strong>11. Informasi Lainnya</strong></td>
+                    <td colspan="8"><strong>10. Informasi Lainnya</strong></td>
                 </tr>
                 <tr>
-                    <td> SRP </td>
+                    <td>a. SRP </td>
                     <td colspan="7">{{ @$user_information->krk->srp }}</td>
                 </tr>
                 <tr>
-                    <td> KKOP </td>
+                    <td>b. KKOP </td>
                     <td colspan="7">{{ @$user_information->krk->kkop }}</td>
                 </tr>
                 <tr>
-                    <td> Tambahan </td>
+                    <td>c. Tambahan </td>
                     <td colspan="7">{{ @$user_information->krk->tambahan }}</td>
                 </tr>
             </tbody>

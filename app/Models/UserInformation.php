@@ -61,13 +61,13 @@ class UserInformation extends Model
     public function getKeteranganStatusAttribute()
     {
         if($this->status == self::STATUS_FILING){
-            return 'Tahap Berkas';
-        }elseif(in_array($this->status, self::STATUS_VALIDASI)){
-            return 'Tahap Validasi';
+            return 'Verifikasi Berkas';
         }elseif($this->status == self::STATUS_CEK){
-            return 'Tahap Pengecekan Manual';
+            return 'Pengecekan Berkas';
+        }elseif(in_array($this->status, self::STATUS_VALIDASI)){
+            return 'Validasi Berkas';
         }elseif($this->status == self::STATUS_CETAK){
-            return 'Tahap Cetak';
+            return 'KRK Selesai';
         }else{
             return $this->status;
         }
@@ -166,24 +166,24 @@ class UserInformation extends Model
             ];
         }elseif($status == self::STATUS_SUBKOR){
             return [
+                self::STATUS_KABID => 'Kepala Bidang',
                 self::STATUS_CEK => 'Cek Manual',
                 self::STATUS_FILING => 'Agenda',
-                self::STATUS_KABID => 'Kepala Bidang',
             ];
         }elseif($status == self::STATUS_KABID){
             return [
+                self::STATUS_KADIS => 'Kepala Dinas',
+                self::STATUS_SUBKOR => 'Sub Koordinator',
                 self::STATUS_CEK => 'Cek Manual',
                 self::STATUS_FILING => 'Agenda',
-                self::STATUS_SUBKOR => 'Sub Koordinator',
-                self::STATUS_KADIS => 'Kepala Dinas',
             ];
         }elseif($status == self::STATUS_KADIS){
             return [
+                self::STATUS_CETAK => 'SK',
+                self::STATUS_KABID => 'Kepala Bidang',
+                self::STATUS_SUBKOR => 'Sub Koordinator',
                 self::STATUS_CEK => 'Cek Manual',
                 self::STATUS_FILING => 'Agenda',
-                self::STATUS_SUBKOR => 'Sub Koordinator',
-                self::STATUS_KABID => 'Kepala Bidang',
-                self::STATUS_CETAK => 'SK',
             ];
         }elseif($status == self::STATUS_CETAK){
             return [
@@ -191,13 +191,13 @@ class UserInformation extends Model
             ];
         }else{
             return [
+                self::STATUS_SELESAI => 'Selesai',
+                self::STATUS_CETAK => 'SK',
+                self::STATUS_KADIS => 'Kepala Dinas',
+                self::STATUS_KABID => 'Kepala Bidang',
+                self::STATUS_SUBKOR => 'Sub Koordinator',
                 self::STATUS_CEK => 'Cek Manual',
                 self::STATUS_FILING => 'Agenda',
-                self::STATUS_SUBKOR => 'Sub Koordinator',
-                self::STATUS_KABID => 'Kepala Bidang',
-                self::STATUS_KADIS => 'Kepala Dinas',
-                self::STATUS_CETAK => 'SK',
-                self::STATUS_SELESAI => 'Selesai',
             ];
         }
     }

@@ -89,7 +89,16 @@
                 </div>
             </div>
             <div class="card-body">
-
+                @if (Route::is('selesai-detail'))
+                    <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
+                        data-target="#exampleModal">Generate File</a>
+                    @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
+                        <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
+                            class="btn btn-primary w-30 float-right mr-2" download>Download</a>
+                        <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
+                            class="btn btn-primary w-30 float-right mr-2" target="_blank">View</a>
+                    @endif
+                @endif
                 @if (Route::is('berkas-selesai-detail') && $user_information->nomor_krk)
                     <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
                         data-target="#exampleModal">Generate File</a>
@@ -502,22 +511,6 @@
                                             <span>%</span>
                                         </div>
                                     </div>
-                                    <center><label for="">KDH</label></center>
-                                    <div class="input-group">
-                                        <input name="kdh" id="" class="form-control"
-                                            value="{{ @$user_information->krk->kdh }}">
-                                        <div class="input-group-text">
-                                            <span>%</span>
-                                        </div>
-                                    </div>
-                                    <center><label for="">PSU</label></center>
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <span>Min.</span>
-                                        </div>
-                                        <input name="psu" id="" class="form-control"
-                                            value="{{ @$user_information->krk->psu }}">
-                                    </div>
                                     <center><label for="">KTB</label></center>
                                     <div class="input-group">
                                         <input name="ktb" id="" class="form-control"
@@ -526,6 +519,25 @@
                                             <span>%</span>
                                         </div>
                                     </div>
+                                    @if (@$user_information->activity_name === \App\Models\Activity::find(4)->title)
+                                        <center><label for="">PSU</label></center>
+                                        <div class="input-group">
+                                            <div class="input-group-text">
+                                                <span>Min.</span>
+                                            </div>
+                                            <input name="psu" id="" class="form-control"
+                                                value="{{ @$user_information->krk->psu }}">
+                                        </div>
+                                    @else
+                                        <center><label for="">KDH</label></center>
+                                        <div class="input-group">
+                                            <input name="kdh" id="" class="form-control"
+                                                value="{{ @$user_information->krk->kdh }}">
+                                            <div class="input-group-text">
+                                                <span>%</span>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="col-3">
                                     <center><label for="">JAP</label></center>

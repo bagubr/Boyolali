@@ -28,8 +28,8 @@ class HomeController extends Controller
             $data['user_information']->update(['print_date' => date('d-m-Y H:i:s')]);
         }
         $pdf = FacadePdf::loadView('pdf_view', $data);
-        $pdf->setPaper('A4');
-        // return $pdf->stream(); // Lihat Hasil Pdf
+        $pdf->setPaper(array(0,0,609.4488,935.433), 'potrait');
+        return $pdf->stream(); // Lihat Hasil Pdf
         $content = $pdf->download()->getOriginalContent();
         Storage::put('krks/'.$data['user_information']->uuid.'.pdf',$content);
         try {
