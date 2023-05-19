@@ -21,7 +21,7 @@ class HomeController extends Controller
             'dasar_hukum' => 'required|array',
         ]);
         $data['user_information'] = UserInformation::whereUuid($request->id)->first();
-        $data['qrcode'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate('https://www.google.com/maps/?q='.substr($data['user_information']->latitude, 0,10).','.substr($data['user_information']->longitude, 0, 10)));
+        $data['qrcode'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate('https://www.google.com/maps/search/'.substr($data['user_information']->latitude, 0, 10).','.substr($data['user_information']->longitude, 0,10)));
         $data['approval'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate(route('detail-approval', ['id' => $data['user_information']->uuid])));
         // return view('pdf_view', ['user_information' => $data['user_information'], 'dasar_hukum' => $data['dasar_hukum'], 'qrcode' => $data['qrcode']]); // Lihat Hasil HTML
         if(!$data['user_information']->print_date){
@@ -29,7 +29,7 @@ class HomeController extends Controller
         }
         $pdf = FacadePdf::loadView('pdf_view', $data);
         $pdf->setPaper(array(0,0,609.4488,935.433), 'potrait');
-        return $pdf->stream(); // Lihat Hasil Pdf
+        // return $pdf->stream(); // Lihat Hasil Pdf
         $content = $pdf->download()->getOriginalContent();
         Storage::put('krks/'.$data['user_information']->uuid.'.pdf',$content);
         try {

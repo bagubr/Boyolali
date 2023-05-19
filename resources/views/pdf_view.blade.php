@@ -208,7 +208,8 @@
                     <td colspan="8"> <strong>7. Jaringan Utilitas (bebas bangunan)</strong> </td>
                 </tr>
                 <tr>
-                    <td colspan="8">{{ @!$user_information->krk->jaringan_utilitas ? '-' : @$user_information->krk->jaringan_utilitas }}
+                    <td colspan="8">
+                        {{ @!$user_information->krk->jaringan_utilitas ? '-' : @$user_information->krk->jaringan_utilitas }}
                     </td>
                 </tr>
                 <tr>
@@ -241,7 +242,9 @@
                 <h5>
                     KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
                 </h5>
-                <img src="data:image/png;base64, {!! $approval !!}">
+                @if (@$user_information->approval)
+                    <img src="data:image/png;base64, {!! $approval !!}">
+                @endif
                 <p>
                     <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
                     <small>Pembina Utama Muda</small><br>
@@ -315,7 +318,9 @@
                     <h5>
                         KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG <br> KABUPATEN BOYOLALI
                     </h5>
-                    <img src="data:image/png;base64, {!! $approval !!}">
+                    @if (@$user_information->approval)
+                        <img src="data:image/png;base64, {!! $approval !!}">
+                    @endif
                     <br>
                     <p>
                         <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>

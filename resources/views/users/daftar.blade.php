@@ -537,6 +537,19 @@
         map.on('draw:created', function(e) {
             polygon = e.layer;
             map.addLayer(polygon);
+            var form = $('.php-email-form'); //retrieve the form as a DOM element
+            var polymarker = L.polygon(e.layer._latlngs[0]).getBounds().getCenter();
+            var centerlat = document.createElement('input'); 
+            centerlat.setAttribute('name', "latitude"); //set the param name
+            centerlat.setAttribute('value',  String(polymarker.lat).substr(0, 10)); //set the value
+            centerlat.setAttribute('type', 'hidden') //set the type, like "hidden" or other
+            form.append(centerlat); //append the input to the form
+
+            var centerlong = document.createElement('input'); 
+            centerlong.setAttribute('name', "longitude"); //set the param name
+            centerlong.setAttribute('value',  String(polymarker.lng).substr(0, 10)); //set the value
+            centerlong.setAttribute('type', 'hidden') //set the type, like "hidden" or other
+            form.append(centerlong); //append the input to the form
             e.layer._latlngs[0].forEach(function callback(value, index) {
                 var row = table.insertRow(table.rows.length);
                 var celly = row.insertCell(0);
@@ -546,7 +559,6 @@
                 var latitude = String(value.lat).substr(0, 10);
                 celly.innerHTML = longitude;
                 cellx.innerHTML = latitude;
-                var form = $('.php-email-form'); //retrieve the form as a DOM element
                 var inputlng = document.createElement('input'); //prepare a new input DOM element
                 inputlng.setAttribute('name', "polygon[longitude][]"); //set the param name
                 inputlng.setAttribute('value',  longitude); //set the value

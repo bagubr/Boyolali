@@ -66,12 +66,14 @@ class HomeController extends Controller
             'submitter_phone' => 'required',
             'nomor_hak' => 'required',
             'polygon' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
         ]);
         if ($data['submitter_optional']) {
             $data['submitter'] .= ' ( ' . $data['submitter_optional'] . ' )';
         }
-        $data['latitude'] = $data['polygon']['latitude'][0];
-        $data['longitude'] = $data['polygon']['longitude'][0];
+        // $data['latitude'] = $data['polygon']['latitude'][0];
+        // $data['longitude'] = $data['polygon']['longitude'][0];
         $data['user_id'] = Auth::user()->id;
         $data['kbli_activity_id'] = NULL;
         $data['nomor_registration'] = NULL;
