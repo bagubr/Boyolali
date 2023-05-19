@@ -626,7 +626,7 @@
                                     <input type="text" name="kkop" id="" class="form-control"
                                         value="{{ @$user_information->krk->kkop }}">
                                     <center><label for="">Tambahan</label></center>
-                                    <textarea name="tambahan" id="" class="form-control">{{ @$user_information->krk->tambahan }}</textarea>
+                                    <textarea name="tambahan" style="height:250px" id="" class="form-control">{{ @$user_information->krk->tambahan }}</textarea>
                                 </div>
                                 <br>
                                 <div class="col-12">
