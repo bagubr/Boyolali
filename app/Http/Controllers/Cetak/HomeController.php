@@ -16,7 +16,11 @@ class HomeController extends Controller
 {
     public function generate(Request $request)
     {
-        
+        $data['user_information'] = UserInformation::whereUuid($request->id)->first();
+        if(isset($request->kirim_email)){
+            Notification::send($data['user_information']->user, new GenerateFile($data['user_information']));
+            return redirect()->back()->with('success', 'Berhasil kirim Email');
+        }
         $data = $this->validate($request, [
             'dasar_hukum' => 'required|array',
         ]);
@@ -32,11 +36,6 @@ class HomeController extends Controller
         // return $pdf->stream(); // Lihat Hasil Pdf
         $content = $pdf->download()->getOriginalContent();
         Storage::put('krks/'.$data['user_information']->uuid.'.pdf',$content);
-        try {
-            Notification::send($data['user_information']->user, new GenerateFile($data['user_information']));
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Berhasil generate file, Email tidak terkirim');
-        }
         return redirect()->back()->with('success', 'File berhasil di generate');
     }
 }

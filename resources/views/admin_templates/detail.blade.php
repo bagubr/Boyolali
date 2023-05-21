@@ -4,7 +4,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/libs/leaflet.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet"/>
+    
     <style>
+        select{
+            font-family: fontAwesome
+        }
+        option:nth-child(2) {
+            background-color: cyan;
+        }
+        option {
+            background-color: tomato;
+        }
         .leaflet-div-icon {
             width: 10px !important;
             height: 10px !important;
@@ -89,7 +100,7 @@
                 </div>
             </div>
             <div class="card-body">
-                @if (Route::is('selesai-detail'))
+                @if (Route::is('berkas-selesai-detail') && $user_information->nomor_krk || Route::is('selesai-detail'))
                     <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
                         data-target="#exampleModal">Generate File</a>
                     @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
@@ -97,16 +108,10 @@
                             class="btn btn-primary w-30 float-right mr-2" download>Download</a>
                         <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
                             class="btn btn-primary w-30 float-right mr-2" target="_blank">View</a>
-                    @endif
-                @endif
-                @if (Route::is('berkas-selesai-detail') && $user_information->nomor_krk)
-                    <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
-                        data-target="#exampleModal">Generate File</a>
-                    @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
-                        <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
-                            class="btn btn-primary w-30 float-right mr-2" download>Download</a>
-                        <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
-                            class="btn btn-primary w-30 float-right mr-2" target="_blank">View</a>
+                        <form action="{{ route('generate-file', ['id' => $user_information->uuid]) }}" method="post">
+                            @csrf
+                            <button type="submit" name="kirim_email" value="true" class="btn btn-success w-30 float-right mr-2">Kirim Email</button>
+                        </form>
                     @endif
                 @endif
                 {!! Form::open(['url' => route('agenda-pemohon'), 'method' => 'post', 'id' => 'agenda-lokasi']) !!}
@@ -364,7 +369,7 @@
                                 <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
                             @else
                                 <input type="text" class="form-control" name="nomor_registration"
-                                    value="{{ $nomor_registration }}" readonly>
+                                    value="{{ $user_information->nomor_registration }}" readonly>
                                 <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
                             @endif
                             <br>
@@ -374,7 +379,7 @@
                                 @if (!$user_information->nomor_registration)
                                     <button type="submit" class="btn btn-success m-auto">Save</button>
                                 @else
-                                    <button type="submit" class="btn btn-success m-auto">Kirim Email</button>
+                                    <button type="submit" name="kirim_email" value="true" class="btn btn-success m-auto">Kirim Email</button>
                                 @endif
                             @endif
                         </form>
@@ -805,6 +810,7 @@
         });
     </script>
     <script>
+        const nomor_registration = {!! $user_information !!};
         $('#nextProses').click(function(e) {
             e.preventDefault();
             swal({
@@ -822,16 +828,20 @@
                         if (willDelete == null) {
                             swal("Cancel");
                         } else {
-                            swal("Berhasil!", {
-                                icon: "success",
-                            });
-                            var formNextProses = $('#formNextProses');
-                            var noteInput = document.createElement('input');
-                            noteInput.setAttribute('name', "note");
-                            noteInput.setAttribute('value', willDelete);
-                            noteInput.setAttribute('type', 'hidden');
-                            formNextProses.append(noteInput);
-                            formNextProses.submit();
+                            if(nomor_registration.nomor_registration === null){
+                                swal("Nomor Agenda blm di buat!");
+                            }else{
+                                swal("Berhasil!", {
+                                    icon: "success",
+                                });
+                                var formNextProses = $('#formNextProses');
+                                var noteInput = document.createElement('input');
+                                noteInput.setAttribute('name', "note");
+                                noteInput.setAttribute('value', willDelete);
+                                noteInput.setAttribute('type', 'hidden');
+                                formNextProses.append(noteInput);
+                                formNextProses.submit();
+                            }
                         }
                     } else {
                         swal("Catatan Kosong");

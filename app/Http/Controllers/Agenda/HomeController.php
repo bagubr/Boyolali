@@ -84,6 +84,9 @@ class   HomeController extends Controller
             'note' => 'Catatan blm di isi',
         ]);
         $user_information = UserInformation::where('uuid', $data['uuid'])->first();
+        if(!$user_information->nomor_krk){
+            return redirect()->back()->with('error', 'Nomor SK blm di isi');
+        }
         $data['user_information_id'] = $user_information->id;
         $data['from'] = Auth::guard('administrator')->user()->role;
         $data['from_id'] = Auth::guard('administrator')->user()->id;
@@ -91,7 +94,7 @@ class   HomeController extends Controller
         $data_information['agenda_date'] = date('Y-m-d H:i:s');
         $data_information['status'] = $data['to'];
         $user_information->update($data_information);
-        return redirect()->route('berkas-selesai-detail')->with('success', 'Berhasil');
+        return redirect()->route('agenda-berkas-selesai')->with('success', 'Berhasil');
     }
 
     public function detail(Request $request)
@@ -111,13 +114,16 @@ class   HomeController extends Controller
             $user_information->update($data);
             $user_information->refresh();
         }
-        ApplicantReference::where('user_information_id', $id)->update([
-            'status' => ApplicantReference::STATUS_APPROVE
-        ]);
-        try {
-            Notification::send($user_information->user, new AgendaCreate($user_information));
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Berhasil buat Nomor Agenda, Email tidak terkirim');
+        if(isset($request->kirim_email)){
+            try {
+                Notification::send($user_information->user, new AgendaCreate($user_information));
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('error', 'Email tidak terkirim');
+            }
+        }else{
+            ApplicantReference::where('user_information_id', $id)->update([
+                'status' => ApplicantReference::STATUS_APPROVE
+            ]);
         }
         return redirect()->back()->with('success', 'Berhasil');
     }
@@ -209,6 +215,9 @@ class   HomeController extends Controller
             'note' => 'Catatan blm di isi',
         ]);
         $user_information = UserInformation::where('uuid', $data['uuid'])->first();
+        if(!$user_information->nomor_registration){
+            return redirect()->back()->with('error', 'Nomor Agenda blm di isi');
+        }
         $data['user_information_id'] = $user_information->id;
         $data['from'] = Auth::guard('administrator')->user()->role;
         $data['from_id'] = Auth::guard('administrator')->user()->id;

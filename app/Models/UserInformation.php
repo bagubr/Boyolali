@@ -157,38 +157,38 @@ class UserInformation extends Model
     {
         if($status == self::STATUS_FILING){
             return [
-                self::STATUS_CEK => 'Cek Manual',
+                self::STATUS_CEK => '&#xf00c; Cek Manual',
             ];
         }elseif($status == self::STATUS_CEK){
             return [
-                self::STATUS_SUBKOR => 'Sub Koordinator',
-                self::STATUS_FILING => 'Agenda',
+                self::STATUS_SUBKOR => '&#xf00c; Sub Koordinator',
+                self::STATUS_FILING => '&#xf00d; Agenda',
             ];
         }elseif($status == self::STATUS_SUBKOR){
             return [
-                self::STATUS_KABID => 'Kepala Bidang',
-                self::STATUS_CEK => 'Cek Manual',
-                self::STATUS_FILING => 'Agenda',
+                self::STATUS_KABID => '&#xf00c; Kepala Bidang',
+                self::STATUS_CEK => '&#xf00d; Cek Manual',
+                self::STATUS_FILING => '&#xf00d; Agenda',
             ];
         }elseif($status == self::STATUS_KABID){
             return [
-                self::STATUS_KADIS => 'Kepala Dinas',
-                self::STATUS_SUBKOR => 'Sub Koordinator',
-                self::STATUS_CEK => 'Cek Manual',
-                self::STATUS_FILING => 'Agenda',
+                self::STATUS_KADIS => '&#xf00c; Kepala Dinas',
+                self::STATUS_SUBKOR => '&#xf00d; Sub Koordinator',
+                self::STATUS_CEK => '&#xf00d; Cek Manual',
+                self::STATUS_FILING => '&#xf00d; Agenda',
             ];
         }elseif($status == self::STATUS_KADIS){
             return [
-                self::STATUS_CETAK => 'SK',
-                self::STATUS_KABID => 'Kepala Bidang',
-                self::STATUS_SUBKOR => 'Sub Koordinator',
-                self::STATUS_CEK => 'Cek Manual',
-                self::STATUS_FILING => 'Agenda',
+                self::STATUS_CETAK => '&#xf00c; SK',
+                self::STATUS_KABID => '&#xf00d; Kepala Bidang',
+                self::STATUS_SUBKOR => '&#xf00d; Sub Koordinator',
+                self::STATUS_CEK => '&#xf00d; Cek Manual',
+                self::STATUS_FILING => '&#xf00d; Agenda',
             ];
-        }elseif($status == self::STATUS_CETAK){
-            return [
-                self::STATUS_SELESAI => 'Selesai',
-            ];
+        // }elseif($status == self::STATUS_CETAK){
+        //     return [
+        //         self::STATUS_SELESAI => '&#xf00c; Selesai',
+        //     ];
         }else{
             return [
                 self::STATUS_SELESAI => 'Selesai',
