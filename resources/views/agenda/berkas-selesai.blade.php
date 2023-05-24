@@ -17,6 +17,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Tanggal Permohonan</th>
+                                <th>Fungsi Bangunan</th>
                                 <th>Nomor Agenda</th>
                                 <th>Nama Pemohon</th>
                                 <th>Nomor Pemohon</th>
@@ -30,6 +31,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('Y-m-d', strtotime($item->created_at)) }}</td>
+                                    <td>{{ $item->activity_name }}</td>
                                     <td>{{ $item->nomor_registration }}</td>
                                     <td>{{ $item->submitter }}</td>
                                     <td>{{ $item->submitter_phone }}</td>

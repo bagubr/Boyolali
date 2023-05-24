@@ -9,6 +9,7 @@ use App\Models\Polygon;
 use App\Models\Riwayat;
 use App\Models\UserInformation;
 use App\Notifications\AgendaCreate;
+use App\Notifications\TolakAgenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -225,6 +226,9 @@ class   HomeController extends Controller
         $data_information['agenda_date'] = date('Y-m-d H:i:s');
         $data_information['status'] = $data['to'];
         $user_information->update($data_information);
+        if($data_information['status'] == UserInformation::STATUS_TOLAK){
+            Notification::send($user_information->user, new TolakAgenda($user_information));
+        }
         return redirect()->route('agenda-berkas-proses')->with('success', 'Berhasil');
     }
     

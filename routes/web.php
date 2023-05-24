@@ -9,6 +9,7 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\Kabid\HomeController as KabidHomeController;
 use App\Http\Controllers\Kadis\HomeController as KadisHomeController;
+use App\Http\Controllers\Pencarian\HomeController as PencarianHomeController;
 use App\Http\Controllers\Users\HomeController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\Sketch\HomeController as SketchHomeController;
@@ -117,10 +118,15 @@ Route::prefix('administrator')->group(function () {
         Route::post('kadis-approve', [KadisHomeController::class, 'approve'])->name('kadis-approve');
         Route::get('kadis-cek', [KadisHomeController::class, 'cek'])->name('kadis-cek');
         Route::get('kadis-cek-detail', [KadisHomeController::class, 'detail'])->name('kadis-cek-detail');
-
+        
         Route::post('generate-file', [CetakHomeController::class, 'generate'])->name('generate-file');
+        Route::get('view-file', [CetakHomeController::class, 'view'])->name('view-file');
         Route::get('admin-profile', [AdministratorHomeController::class, 'admin_profile'])->name('admin-profile');
         Route::post('admin-profile', [AdministratorHomeController::class, 'admin_profile'])->name('admin-profile-post');
+
+        Route::get('pencarian', [PencarianHomeController::class, 'index'])->name('pencarian');
+        Route::get('pencarian-detail', [PencarianHomeController::class, 'detail'])->name('pencarian-detail');
+        Route::get('pencarian-data', [PencarianHomeController::class, 'pencarian_data'])->name('pencarian-data');
     });
 });
 

@@ -20,6 +20,15 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Pencarian
+    </div>
+    <li class="nav-item {{ Route::is('pencarian', 'pencarian-detail') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('pencarian') }}">
+            <i class="fas fa-fw fa-edit"></i>
+            <span>Pencarian Berkas</span></a>
+    </li>
 
     @if (Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'ADMIN')
         <!-- Divider -->

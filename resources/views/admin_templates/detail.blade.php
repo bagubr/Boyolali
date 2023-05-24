@@ -4,18 +4,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/libs/leaflet.min.css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet"/>
-    
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet" />
+
     <style>
-        select{
+        select {
             font-family: fontAwesome
         }
-        option:nth-child(2) {
-            background-color: cyan;
-        }
-        option {
-            background-color: tomato;
-        }
+
         .leaflet-div-icon {
             width: 10px !important;
             height: 10px !important;
@@ -50,6 +45,18 @@
     </style>
 @endpush
 @section('content')
+@php
+    function cekstatus(){
+        if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'ADMIN'){
+            if(Route::is('pencarian-detail')){
+                return false;
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+@endphp
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
@@ -100,17 +107,20 @@
                 </div>
             </div>
             <div class="card-body">
-                @if (Route::is('berkas-selesai-detail') && $user_information->nomor_krk || Route::is('selesai-detail'))
+                @if (Route::is('subkor-cek-detail') || Route::is('subkor-detail') || Route::is('kabid-cek-detail') || Route::is('kabid-detail') || Route::is('kadis-cek-detail') || Route::is('kadis-detail') || Route::is('berkas-selesai-detail') || Route::is('selesai-detail')) 
+                    <a href="{{ route('view-file', ['id' => $user_information->uuid]) }}"
+                        class="btn btn-primary w-30 float-right mr-2 mb-2 ml-2" target="_blank">View</a>
+                @endif
+                @if ($user_information->nomor_krk)
                     <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
                         data-target="#exampleModal">Generate File</a>
                     @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
                         <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
                             class="btn btn-primary w-30 float-right mr-2" download>Download</a>
-                        <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
-                            class="btn btn-primary w-30 float-right mr-2" target="_blank">View</a>
                         <form action="{{ route('generate-file', ['id' => $user_information->uuid]) }}" method="post">
                             @csrf
-                            <button type="submit" name="kirim_email" value="true" class="btn btn-success w-30 float-right mr-2">Kirim Email</button>
+                            <button type="submit" name="kirim_email" value="true"
+                                class="btn btn-success w-30 float-right mr-2">Kirim Email</button>
                         </form>
                     @endif
                 @endif
@@ -228,10 +238,31 @@
                                 {!! Form::text('nomor_hak', $user_information->nomor_hak, ['class' => 'form-control', 'id' => 'nomor_hak']) !!}
                             </td>
                         </tr>
-                        <tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div id="map-wrapper" style="width: 70%;
+                    position: relative;">
+                        <div class="mt-3 mb-3" id="map"></div>
+                        <div id="button-wrapper" class="card d-inline p-2"
+                            style="position: absolute; top: 10px; right:10px; z-index:1000;margin:10px;">
+                            <button type="button" class="btn btn-primary" onclick="editButton()">Edit</button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelButton()">Reset</button>
+                            <div class="form-check">
+                                <input class="form-check-input" id="viewPolygon" type="checkbox" onclick="viewPolygon()"
+                                    checked>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Lihat Polygon
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <table style="width: 30%;float:right;vertical-align: top; text-align:center;">
+                        <tr style="vertical-align:top; text-align:center">
                             <td>Koordinat</td>
-                            <td>:</td>
-                            <td>
+                        </tr>
+                        <tr style="vertical-align:top; text-align:center">
+                            <td align="center">
                                 <table class="table table-striped w-50" border="1">
                                     <thead>
                                         <tr>
@@ -250,10 +281,11 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr class="koordinattable">
+                        <tr style="vertical-align:top; text-align:center">
                             <td class="d-none">Koordinat Baru</td>
-                            <td class="d-none">:</td>
-                            <td class="d-none">
+                        </tr>
+                        <tr class="koordinattable" style="vertical-align:top; text-align:center">
+                            <td class="d-none" align="center">
                                 <table class="table table-striped tablekoordinat w-50" border="1">
                                     <thead>
                                         <tr>
@@ -272,27 +304,9 @@
                                 </table>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-                <div id="map-wrapper" style="width: 100%;
-                position: relative;">
-                    <div class="mt-3 mb-3" id="map"></div>
-                    <div id="button-wrapper" class="card d-inline p-2"
-                        style="position: absolute; top: 10px; right:10px; z-index:1000;margin:10px;">
-                        <button type="button" class="btn btn-primary" onclick="editButton()">Edit</button>
-                        <button type="button" class="btn btn-secondary" onclick="cancelButton()">Reset</button>
-                        <div class="form-check">
-                            <input class="form-check-input" id="viewPolygon" type="checkbox" onclick="viewPolygon()"
-                                checked>
-                            <label class="form-check-label" for="flexCheckChecked">
-                                Lihat Polygon
-                            </label>
-                        </div>
-                    </div>
+                    </table>
                 </div>
-                @if (Auth::guard('administrator')->user()->role == 'FILING' ||
-                        Auth::guard('administrator')->user()->role == 'CEK' ||
-                        Auth::guard('administrator')->user()->role == 'ADMIN')
+                @if (cekstatus())
                     <button class="btn btn-primary float-right" type="submit">Submit</button>
                 @endif
                 {!! Form::close() !!}
@@ -347,16 +361,13 @@
                                     ->orderBy('id')
                                     ->get()
                                     ->pluck('value');
-                                
-                                $nomor = str_pad($nomor, 4, '0', STR_PAD_LEFT);
-                                $nomor_registration_before = $default[0] . '/' . $nomor . '/' . date('n') . '/' . date('Y');
+                                $nomor_registration_before = $default[0] . '/' . str_pad($nomor, 4, '0', STR_PAD_LEFT) . '/' . date('n') . '/' . date('Y');
                                 if (!$user_information->nomor_registration) {
                                     $nomor = $nomor + 1;
                                 } else {
                                     $nomor = $nomor;
                                 }
-                                $nomor = str_pad($nomor, 4, '0', STR_PAD_LEFT);
-                                $nomor_registration = $default[0] . '/' . $nomor . '/' . date('n') . '/' . date('Y');
+                                $nomor_registration = $default[0] . '/' . str_pad($nomor, 4, '0', STR_PAD_LEFT) . '/' . date('n') . '/' . date('Y');
                             @endphp
                             <label for="">Nomor Registrasi Sebelumnya</label>
                             <input type="text" class="form-control" name="nomor_registration_before"
@@ -373,22 +384,19 @@
                                 <input type="hidden" name="nomor" id="" value="{{ $nomor }}">
                             @endif
                             <br>
-                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
-                                    Auth::guard('administrator')->user()->role == 'CEK' ||
-                                    Auth::guard('administrator')->user()->role == 'ADMIN')
+                            @if (cekstatus())
                                 @if (!$user_information->nomor_registration)
                                     <button type="submit" class="btn btn-success m-auto">Save</button>
                                 @else
-                                    <button type="submit" name="kirim_email" value="true" class="btn btn-success m-auto">Kirim Email</button>
+                                    <button type="submit" name="kirim_email" value="true"
+                                        class="btn btn-success m-auto">Kirim Email</button>
                                 @endif
                             @endif
                         </form>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="berkas" role="tabpanel" aria-labelledby="berkas-tab">
-                    @if (Auth::guard('administrator')->user()->role == 'FILING' ||
-                            Auth::guard('administrator')->user()->role == 'CEK' ||
-                            Auth::guard('administrator')->user()->role == 'ADMIN')
+                    @if (cekstatus())
                         <a href="#" class="btn btn-success float-right m-3" data-toggle="modal"
                             data-target="#addReferensi"
                             onclick="add({{ $user_information->id }}, {{ \App\Models\ReferenceType::whereNotIn('id',\App\Models\ApplicantReference::where('user_information_id', $user_information->id)->get()->pluck('reference_type_id'))->get()->pluck('file_type', 'id') }})">Tambah</a>
@@ -412,9 +420,7 @@
                                         <td>
                                             <a href="{{ url('storage/' . $item->file) }}" class="btn btn-primary"
                                                 target="_blank">Lihat</a>
-                                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
-                                                    Auth::guard('administrator')->user()->role == 'CEK' ||
-                                                    Auth::guard('administrator')->user()->role == 'ADMIN')
+                                            @if (cekstatus())
                                                 <a href="#" class="btn btn-info" data-toggle="modal"
                                                     data-target="#updateReferensi"
                                                     onclick="edit({{ $item->id }})">Edit</a>
@@ -441,9 +447,7 @@
                                         alt="" class="img-fluid rounded mx-auto d-block" width="500px">
                                 @endif
                                 <div class="float-right m-3 ">
-                                    @if (Auth::guard('administrator')->user()->role == 'FILING' ||
-                                            Auth::guard('administrator')->user()->role == 'CEK' ||
-                                            Auth::guard('administrator')->user()->role == 'ADMIN')
+                                    @if (cekstatus())
                                         <button class="btn btn-primary" type="submit">Upload</button>
                                     @endif
                                 </div>
@@ -636,16 +640,19 @@
                                 <br>
                                 <div class="col-12">
                                     <label for="">Jaringan Utilitas (Bebas Bangunan)</label>
-                                    <textarea name="jaringan_utilitas" id="" class="form-control">{{ @$user_information->krk->jaringan_utilitas }}</textarea>
-                                    <label for="">Prasarana Jalan</label>
-                                    <textarea name="prasarana_jalan" id="" class="form-control">{{ @$user_information->krk->prasarana_jalan }}</textarea>
+                                    <textarea name="jaringan_utilitas" id="" class="form-control">a. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebas Minimum Vertikal dari Konduktor pada Jaringan Transmisi Tenaga Listrik).
+b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Minimum Horizontal dari Sumbu Vertikal Menara/Tiang pada Jaringan Transmisi Tenaga Listrik)
+{{ @$user_information->krk->jaringan_utilitas }}
+                                    </textarea>
+                                    @if (@$user_information->activity_name === \App\Models\Activity::find(4)->title)
+                                        <label for="">Prasarana Jalan</label>
+                                        <textarea name="prasarana_jalan" id="" class="form-control">Sesuai dengan Lampiran pada Peraturan Pemerintah No. 12 Tahun 2021 Tentang Penyelenggaraan Perumahan dan Kawasan Permukiman. Jika total luas lahan yang diperuntukkan bagi pembangunan Prasarana Jalan kurang dari 20% (dua puluh persen) dari luas total seluruh area Permukiman, maka dimensi harus disesuaikan agar syarat 20% (dua puluh persen) luas lahan untuk Prasarana Jalan terpenuhi, dengan memperhatikan fungsi jalan dan volume lalu lintas yang akan ditampung oleh jalan{{ @$user_information->krk->prasarana_jalan }}</textarea>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer float-right">
-                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
-                                    Auth::guard('administrator')->user()->role == 'CEK' ||
-                                    Auth::guard('administrator')->user()->role == 'ADMIN')
+                            @if (cekstatus())
                                 <button class="btn btn-primary" type="submit">Submit</button>
                             @endif
                         </div>
@@ -681,15 +688,28 @@
                 <div class="tab-pane fade" id="nomorsk" role="tabpanel" aria-labelledby="nomorsk-tab">
 
                     <div class="card-body">
+                        @php
+                            $nomor = \App\Models\UserInformation::orderBy('nomor_krk', 'desc')->first()->nomor_krk ?? 0;
+                            
+                            $sebelumnya = implode("/", ['650',str_pad(explode("/", $nomor)[1], 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $nomor_krk = implode("/", ['650',str_pad(explode("/", $nomor)[1]+1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                        @endphp
                         <form action="{{ route('nomorsk-post', $user_information->id) }}" method="post">
                             @csrf
-                            <label for="">Nomor SK</label>
-                            <input type="text" class="form-control" name="nomor_krk"
-                                value="{{ $user_information->nomor_krk }}">
+                            <label for="">Nomor SK Sebelumnya</label>
+                            <input type="text" class="form-control" name="nomor_krk_sebelumnya"
+                                value="{{ $sebelumnya }}" readonly>
+                            @if (!$user_information->nomor_krk)
+                                <label for="">Nomor SK</label>
+                                <input type="text" class="form-control" name="nomor_krk"
+                                    value="{{ $nomor_krk }}">
+                            @else
+                                <label for="">Nomor SK</label>
+                                <input type="text" class="form-control" name="nomor_krk"
+                                    value="{{ $user_information->nomor_krk }}">
+                            @endif
                             <br>
-                            @if (Auth::guard('administrator')->user()->role == 'FILING' ||
-                                    Auth::guard('administrator')->user()->role == 'CEK' ||
-                                    Auth::guard('administrator')->user()->role == 'ADMIN')
+                            @if (cekstatus())
                                 <button type="submit" class="btn btn-success m-auto">Save</button>
                             @endif
                         </form>
@@ -828,9 +848,9 @@
                         if (willDelete == null) {
                             swal("Cancel");
                         } else {
-                            if(nomor_registration.nomor_registration === null){
+                            if (nomor_registration.nomor_registration === null) {
                                 swal("Nomor Agenda blm di buat!");
-                            }else{
+                            } else {
                                 swal("Berhasil!", {
                                     icon: "success",
                                 });

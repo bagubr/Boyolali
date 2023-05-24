@@ -62,12 +62,12 @@
         <tr>
             <td>NOMOR</td>
             <td>:</td>
-            <td>{{ $user_information['nomor_registration'] }}</td>
+            <td>{{ $user_information['nomor_krk'] }}</td>
         </tr>
         <tr>
             <td>TANGGAL </td>
             <td>:</td>
-            <td>{{ date('d-m-Y', strtotime($user_information['print_date'])) }}</td>
+            <td>{{ (!$user_information['print_date'])?'':date('d-m-Y', strtotime($user_information['print_date'])) }}</td>
         </tr>
     </table>
 
@@ -174,32 +174,37 @@
                         {{ @!$user_information->krk->sungai_tidak_bertanggul ? '-' : @$user_information->krk->sungai_tidak_bertanggul }}
                     </td>
                 </tr>
-                @if ($user_information->activity_name == \App\Models\Activity::find(4)->name)
-                    <tr>
+                <tr>
+                    @if ($user_information->activity_name == 'Perumahan')
                         <td> <strong> 6. PSU </strong></td>
                         <td>{{ @!$user_information->krk->psu ? '-' : 'Min ' . @$user_information->krk->psu }}</td>
-                        <td>JLing</td>
-                        <td>{{ @!$user_information->gsb->jling ? '-' : @$user_information->gsb->jling }}</td>
-                        <td colspan="2">Waduk (titik pasang tertinggi)</td>
-                        <td colspan="2">{{ @!$user_information->krk->waduk ? '-' : @$user_information->krk->waduk }}
-                        </td>
-                    </tr>
-                @else
-                    <tr>
-                        <td> <strong>6. KDH </strong></td>
+                    @else
+                        <td> <strong>6. KDH</strong></td>
                         <td>{{ @!$user_information->krk->kdh ? '-' : @$user_information->krk->kdh . ' %' }}</td>
-                        <td>JLS</td>
-                        <td>{{ @!$user_information->gsb->jls ? '-' : @$user_information->gsb->jls }}</td>
-                        <td colspan="2">Mata Air</td>
-                        <td colspan="2">
-                            {{ @!$user_information->krk->mata_air ? '-' : @$user_information->krk->mata_air }}
-                        </td>
-                    </tr>
-                @endif
+                    @endif
+                    <td>JLing</td>
+                    <td>{{ @!$user_information->gsb->jling ? '-' : @$user_information->gsb->jling }}</td>
+                    <td colspan="2">Waduk (titik pasang tertinggi)</td>
+                    <td colspan="2">{{ @!$user_information->krk->waduk ? '-' : @$user_information->krk->waduk }}
+                    </td>
+                </tr>
                 <tr>
+                    <td colspan="2"></td>
+                    <td>JLS</td>
+                    <td>{{ @!$user_information->gsb->jls ? '-' : @$user_information->gsb->jls }}</td>
+                    <td colspan="2">Mata Air</td>
+                    <td colspan="2">
+                        {{ @!$user_information->krk->mata_air ? '-' : @$user_information->krk->mata_air }}
+                    </td>
+                </tr>
+                <tr>
+                    @if ($user_information->activity_name == 'Perumahan')
+                    <td colspan="4"></td>
+                    @else
                     <td colspan="2"></td>
                     <td> <strong> 8. KTB </strong> </td>
                     <td>{{ @!$user_information->krk->ktb ? '-' : @$user_information->krk->ktb }}
+                    @endif
                     </td>
                     <td colspan="2">Tol (dari pagar)</td>
                     <td colspan="2">{{ @!$user_information->krk->tol ? '-' : @$user_information->krk->tol }}</td>
@@ -212,6 +217,7 @@
                         {{ @!$user_information->krk->jaringan_utilitas ? '-' : @$user_information->krk->jaringan_utilitas }}
                     </td>
                 </tr>
+                @if ($user_information->activity_name == 'Perumahan')
                 <tr>
                     <td colspan="8"><strong>9. Prasarana Jalan</strong></td>
                 </tr>
@@ -221,6 +227,11 @@
                 <tr>
                     <td colspan="8"><strong>10. Informasi Lainnya</strong></td>
                 </tr>
+                @else
+                <tr>
+                    <td colspan="8"><strong>9. Informasi Lainnya</strong></td>
+                </tr>
+                @endif
                 <tr>
                     <td>a. SRP </td>
                     <td colspan="7">{{ @$user_information->krk->srp }}</td>
@@ -245,6 +256,7 @@
                 @if (@$user_information->approval)
                     <img src="data:image/png;base64, {!! $approval !!}">
                 @endif
+                <br>
                 <p>
                     <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
                     <small>Pembina Utama Muda</small><br>
@@ -267,7 +279,7 @@
         <tr>
             <td style="font-size: 14px">TANGGAL </td>
             <td style="font-size: 14px">:</td>
-            <td style="font-size: 14px">{{ date('d-m-Y', strtotime($user_information['print_date'])) }}</td>
+            <td style="font-size: 14px">{{ (!$user_information['print_date'])?'':date('d-m-Y', strtotime($user_information['print_date'])) }}</td>
         </tr>
     </table>
     <br>

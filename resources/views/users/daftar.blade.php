@@ -194,7 +194,7 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="submitter_optional">Nama Perusahaan</label>
-                                <input type="text" class="form-control input" name="submitter_optional"
+                                <input type="text" class="form-control" name="submitter_optional"
                                     id="submitter_optional" required>
                                 <small class="text-danger">* apabila bukan perorangan</small>
                             </div>

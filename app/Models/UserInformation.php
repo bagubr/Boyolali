@@ -14,6 +14,7 @@ class UserInformation extends Model
     const STATUS_KABID = 'KABID';
     const STATUS_KADIS = 'KADIS';
     const STATUS_CETAK = 'CETAK';
+    const STATUS_TOLAK = 'TOLAK';
     const STATUS_SELESAI = 'SELESAI';
     const STATUS_VALIDASI = [
         self::STATUS_SUBKOR,
@@ -158,6 +159,7 @@ class UserInformation extends Model
         if($status == self::STATUS_FILING){
             return [
                 self::STATUS_CEK => '&#xf00c; Cek Manual',
+                self::STATUS_TOLAK => '&#xf00d; Tolak',
             ];
         }elseif($status == self::STATUS_CEK){
             return [
@@ -185,19 +187,15 @@ class UserInformation extends Model
                 self::STATUS_CEK => '&#xf00d; Cek Manual',
                 self::STATUS_FILING => '&#xf00d; Agenda',
             ];
-        // }elseif($status == self::STATUS_CETAK){
-        //     return [
-        //         self::STATUS_SELESAI => '&#xf00c; Selesai',
-        //     ];
         }else{
             return [
-                self::STATUS_SELESAI => 'Selesai',
-                self::STATUS_CETAK => 'SK',
-                self::STATUS_KADIS => 'Kepala Dinas',
-                self::STATUS_KABID => 'Kepala Bidang',
-                self::STATUS_SUBKOR => 'Sub Koordinator',
-                self::STATUS_CEK => 'Cek Manual',
-                self::STATUS_FILING => 'Agenda',
+                self::STATUS_SELESAI => '&#xf00c; Selesai',
+                self::STATUS_CETAK => '&#xf00d; SK',
+                self::STATUS_KADIS => '&#xf00d; Kepala Dinas',
+                self::STATUS_KABID => '&#xf00d; Kepala Bidang',
+                self::STATUS_SUBKOR => '&#xf00d; Sub Koordinator',
+                self::STATUS_CEK => '&#xf00d; Cek Manual',
+                self::STATUS_FILING => '&#xf00d; Agenda',
             ];
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cetak;
 
 use App\Http\Controllers\Controller;
+use App\Models\DasarHukum;
 use App\Models\UserInformation;
 use App\Notifications\GenerateFile;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
@@ -33,9 +34,20 @@ class HomeController extends Controller
         }
         $pdf = FacadePdf::loadView('pdf_view', $data);
         $pdf->setPaper(array(0,0,609.4488,935.433), 'potrait');
-        // return $pdf->stream(); // Lihat Hasil Pdf
+        return $pdf->stream(); // Lihat Hasil Pdf
         $content = $pdf->download()->getOriginalContent();
         Storage::put('krks/'.$data['user_information']->uuid.'.pdf',$content);
         return redirect()->back()->with('success', 'File berhasil di generate');
+    }
+
+    public function view(Request $request)
+    {
+        $data['user_information'] = UserInformation::whereUuid($request->id)->first();
+        $data['dasar_hukum'] = DasarHukum::get()->pluck('content');
+        $data['user_information'] = UserInformation::whereUuid($request->id)->first();
+        $data['qrcode'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate('https://www.google.com/maps/search/'.substr($data['user_information']->latitude, 0, 10).','.substr($data['user_information']->longitude, 0,10)));
+        $pdf = FacadePdf::loadView('pdf_view', $data);
+        $pdf->setPaper(array(0,0,609.4488,935.433), 'potrait');
+        return $pdf->stream(); // Lihat Hasil Pdf
     }
 }
