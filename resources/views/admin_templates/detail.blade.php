@@ -153,9 +153,9 @@
                             <td>:</td>
                             <td>
                                 {!! Form::text('email', $user_information->user->email, ['class' => 'form-control', 'disabled']) !!}</td>
-                        </tr>
-                        <tr>
-                            <td>Alamat Pemohon</td>
+                            </tr>
+                            <tr>
+                                <td>Alamat Pemohon</td>
                             <td>:</td>
                             <td>
                                 {!! Form::textarea('address', $user_information->address, ['class' => 'form-control']) !!}</td>
@@ -163,12 +163,14 @@
                         <tr>
                             <td>Kegiatan yang dimohon</td>
                             <td>:</td>
+                            {{-- <td>{!! Form::text('activity_name', $user_information->activity_name, ['class' => 'form-control', 'disabled']) !!}</td> --}}
                             <td>
+                                @php
+                                    $data = array_merge([\App\Models\Activity::where('title', '!=', $user_information->activity_name)->get()->pluck('title', 'title')], [$user_information->activity_name => $user_information->activity_name ]);
+                                @endphp
                                 {!! Form::select(
-                                    'activity_name',
-                                    [\App\Models\Activity::get()->pluck('title', 'title')],
-                                    $user_information->activity_name,
-                                    ['class' => 'form-control', 'id' => 'activity_name', 'style' => 'width:100%'],
+                                    'activity_name', $data[0], $user_information->activity_name,
+                                    ['class' => 'form-control', 'id' => 'activity_name', 'style' => 'width:100%', 'label' => 'oke'],
                                 ) !!}</td>
                         </tr>
                         <tr>
