@@ -166,10 +166,10 @@
                             {{-- <td>{!! Form::text('activity_name', $user_information->activity_name, ['class' => 'form-control', 'disabled']) !!}</td> --}}
                             <td>
                                 @php
-                                    $data = array_merge([\App\Models\Activity::where('title', '!=', $user_information->activity_name)->get()->pluck('title', 'title')], [$user_information->activity_name => $user_information->activity_name ]);
+                                    $data = array_merge(\App\Models\Activity::where('title', '!=', $user_information->activity_name)->get()->pluck('title', 'title')->toArray(), [$user_information->activity_name => $user_information->activity_name ]);
                                 @endphp
                                 {!! Form::select(
-                                    'activity_name', $data[0], $user_information->activity_name,
+                                    'activity_name', $data, $user_information->activity_name,
                                     ['class' => 'form-control', 'id' => 'activity_name', 'style' => 'width:100%', 'label' => 'oke'],
                                 ) !!}</td>
                         </tr>
