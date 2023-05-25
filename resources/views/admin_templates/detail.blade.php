@@ -642,13 +642,13 @@
                                 <br>
                                 <div class="col-12">
                                     <label for="">Jaringan Utilitas (Bebas Bangunan)</label>
-                                    <textarea name="jaringan_utilitas" id="" class="form-control">a. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebas Minimum Vertikal dari Konduktor pada Jaringan Transmisi Tenaga Listrik).
+                                    <textarea name="jaringan_utilitas" id="" class="form-control" style="height: 150px;">a. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebas Minimum Vertikal dari Konduktor pada Jaringan Transmisi Tenaga Listrik).
 b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Minimum Horizontal dari Sumbu Vertikal Menara/Tiang pada Jaringan Transmisi Tenaga Listrik)
 {{ @$user_information->krk->jaringan_utilitas }}
                                     </textarea>
                                     @if (@$user_information->activity_name === \App\Models\Activity::find(4)->title)
                                         <label for="">Prasarana Jalan</label>
-                                        <textarea name="prasarana_jalan" id="" class="form-control">Sesuai dengan Lampiran pada Peraturan Pemerintah No. 12 Tahun 2021 Tentang Penyelenggaraan Perumahan dan Kawasan Permukiman. Jika total luas lahan yang diperuntukkan bagi pembangunan Prasarana Jalan kurang dari 20% (dua puluh persen) dari luas total seluruh area Permukiman, maka dimensi harus disesuaikan agar syarat 20% (dua puluh persen) luas lahan untuk Prasarana Jalan terpenuhi, dengan memperhatikan fungsi jalan dan volume lalu lintas yang akan ditampung oleh jalan{{ @$user_information->krk->prasarana_jalan }}</textarea>
+                                        <textarea name="prasarana_jalan" id="" class="form-control" style="height: 150px;">Sesuai dengan Lampiran pada Peraturan Pemerintah No. 12 Tahun 2021 Tentang Penyelenggaraan Perumahan dan Kawasan Permukiman. Jika total luas lahan yang diperuntukkan bagi pembangunan Prasarana Jalan kurang dari 20% (dua puluh persen) dari luas total seluruh area Permukiman, maka dimensi harus disesuaikan agar syarat 20% (dua puluh persen) luas lahan untuk Prasarana Jalan terpenuhi, dengan memperhatikan fungsi jalan dan volume lalu lintas yang akan ditampung oleh jalan{{ @$user_information->krk->prasarana_jalan }}</textarea>
                                     @endif
                                 </div>
                             </div>
