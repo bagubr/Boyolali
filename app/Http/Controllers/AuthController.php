@@ -84,6 +84,7 @@ class AuthController extends Controller
                     'google_id'=> $user->id,
                     'password' => Hash::make($user->id)
                 ]);
+                $newUser->sendEmailVerificationNotification();
                 auth()->login($newUser, true);
                 return redirect()->route('home')->with('success', 'Login Berhasil');
             }
