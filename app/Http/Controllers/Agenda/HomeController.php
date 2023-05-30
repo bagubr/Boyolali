@@ -226,6 +226,7 @@ class   HomeController extends Controller
         $data_information['agenda_date'] = date('Y-m-d H:i:s');
         $data_information['status'] = $data['to'];
         $user_information->update($data_information);
+        $user_information->refresh();
         if($data_information['status'] == UserInformation::STATUS_TOLAK){
             Notification::send($user_information->user, new TolakAgenda($user_information));
         }
