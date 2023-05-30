@@ -16,11 +16,12 @@
     <link rel="stylesheet" href="{{ url('') }}/dist/css/adminlte.min.css?v=3.2.0">
 </head>
 
-<body class="hold-transition register-page">
+<body class="hold-transition register-page" style="background-color: #37517E">
     <div class="register-box">
         <div class="card">
             <div class="card-body">
                 <p class="login-box-msg">Registration</p>
+                @include('users.alert')
                 <form action="{{ route('registration') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
@@ -56,11 +57,6 @@
                             </div>
                         </div>
                     </div>
-                    @if ($errors->any())
-                        @foreach ($errors->all() as $error)
-                            <div class="btn btn-danger">{{ $error }}</div>
-                        @endforeach
-                    @endif
                     <div class="row">
                         {{-- <div class="col-8">
                             <div class="icheck-primary">

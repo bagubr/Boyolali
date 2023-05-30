@@ -86,13 +86,13 @@
         <div class="container" data-aos="fade-up">
 
             <div class="section-title">
-                <h2 style="-webkit-text-stroke: 1px white;">Dinas Pekerjaan Umum dan Penataan Ruang (DPUPR) <br> Kab. Boyolali</h2>
+                <h2 style="color:white;">Dinas Pekerjaan Umum dan Penataan Ruang (DPUPR) <br> Kab. Boyolali</h2>
             </div>
 
-            <div class="row">
+            <div class="row justify-content-center">
                 @foreach (\App\Models\MenuApplication::where('slug', 'admin')->get() as $item)
                     <div class="col-lg-4" style="height:200px; width: 200px" data-aos="zoom-in" data-aos-delay="100">
-                        <a href="{{ $item->url }}">
+                        <a href="{{ $item->url }}" target="_blank">
                             <div class="p-10 member d-flex align-items-start">
                                 <div class="member-info p-0"><img src="{{ asset('uploads/' . $item->file) }}"
                                         class="img-fluid" alt="">

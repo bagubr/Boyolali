@@ -13,7 +13,7 @@
     <header id="header" class="fixed-top " style="background: rgba(40, 58, 90, 0.9);">
         <div class="container d-flex align-items-center">
 
-            <h1 class="logo me-auto"><a href="#">{{ config('app.name') }}</a></h1>
+            <h1 class="logo me-auto"><a href="#" style="text-decoration: none;">{{ config('app.name') }}</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="#" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -135,10 +135,12 @@
                                 </td>
                                 <td>{{ $item->user_information_reference($user_information->id)->status ?? '-' }}</td>
                                 <td>
-                                    @if (!$item->user_information_reference($user_information->id))
-                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#upload" id="myModal" data-id="{{ $item->id }}"
-                                            onclick="upload({{ $item->id }})">Upload</button>
+                                    @if ($user_information->status == \App\Models\UserInformation::STATUS_FILING)
+                                        @if (!$item->user_information_reference($user_information->id))
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#upload" id="myModal" data-id="{{ $item->id }}"
+                                                onclick="upload({{ $item->id }})">Upload</button>
+                                        @endif
                                     @endif
                                 </td>
                                 <td>{{ $item->note }}</td>

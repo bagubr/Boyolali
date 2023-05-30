@@ -61,6 +61,7 @@ Route::prefix('users')->group(function () {
     Route::get('sub-district', [SubDistrictController::class, 'sub_district'])->name('sub-district');
     Route::post('login', [AuthController::class, 'login'])->name('user-login-post');
     Route::post('registration', [AuthController::class, 'registration'])->name('registration-post');
+    Route::get('detail-approval', [HomeController::class, 'detail_approval'])->name('detail-approval');
     
     Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('dashboard', [HomeController::class, 'index'])->name('home');
@@ -68,7 +69,6 @@ Route::prefix('users')->group(function () {
         Route::get('daftar', [HomeController::class, 'daftar'])->name('daftar');
         Route::get('proses', [HomeController::class, 'proses'])->name('proses');
         Route::get('detail', [HomeController::class, 'detail'])->name('detail');
-        Route::get('detail-approval', [HomeController::class, 'detail_approval'])->name('detail-approval');
         Route::post('upload', [HomeController::class, 'upload'])->name('upload');
         Route::post('user_information', [HomeController::class, 'user_information'])->name('user_information');
         Route::post('logout', [AuthController::class, 'logout'])->name('user-logout');

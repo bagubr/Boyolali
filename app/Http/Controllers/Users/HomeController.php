@@ -104,12 +104,16 @@ class HomeController extends Controller
 
     public function upload(Request $request)
     {
+        $data = $this->validate($request, [
+            'user_information_id' => 'required',
+            'reference_type_id' => 'required',
+            'file' => 'required|file',
+        ]);
+        $user_information = UserInformation::find($data['user_information_id']);
+        if($user_information->status != UserInformation::STATUS_FILING){
+            return redirect()->back()->with('error', 'Maaf Upload gagal, Pengajuan anda sedang/sudah di proses');
+        }
         try {
-            $data = $this->validate($request, [
-                'user_information_id' => 'required',
-                'reference_type_id' => 'required',
-                'file' => 'required|file',
-            ]);
             DB::beginTransaction();
             $data['file'] = $request->file->store('files');
             $data['is_upload'] = true;

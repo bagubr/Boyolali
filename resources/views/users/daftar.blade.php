@@ -88,7 +88,7 @@
     <header id="header" class="fixed-top " style="background: rgba(40, 58, 90, 0.9);">
         <div class="container d-flex align-items-center">
 
-            <h1 class="logo me-auto"><a href="#">{{ config('app.name') }}</a></h1>
+            <h1 class="logo me-auto"><a href="#" style="text-decoration: none;">{{ config('app.name') }}</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="#" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -190,12 +190,12 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="submitter">Nama Pemohon</label>
-                                <input type="text" class="form-control input" name="submitter" id="submitter" required>
+                                <input type="text" class="form-control input" name="submitter" id="submitter" required style="text-transform: uppercase;">
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="submitter_optional">Nama Perusahaan</label>
                                 <input type="text" class="form-control" name="submitter_optional"
-                                    id="submitter_optional">
+                                    id="submitter_optional" style="text-transform: uppercase;">
                                 <small class="text-danger">* apabila bukan perorangan</small>
                             </div>
                             <div class="form-group">
@@ -344,7 +344,7 @@
                     // add an "invalid" class to the field:
                     y[i].className += " invalid";
                     // and set the current valid status to false
-                    valid = false;
+                    valid = true;
                 }
             }
             // If the valid status is true, mark the step as finished and valid:

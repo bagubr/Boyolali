@@ -4,7 +4,7 @@
     <header id="header" class="fixed-top ">
         <div class="container d-flex align-items-center">
 
-            <h1 class="logo me-auto"><a href="#">{{ config('app.name') }}</a></h1>
+            <h1 class="logo me-auto"><a href="#" style="text-decoration: none;">{{ config('app.name') }}</a></h1>
 
         </div>
     </header><!-- End Header -->

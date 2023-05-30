@@ -45,18 +45,19 @@
     </style>
 @endpush
 @section('content')
-@php
-    function cekstatus(){
-        if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'ADMIN'){
-            if(Route::is('pencarian-detail')){
+    @php
+        function cekstatus()
+        {
+            if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'ADMIN') {
+                if (Route::is('pencarian-detail')) {
+                    return false;
+                }
+                return true;
+            } else {
                 return false;
             }
-            return true;
-        }else{
-            return false;
         }
-    }
-@endphp
+    @endphp
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
@@ -107,7 +108,14 @@
                 </div>
             </div>
             <div class="card-body">
-                @if (Route::is('subkor-cek-detail') || Route::is('subkor-detail') || Route::is('kabid-cek-detail') || Route::is('kabid-detail') || Route::is('kadis-cek-detail') || Route::is('kadis-detail') || Route::is('berkas-selesai-detail') || Route::is('selesai-detail')) 
+                @if (Route::is('subkor-cek-detail') ||
+                        Route::is('subkor-detail') ||
+                        Route::is('kabid-cek-detail') ||
+                        Route::is('kabid-detail') ||
+                        Route::is('kadis-cek-detail') ||
+                        Route::is('kadis-detail') ||
+                        Route::is('berkas-selesai-detail') ||
+                        Route::is('selesai-detail'))
                     <a href="{{ route('view-file', ['id' => $user_information->uuid]) }}"
                         class="btn btn-primary w-30 float-right mr-2 mb-2 ml-2" target="_blank">View</a>
                 @endif
@@ -116,11 +124,12 @@
                         data-target="#exampleModal">Generate File</a>
                     @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
                         @php
-                            $namefile = str_replace('/','_',$user_information->nomor_registration);
-                            header('Content-Disposition: inline; filename="'.$namefile.'.pdf"');
+                            $namefile = str_replace('/', '_', $user_information->nomor_registration);
+                            header('Content-Disposition: inline; filename="' . $namefile . '.pdf"');
                         @endphp
                         <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
-                            class="btn btn-primary w-30 float-right mr-2" download="{{ str_replace('/','_',$user_information->nomor_registration) }}">Download</a>
+                            class="btn btn-primary w-30 float-right mr-2"
+                            download="{{ str_replace('/', '_', $user_information->nomor_registration) }}">Download</a>
                         <form action="{{ route('generate-file', ['id' => $user_information->uuid]) }}" method="post">
                             @csrf
                             <button type="submit" name="kirim_email" value="true"
@@ -157,9 +166,9 @@
                             <td>:</td>
                             <td>
                                 {!! Form::text('email', $user_information->user->email, ['class' => 'form-control', 'disabled']) !!}</td>
-                            </tr>
-                            <tr>
-                                <td>Alamat Pemohon</td>
+                        </tr>
+                        <tr>
+                            <td>Alamat Pemohon</td>
                             <td>:</td>
                             <td>
                                 {!! Form::textarea('address', $user_information->address, ['class' => 'form-control']) !!}</td>
@@ -170,12 +179,20 @@
                             {{-- <td>{!! Form::text('activity_name', $user_information->activity_name, ['class' => 'form-control', 'disabled']) !!}</td> --}}
                             <td>
                                 @php
-                                    $data = array_merge(\App\Models\Activity::where('title', '!=', $user_information->activity_name)->get()->pluck('title', 'title')->toArray(), [$user_information->activity_name => $user_information->activity_name ]);
+                                    $data = array_merge(
+                                        \App\Models\Activity::where('title', '!=', $user_information->activity_name)
+                                            ->get()
+                                            ->pluck('title', 'title')
+                                            ->toArray(),
+                                        [$user_information->activity_name => $user_information->activity_name],
+                                    );
                                 @endphp
-                                {!! Form::select(
-                                    'activity_name', $data, $user_information->activity_name,
-                                    ['class' => 'form-control', 'id' => 'activity_name', 'style' => 'width:100%', 'label' => 'oke'],
-                                ) !!}</td>
+                                {!! Form::select('activity_name', $data, $user_information->activity_name, [
+                                    'class' => 'form-control',
+                                    'id' => 'activity_name',
+                                    'style' => 'width:100%',
+                                    'label' => 'oke',
+                                ]) !!}</td>
                         </tr>
                         <tr>
                             <td>Luas Tanah</td>
@@ -522,17 +539,6 @@
                                         </div>
                                         <input name="klb" id="" class="form-control"
                                             value="{{ @$user_information->krk->klb }}">
-                                        <div class="input-group-text">
-                                            <span>%</span>
-                                        </div>
-                                    </div>
-                                    <center><label for="">KTB</label></center>
-                                    <div class="input-group">
-                                        <input name="ktb" id="" class="form-control"
-                                            value="{{ @$user_information->krk->ktb }}">
-                                        <div class="input-group-text">
-                                            <span>%</span>
-                                        </div>
                                     </div>
                                     @if (@$user_information->activity_name === \App\Models\Activity::find(4)->title)
                                         <center><label for="">PSU</label></center>
@@ -548,6 +554,16 @@
                                         <div class="input-group">
                                             <input name="kdh" id="" class="form-control"
                                                 value="{{ @$user_information->krk->kdh }}">
+                                            <div class="input-group-text">
+                                                <span>%</span>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if (@$user_information->activity_name != \App\Models\Activity::find(4)->title)
+                                        <center><label for="">KTB</label></center>
+                                        <div class="input-group">
+                                            <input name="ktb" id="" class="form-control"
+                                                value="{{ @$user_information->krk->ktb }}">
                                             <div class="input-group-text">
                                                 <span>%</span>
                                             </div>
@@ -641,18 +657,34 @@
                                     <input type="text" name="kkop" id="" class="form-control"
                                         value="{{ @$user_information->krk->kkop }}">
                                     <center><label for="">Tambahan</label></center>
-                                    <textarea name="tambahan" style="height:250px" id="" class="form-control">{{ @$user_information->krk->tambahan }}</textarea>
+                                    @if (@$user_information->krk->tambahan)
+                                        <textarea name="tambahan" style="height:250px" id="" class="form-control">{{ @$user_information->krk->tambahan }}</textarea>
+                                    @else
+                                        @if (@$user_information->activity_name === \App\Models\Activity::find(4)->title)
+                                            <textarea name="tambahan" style="height:250px" id="" class="form-control">1. KDH berbasis luasan kavling sesuai ketentuan yang berlaku.
+2. GSB terhadap Jalan Lingkungan Perumahan 1/2 RUMIJA + 1.
+3. Luas kavling untuk hunian minimal 60 m2.</textarea>
+                                        @else
+                                            <textarea name="tambahan" style="height:250px" id="" class="form-control">Harus ditanami sekurang-kurangnya 1 (satu) pohon pelindung dan ditanami tanaman berupa [perdu, semak hias, serta penutup tanah/rumput dengan jumlah yang cukup.</textarea>
+                                        @endif
+                                    @endif
                                 </div>
                                 <br>
                                 <div class="col-12">
                                     <label for="">Jaringan Utilitas (Bebas Bangunan)</label>
-                                    <textarea name="jaringan_utilitas" id="" class="form-control" style="height: 150px;">a. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebas Minimum Vertikal dari Konduktor pada Jaringan Transmisi Tenaga Listrik).
-b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Minimum Horizontal dari Sumbu Vertikal Menara/Tiang pada Jaringan Transmisi Tenaga Listrik)
-{{ @$user_information->krk->jaringan_utilitas }}
-                                    </textarea>
+                                    @if (@$user_information->krk->jaringan_utilitas)
+                                        <textarea name="jaringan_utilitas" id="" class="form-control" style="height: 150px;">{{ @$user_information->krk->jaringan_utilitas }}</textarea>
+                                    @else
+                                        <textarea name="jaringan_utilitas" id="" class="form-control" style="height: 150px;">a. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebas Minimum Vertikal dari Konduktor pada Jaringan Transmisi Tenaga Listrik).
+b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Minimum Horizontal dari Sumbu Vertikal Menara/Tiang pada Jaringan Transmisi Tenaga Listrik).</textarea>
+                                    @endif
                                     @if (@$user_information->activity_name === \App\Models\Activity::find(4)->title)
                                         <label for="">Prasarana Jalan</label>
-                                        <textarea name="prasarana_jalan" id="" class="form-control" style="height: 150px;">Sesuai dengan Lampiran pada Peraturan Pemerintah No. 12 Tahun 2021 Tentang Penyelenggaraan Perumahan dan Kawasan Permukiman. Jika total luas lahan yang diperuntukkan bagi pembangunan Prasarana Jalan kurang dari 20% (dua puluh persen) dari luas total seluruh area Permukiman, maka dimensi harus disesuaikan agar syarat 20% (dua puluh persen) luas lahan untuk Prasarana Jalan terpenuhi, dengan memperhatikan fungsi jalan dan volume lalu lintas yang akan ditampung oleh jalan{{ @$user_information->krk->prasarana_jalan }}</textarea>
+                                        @if (@$user_information->krk->prasarana_jalan)
+                                            <textarea name="prasarana_jalan" id="" class="form-control" style="height: 150px;">{{ @$user_information->krk->prasarana_jalan }}</textarea>
+                                        @else
+                                            <textarea name="prasarana_jalan" id="" class="form-control" style="height: 150px;">Sesuai dengan Lampiran pada Peraturan Pemerintah No. 12 Tahun 2021 Tentang Penyelenggaraan Perumahan dan Kawasan Permukiman. Jika total luas lahan yang diperuntukkan bagi pembangunan Prasarana Jalan kurang dari 20% (dua puluh persen) dari luas total seluruh area Permukiman, maka dimensi harus disesuaikan agar syarat 20% (dua puluh persen) luas lahan untuk Prasarana Jalan terpenuhi, dengan memperhatikan fungsi jalan dan volume lalu lintas yang akan ditampung oleh jalan.</textarea>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -697,8 +729,8 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
                         @php
                             $nomor = \App\Models\UserInformation::orderBy('nomor_krk', 'desc')->first()->nomor_krk ?? 0;
                             
-                            $sebelumnya = implode("/", ['650',str_pad(explode("/", $nomor)[1], 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
-                            $nomor_krk = implode("/", ['650',str_pad(explode("/", $nomor)[1]+1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $sebelumnya = implode('/', ['650', str_pad(explode('/', $nomor)[1], 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $nomor_krk = implode('/', ['650', str_pad(explode('/', $nomor)[1] + 1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
                         @endphp
                         <form action="{{ route('nomorsk-post', $user_information->id) }}" method="post">
                             @csrf
@@ -854,7 +886,8 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
                         if (willDelete == null) {
                             swal("Cancel");
                         } else {
-                            if ($('#formNextProsesto').val() != `{!! \App\Models\UserInformation::STATUS_TOLAK !!}` && nomor_registration.nomor_registration === null) {
+                            if ($('#formNextProsesto').val() != `{!! \App\Models\UserInformation::STATUS_TOLAK !!}` && nomor_registration
+                                .nomor_registration === null) {
                                 swal("Nomor Agenda blm di buat!");
                             } else {
                                 swal("Berhasil!", {

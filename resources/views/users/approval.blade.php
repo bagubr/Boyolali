@@ -13,7 +13,7 @@
     <header id="header" class="fixed-top " style="background: rgba(40, 58, 90, 0.9);">
         <div class="container d-flex align-items-center">
 
-            <h1 class="logo me-auto"><a href="#">{{ config('app.name') }}</a></h1>
+            <h1 class="logo me-auto"><a href="#" style="text-decoration: none;">{{ config('app.name') }}</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="#" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -29,7 +29,6 @@
             @include('users.alert')
             <div class="section-title">
                 <h2>{{ config('app.name') }}</h2>
-                <h3>{{ $user_information->nomor_registration }}</h3>
             </div>
             <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
                 <div class="col-lg-12 col-md-6 portfolio-item filter-web">

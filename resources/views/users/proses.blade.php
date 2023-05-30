@@ -1,10 +1,13 @@
 @extends('layouts')
+@push('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@endpush
 @section('header')
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top " style="background: rgba(40, 58, 90, 0.9);">
         <div class="container d-flex align-items-center">
 
-            <h1 class="logo me-auto"><a href="#">{{ config('app.name') }}</a></h1>
+            <h1 class="logo me-auto"><a href="#" style="text-decoration: none;">{{ config('app.name') }}</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="#" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
             
@@ -21,7 +24,7 @@
             <div class="section-title">
                 <h2>Daftar KRK Proses</h2>
             </div>
-            <a class="btn btn-success" style="right: 1%;position: absolute;" href="{{ route('daftar') }}">Pendaftaran KRK Baru</a>
+            <a class="btn btn-success" style="right: 1%;position: absolute;" href="{{ route('daftar') }}"> <i class="fa-solid fa-plus"></i> Pendaftaran KRK Baru</a>
             <div class="row justify-content-center">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>

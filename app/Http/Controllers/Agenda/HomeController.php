@@ -86,7 +86,7 @@ class   HomeController extends Controller
         ]);
         $user_information = UserInformation::where('uuid', $data['uuid'])->first();
         if(!$user_information->nomor_krk){
-            return redirect()->back()->with('error', 'Nomor SK blm di isi');
+            return redirect()->back()->with('error', 'Nomor SK belum di isi');
         }
         $data['user_information_id'] = $user_information->id;
         $data['from'] = Auth::guard('administrator')->user()->role;

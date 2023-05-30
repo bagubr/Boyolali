@@ -36,13 +36,13 @@ class AuthController extends Controller
 
     public function registration(Request $request)
     {
+        $data = $request->validate([
+            'name'=> 'required|string',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed'
+        ]);
         try {
             DB::beginTransaction();
-            $data = $request->validate([
-                'name'=> 'required|string',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed'
-            ]);
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
             event(new Registered($user));
@@ -51,7 +51,7 @@ class AuthController extends Controller
             return redirect()->route('users')->with('success', 'Registrasi Berhasil silahkan konfirmasi email anda!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('users')->with('error', 'Registrasi Gagal silahkan coba kembali!');
+            return redirect()->route('registration')->with('error', 'Registrasi Gagal silahkan coba kembali!');
         }
         
         
