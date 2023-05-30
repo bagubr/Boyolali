@@ -149,6 +149,11 @@ class UserInformation extends Model
         return $this->hasMany(Riwayat::class)->orderBy('created_at');
     }
 
+    public function riwayat_new()
+    {
+        return $this->hasMany(Riwayat::class)->orderBy('created_at', 'desc');
+    }
+
     public function approval()
     {
         return $this->hasOne(Approval::class, 'uuid', 'uuid');
