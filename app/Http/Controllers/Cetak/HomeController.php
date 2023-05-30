@@ -34,7 +34,7 @@ class HomeController extends Controller
         }
         $pdf = FacadePdf::loadView('pdf_view', $data);
         $pdf->setPaper(array(0,0,609.4488,935.433), 'potrait');
-        return $pdf->stream(); // Lihat Hasil Pdf
+        // return $pdf->stream(); // Lihat Hasil Pdf
         $content = $pdf->download()->getOriginalContent();
         Storage::put('krks/'.$data['user_information']->uuid.'.pdf',$content);
         return redirect()->back()->with('success', 'File berhasil di generate');
