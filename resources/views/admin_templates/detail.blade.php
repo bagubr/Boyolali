@@ -93,7 +93,7 @@
                             @if (isset($route))
                                 {!! Form::open(['url' => $route, 'method' => 'post', 'id' => 'formNextProses']) !!}
                                 {!! Form::hidden('uuid', $user_information->uuid) !!}
-                                <select name="to" id="" class="form-control w-50 d-inline" required>
+                                <select name="to" id="formNextProsesto" class="form-control w-50 d-inline" required>
                                     <option value="">--PILIH--</option>
                                     @foreach (\App\Models\UserInformation::user_alur($role) as $key => $item)
                                         <option value="{{ $key }}">{{ $item }}</option>
@@ -850,7 +850,7 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
                         if (willDelete == null) {
                             swal("Cancel");
                         } else {
-                            if (nomor_registration.nomor_registration === null) {
+                            if ($('#formNextProsesto').val() != `{!! \App\Models\UserInformation::STATUS_TOLAK !!}` && nomor_registration.nomor_registration === null) {
                                 swal("Nomor Agenda blm di buat!");
                             } else {
                                 swal("Berhasil!", {

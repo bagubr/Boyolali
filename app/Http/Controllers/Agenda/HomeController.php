@@ -216,7 +216,7 @@ class   HomeController extends Controller
             'note' => 'Catatan blm di isi',
         ]);
         $user_information = UserInformation::where('uuid', $data['uuid'])->first();
-        if(!$user_information->nomor_registration){
+        if(!$user_information->nomor_registration && $request->to != \App\Models\UserInformation::STATUS_TOLAK){
             return redirect()->back()->with('error', 'Nomor Agenda blm di isi');
         }
         $data['user_information_id'] = $user_information->id;
