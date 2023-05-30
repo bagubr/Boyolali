@@ -44,7 +44,7 @@ class TolakAgenda extends Notification
     {
         return (new MailMessage)->subject('Nomor Agenda')
                     ->greeting('Hai '. $this->user_information->user->name)
-                    ->line('Maaf permohonan anda di tolak dengan alasan :')
+                    ->line('Maaf permohonan anda di tolak dengan alasan :'. $this->user_information->riwayat_new()[0]->note)
                     ->line($this->user_information->note)
                     ->action('Cek Agenda', route('detail', ['id' => $this->user_information->id]));
     }
