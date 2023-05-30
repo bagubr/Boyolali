@@ -195,7 +195,7 @@
                             <div class="form-group col-md-12">
                                 <label for="submitter_optional">Nama Perusahaan</label>
                                 <input type="text" class="form-control" name="submitter_optional"
-                                    id="submitter_optional" required>
+                                    id="submitter_optional">
                                 <small class="text-danger">* apabila bukan perorangan</small>
                             </div>
                             <div class="form-group">
@@ -248,7 +248,7 @@
                                             <td>{{ $item->file_type }}</td>
                                             <td style="width: 40%">{!! $item->content !!}</td>
                                             <td>
-                                                <input type="file" name="{{ $item->id }}" id="" class="form-control {{ ($item->note == 'Wajib Upload')?'input':'' }}" onChange="validateAndUpload(this,{{ $item->max_upload }});" required>
+                                                <input type="file" name="{{ $item->id }}" id="" class="form-control {{ ($item->note == 'Wajib Upload')?'input':'' }}" onChange="validateAndUpload(this,{{ $item->max_upload }});" {{ ($item->note == 'Wajib Upload')?'required':'' }}>
                                                 <small style="color:red;">* Max Upload {{ $item->max_upload }} mb</small>
                                             </td>
                                             <td>{!! $item->note !!}</td>
