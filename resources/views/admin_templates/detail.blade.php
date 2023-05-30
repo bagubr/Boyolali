@@ -115,8 +115,12 @@
                     <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
                         data-target="#exampleModal">Generate File</a>
                     @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
+                        @php
+                            $namefile = str_replace('/','_',$user_information->nomor_registration);
+                            header('Content-Disposition: inline; filename="'.$namefile.'.pdf"');
+                        @endphp
                         <a href="{{ asset('storage/krks/' . $user_information->uuid . '.pdf') }}"
-                            class="btn btn-primary w-30 float-right mr-2" download>Download</a>
+                            class="btn btn-primary w-30 float-right mr-2" download="{{ str_replace('/','_',$user_information->nomor_registration) }}">Download</a>
                         <form action="{{ route('generate-file', ['id' => $user_information->uuid]) }}" method="post">
                             @csrf
                             <button type="submit" name="kirim_email" value="true"
