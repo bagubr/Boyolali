@@ -9,9 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('pencarian/index');
+        if($request->keyword){
+            $user_informations = UserInformation::where(function ($query) use ($request) {
+                $query->whereNomorRegistration($request->keyword);
+                $query->orWhere('submitter', 'like', '%' . $request->keyword . '%');
+                $query->orWhere('nomor_krk', 'like', '%' . $request->keyword . '%');
+                $query->orWhere('submitter_phone', 'like', '%' . $request->keyword . '%');
+                $query->orWhere('location_address', 'like', '%' . $request->keyword . '%');
+            })->get();
+        }
+        return view('pencarian/index', compact('user_informations'));
     }
 
     public function detail(Request $request)
@@ -33,12 +42,16 @@ class HomeController extends Controller
         $user_informations->where(function ($query) use ($searchValue) {
             $query->whereNomorRegistration($searchValue);
             $query->orWhere('submitter', 'like', '%' . $searchValue . '%');
+            $query->orWhere('nomor_krk', 'like', '%' . $searchValue . '%');
             $query->orWhere('submitter_phone', 'like', '%' . $searchValue . '%');
             $query->orWhere('location_address', 'like', '%' . $searchValue . '%');
-            $query->where('user_id', Auth::guard('administrator')->user()->id);
         });
+        if ($searchValue) {
         $totalRecords = $user_informations
             ->count();
+        }else{
+            $totalRecords = 0;
+        }
         $user_informations = $user_informations
             ->orderBy('id')
             ->skip($start)

@@ -9,6 +9,18 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Daftar Pencarian</h6>
+                <form action="" method="GET" class="form-horizontal" role="form">
+                    @csrf
+                    <div class="input-group">
+                        <input class="form-control input-mask-date" type="text" id="form-field-mask-1" placeholder="Nomor Agenda/ Nama Pemohon/ Alamat Lokasi/ No SK" name="keyword" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="ace-icon fa fa-search bigger-110"></i>
+                                Cari
+                            </button>
+                        </span>
+                    </div>
+                </form>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -24,6 +36,18 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($user_informations)
+                            @foreach ($user_informations as $item)
+                            <tr>
+                                <td>{{ $item->iteration }}</td>
+                                <td>{{ $item->nomor_registration }}</td>
+                                <td>{{ $item->submitter }}</td>
+                                <td>{{ $item->location_address }}</td>
+                                <td>{{ $item->nomor_krk }}</td>
+                                <td><a href={{route('pencarian-detail', ['id' => $item->id])}} class='badge bg-primary text-white'>Detail</a></td>
+                            </tr>
+                            @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -40,11 +64,8 @@
     $(document).ready(function() {
         $('#dataTable2').DataTable({
             processing: true, 
-            serverSide: true, 
+            serverSide: false, 
             searching: true, 
-            ajax: {
-                url: "{{route('pencarian-data')}}"
-            },
             columns: [ 
                 { data: 'id' }, 
                 { data: 'nomor_registration' }, 
