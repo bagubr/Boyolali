@@ -129,7 +129,7 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Session::get('user')->name }}</span>
                 <img class="img-profile rounded-circle"
-                    src="{{ asset('storage/'.Session::get('user')->avatar) }}">
+                    src="{{ asset('storage/'. Auth::guard('administrator')->user()->avatar) }}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

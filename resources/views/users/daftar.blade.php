@@ -446,6 +446,9 @@
             tags: true,
             width: 'resolve',
         });
+        $('#submitter, #submitter_optional').keyup(function() {
+            $(this).val($(this).val().toUpperCase());
+        });
         $('#sub_district_id').select2({
             ajax: {
                 url: "{{ url('users/sub-district?') }}",
