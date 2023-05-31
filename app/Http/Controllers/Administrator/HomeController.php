@@ -61,6 +61,7 @@ class HomeController extends Controller
                 'name' => 'string',
                 'username' => 'string',
                 'phone' => 'string',
+                'jabatan' => 'string',
                 'avatar' => 'file',
                 'password' => 'sometimes|confirmed'
             ]);

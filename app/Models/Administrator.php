@@ -16,7 +16,7 @@ class Administrator extends Authenticatable
 
     protected $table = 'administrators';
     protected $fillable = [
-        'name', 'username', 'phone', 'password', 'is_active', 'avatar', 'role'
+        'name', 'jabatan', 'username', 'phone', 'password', 'is_active', 'avatar', 'role'
     ];
 
     public static function role()

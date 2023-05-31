@@ -16,6 +16,10 @@
                         <input type="text" class="form-control" value="{{ Auth::guard('administrator')->user()->name }}" id="name" name="name">
                     </div>
                     <div class="form-group">
+                        <label for="jabatan">Jabatan</label>
+                        <input type="text" class="form-control" value="{{ Auth::guard('administrator')->user()->jabatan }}" id="jabatan" name="jabatan">
+                    </div>
+                    <div class="form-group">
                         <label for="phone">Telp</label>
                         <input type="text" class="form-control" value="{{ Auth::guard('administrator')->user()->phone }}" id="phone" name="phone">
                     </div>
