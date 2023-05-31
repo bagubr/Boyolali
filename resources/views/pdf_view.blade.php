@@ -218,7 +218,7 @@
                 </tr>
                 <tr>
                     <td colspan="8">
-                        {{ @!$user_information->krk->jaringan_utilitas ? '-' : nl2br(@$user_information->krk->jaringan_utilitas) }}
+                        {!! @!$user_information->krk->jaringan_utilitas ? '-' : nl2br(@$user_information->krk->jaringan_utilitas) !!}
                     </td>
                 </tr>
                 @if ($user_information->activity_name == 'Perumahan')
@@ -226,7 +226,7 @@
                     <td colspan="8"><strong>9. Prasarana Jalan</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="8">{{ nl2br(@$user_information->krk->prasarana_jalan) }}</td>
+                    <td colspan="8">{!! nl2br(@$user_information->krk->prasarana_jalan) !!}</td>
                 </tr>
                 <tr>
                     <td colspan="8"><strong>10. Informasi Lainnya</strong></td>
