@@ -19,6 +19,8 @@ class HomeController extends Controller
                 $query->orWhere('submitter_phone', 'like', '%' . $request->keyword . '%');
                 $query->orWhere('location_address', 'like', '%' . $request->keyword . '%');
             })->get();
+        }else{
+            $user_informations = [];
         }
         return view('pencarian/index', compact('user_informations'));
     }
