@@ -729,8 +729,8 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
                         @php
                             $nomor = @\App\Models\UserInformation::orderBy('nomor_krk', 'desc')->first()?->nomor_krk ?? 0;
                             
-                            $sebelumnya = @implode('/', ['650', str_pad(@explode('/', $nomor)[1]??1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
-                            $nomor_krk = implode('/', ['650', str_pad(explode('/', $nomor)[1] + 1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $sebelumnya = @implode('/', ['650', str_pad(@explode('/', $nomor)[1]??0, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $nomor_krk = @implode('/', ['650', str_pad(@explode('/', $nomor)[1]??0 + 1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
                         @endphp
                         <form action="{{ route('nomorsk-post', $user_information->id) }}" method="post">
                             @csrf
