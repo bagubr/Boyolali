@@ -73,7 +73,7 @@
 
     <p style="text-align: justify; line-height: 0.1;"><span style="font-size: 12px; line-height: 0.5;">DASAR HUKUM :
             &nbsp;</span></p>
-    <ol style="margin-top: -15px">
+    <ol style="margin-top: -15px;margin-left:-15px;">
         @foreach ($dasar_hukum as $item)
             @if (!empty($item))
                 <li style="text-align: justify; font-size: 12px;">
@@ -159,7 +159,7 @@
                 </tr>
                 <tr>
                     <td><strong> 4. KDB </strong> </td>
-                    <td>{{ @!$user_information->krk->klb ? '-' : 'Maks. ' . @$user_information->krk->klb . ' %' }}
+                    <td>{{ @!$user_information->krk->klb ? '-' : 'Maks. ' . @$user_information->krk->kdb . ' %' }}
                     </td>
                     <td>JKS</td>
                     <td>{{ @!$user_information->gsb->jks ? '-' : @$user_information->gsb->jks }}</td>
@@ -182,16 +182,16 @@
                         <td> <strong>6. KDH</strong></td>
                         <td>{{ @!$user_information->krk->kdh ? '-' : @$user_information->krk->kdh . ' %' }}</td>
                     @endif
-                    <td>JLing</td>
-                    <td>{{ @!$user_information->gsb->jling ? '-' : @$user_information->gsb->jling }}</td>
+                    <td>JLS</td>
+                    <td>{{ @!$user_information->gsb->jls ? '-' : @$user_information->gsb->jls }}</td>
                     <td colspan="2">Waduk (titik pasang tertinggi)</td>
                     <td colspan="2">{{ @!$user_information->krk->waduk ? '-' : @$user_information->krk->waduk }}
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
-                    <td>JLS</td>
-                    <td>{{ @!$user_information->gsb->jls ? '-' : @$user_information->gsb->jls }}</td>
+                    <td>JLing</td>
+                    <td>{{ @!$user_information->gsb->jling ? '-' : @$user_information->gsb->jling }}</td>
                     <td colspan="2">Mata Air</td>
                     <td colspan="2">
                         {{ @!$user_information->krk->mata_air ? '-' : @$user_information->krk->mata_air }}
@@ -245,7 +245,7 @@
                     <td colspan="7">{{ @$user_information->krk->kkop }}</td>
                 </tr>
                 <tr>
-                    <td>c. Tambahan </td>
+                    <td style="text-align: left;vertical-align: top;">c. Tambahan </td>
                     <td colspan="7">{!! nl2br(@$user_information->krk->tambahan) !!}</td>
                 </tr>
             </tbody>
@@ -262,7 +262,7 @@
                 @endif
                 <br>
                 <p>
-                    <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
+                    <b><u>AHMAD GOJALI, S.Sos, M.T.</u><br></b>
                     <small>Pembina Utama Muda</small><br>
                     NIP. 19730415 199403 1 007
                 </p>
@@ -339,7 +339,7 @@
                     @endif
                     <br>
                     <p>
-                        <b><u>AHMAD GOJALI, S.Sos, M.T</u><br></b>
+                        <b><u>AHMAD GOJALI, S.Sos, M.T.</u><br></b>
                         <small>Pembina Utama Muda</small><br>
                         NIP. 19730415 199403 1 007
                     </p>

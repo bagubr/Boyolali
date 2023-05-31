@@ -665,7 +665,7 @@
 2. GSB terhadap Jalan Lingkungan Perumahan 1/2 RUMIJA + 1.
 3. Luas kavling untuk hunian minimal 60 m2.</textarea>
                                         @else
-                                            <textarea name="tambahan" style="height:250px" id="" class="form-control">Harus ditanami sekurang-kurangnya 1 (satu) pohon pelindung dan ditanami tanaman berupa [perdu, semak hias, serta penutup tanah/rumput dengan jumlah yang cukup.</textarea>
+                                            <textarea name="tambahan" style="height:250px" id="" class="form-control">Harus ditanami sekurang-kurangnya 1 (satu) pohon pelindung dan ditanami tanaman berupa perdu, semak hias, serta penutup tanah/rumput dengan jumlah yang cukup.</textarea>
                                         @endif
                                     @endif
                                 </div>
