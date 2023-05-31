@@ -67,7 +67,11 @@
     <script src="{{ url('') }}/vendor/php-email-form/validate.js"></script>
     <script src="{{ url('') }}/assets/js/main.js"></script>
     @stack('js')
-
+    <script>
+      $(document).ready(function(){
+          $(this).scrollTop(0);
+      });
+    </script>
 </body>
 
 </html>

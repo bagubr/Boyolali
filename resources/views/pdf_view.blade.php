@@ -136,7 +136,7 @@
                     <td><strong> 1. Pola Ruang / Zona</strong> </td>
                     <td>{{ @\App\Models\Zona::find($user_information->krk->zona)->name }}</td>
                     <th colspan="6">
-                        10. GSB (meter) Minimal
+                        7. GSB (meter) Minimal
                     </th>
                 </tr>
                 <tr>
@@ -210,7 +210,11 @@
                     <td colspan="2">{{ @!$user_information->krk->tol ? '-' : @$user_information->krk->tol }}</td>
                 </tr>
                 <tr>
-                    <td colspan="8"> <strong>7. Jaringan Utilitas (bebas bangunan)</strong> </td>
+                    @if ($user_information->activity_name == 'Perumahan')
+                    <td colspan="8"> <strong>8. Jaringan Utilitas (bebas bangunan)</strong> </td>
+                    @else
+                    <td colspan="8"> <strong>9. Jaringan Utilitas (bebas bangunan)</strong> </td>
+                    @endif
                 </tr>
                 <tr>
                     <td colspan="8">
@@ -229,7 +233,7 @@
                 </tr>
                 @else
                 <tr>
-                    <td colspan="8"><strong>9. Informasi Lainnya</strong></td>
+                    <td colspan="8"><strong>10. Informasi Lainnya</strong></td>
                 </tr>
                 @endif
                 <tr>

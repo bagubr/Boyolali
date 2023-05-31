@@ -46,6 +46,7 @@ class HomeController extends Controller
         $data['dasar_hukum'] = DasarHukum::get()->pluck('content');
         $data['user_information'] = UserInformation::whereUuid($request->id)->first();
         $data['qrcode'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate('https://www.google.com/maps/search/'.substr($data['user_information']->latitude, 0, 10).','.substr($data['user_information']->longitude, 0,10)));
+            $data['approval'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate(route('detail-approval', ['id' => $data['user_information']->uuid])));
         $pdf = FacadePdf::loadView('pdf_view', $data);
         $pdf->setPaper(array(0,0,609.4488,935.433), 'potrait');
         return $pdf->stream(); // Lihat Hasil Pdf
