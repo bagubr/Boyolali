@@ -12,9 +12,8 @@ class DistrictController extends Controller
         $data['districts'] = District::select('id', 'name')
         ->when($request->name, function ($query) use ($request)
         {
-            $query->where('name', 'ilike', '%'.$request->name.'%');
+            $query->where('name', 'like', '%'.$request->name.'%');
         })
-        ->take('10')
         ->get();
         $data = [
             'code' => 200,

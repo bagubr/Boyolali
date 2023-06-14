@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody>  
-                            @foreach (\App\Models\UserInformation::whereIn('status', [\App\Models\UserInformation::STATUS_CETAK, \App\Models\UserInformation::STATUS_SELESAI])->orderBy('created_at')->get() as $item)
+                            @foreach (\App\Models\UserInformation::where('status', \App\Models\UserInformation::STATUS_CETAK)->orderBy('created_at')->get() as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('Y-m-d', strtotime($item->created_at)) }}</td>

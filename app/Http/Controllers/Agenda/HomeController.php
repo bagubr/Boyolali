@@ -86,7 +86,7 @@ class   HomeController extends Controller
         ]);
         $user_information = UserInformation::where('uuid', $data['uuid'])->first();
         if(!$user_information->nomor_krk){
-            return redirect()->back()->with('error', 'Nomor SK belum di isi');
+            return redirect()->back()->with('error', 'Nomor KRK belum di isi');
         }
         $data['user_information_id'] = $user_information->id;
         $data['from'] = Auth::guard('administrator')->user()->role;
@@ -136,7 +136,7 @@ class   HomeController extends Controller
             'nomor_krk' => 'required|unique:user_informations'
         ]);
         $user_information->update($data);
-        return redirect()->back()->with('success', 'Berhasil buat Nomor SK');
+        return redirect()->back()->with('success', 'Berhasil buat Nomor KRK');
     }
 
     public function reference(Request $request)

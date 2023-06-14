@@ -27,7 +27,7 @@ class HomeController extends Controller
 
     public function detail(Request $request)
     {
-        $user_information = UserInformation::whereUuid($request->id)->first();
+        $user_information = UserInformation::find($request->id);
         return view('admin_templates/detail', compact('user_information'));
     }
 

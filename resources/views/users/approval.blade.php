@@ -17,8 +17,6 @@
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="#" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
-            @include('users.navbar')
-
         </div>
     </header><!-- End Header -->
 @endsection

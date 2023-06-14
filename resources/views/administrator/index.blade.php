@@ -2,11 +2,11 @@
 
 @section('content')
     <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
+    <section id="contact" class="contact" style="background-color: #37517E">
         <div class="container" data-aos="fade-up">
 
             <div class="section-title">
-                <h2>Login</h2>
+                <h2 style="color:white;">Login</h2>
             </div>
 
             <div class="row justify-content-center">

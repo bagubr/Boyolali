@@ -154,7 +154,21 @@
                                     <div class="mb-3" id="map"></div>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    Metode Pengukuran
+                                    <select name="measurement_type" id="measurement_type" onchange="measurementType(this)" class="form-control input" required>
+                                        <option value="">PILIH</option>
+                                        <option value="POLYGON">GAMBAR BIDANG</option>
+                                        <option value="INPUT">INPUT KOORDINAT</option>
+                                        X (Longitude)	Y (Latitude)
+110.645545 -7.4925977
+110.645866 -7.4927041
+110.646006 -7.4923797
+110.645679 -7.4922786
+
+                                    </select>
+                                    <br>
                                     <button type="button" class="btn btn-secondary" onclick="resetButton()">Reset</button>
+                                    <button type="button" class="btn btn-success" style="float: right;display:none;" id="btnCoor" onclick="addCoorButton()">Tambah Koordinat</button>
                                     <table class="table koordinattable">
                                         <thead>
                                             <tr>
@@ -248,7 +262,7 @@
                                             <td>{{ $item->file_type }}</td>
                                             <td style="width: 40%">{!! $item->content !!}</td>
                                             <td>
-                                                <input type="file" name="{{ $item->id }}" id="" class="form-control {{ ($item->note == 'Wajib Upload')?'input':'' }}" onChange="validateAndUpload(this,{{ $item->max_upload }});" {{ ($item->note == 'Wajib Upload')?'required':'' }}>
+                                                <input type="file" name="{{ $item->id }}" id="" class="form-control {{ ($item->note == 'Wajib Upload')?'input':'' }}" onChange="validateAndUpload(this,{{ $item->max_upload }});" {{ ($item->note == 'Wajib Upload')?'required':'' }} accept="application/pdf">
                                                 <small style="color:red;">* Max Upload {{ $item->max_upload }} mb</small>
                                             </td>
                                             <td>{!! $item->note !!}</td>
@@ -286,84 +300,7 @@
 @endsection
 
 @push('js')
-    <script>
-        var currentTab = 0; // Current tab is set to be the first tab (0)
-        showTab(currentTab); // Display the current tab
-
-        function showTab(n) {
-            // This function will display the specified tab of the form...
-            var x = document.getElementsByClassName("tab");
-            x[n].style.display = "block";
-            //... and fix the Previous/Next buttons:
-            if (n == 0) {
-                document.getElementById("prevBtn").style.display = "none";
-            } else {
-                document.getElementById("prevBtn").style.display = "inline";
-            }
-            if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Submit";
-            } else {
-                document.getElementById("nextBtn").innerHTML = "Next";
-            }
-            //... and run a function that will display the correct step indicator:
-            fixStepIndicator(n)
-        }
-
-        function nextPrev(n) {
-            // This function will figure out which tab to display
-            var x = document.getElementsByClassName("tab");
-            // Exit the function if any field in the current tab is invalid:
-            if (n == 1 && !validateForm()) return false;
-            // Hide the current tab:
-            x[currentTab].style.display = "none";
-            // Increase or decrease the current tab by 1:
-            currentTab = currentTab + n;
-            // if you have reached the end of the form...
-            if (currentTab >= x.length) {
-                // ... the form gets submitted:
-                // console.log(document.getElementById("regForm"))
-                // document.getElementById("regForm").submit();
-                document.getElementById("prevBtn").style.display = "none";
-                document.getElementById("nextBtn").style.display = "none";
-                document.getElementById("nextBtn").type = "submit";
-                return false;
-            }
-            // Otherwise, display the correct tab:
-            showTab(currentTab);
-        }
-
-        function validateForm() {
-            // This function deals with validation of the form fields
-            var x, y, i, valid = true;
-            x = document.getElementsByClassName("tab");
-            y = x[currentTab].getElementsByClassName("input");
-            // A loop that checks every input field in the current tab:
-            for (i = 0; i < y.length; i++) {
-                // If a field is empty...
-                if (y[i].value == "") {
-                    // add an "invalid" class to the field:
-                    y[i].className += " invalid";
-                    // and set the current valid status to false
-                    valid = false;
-                }
-            }
-            // If the valid status is true, mark the step as finished and valid:
-            if (valid) {
-                document.getElementsByClassName("step")[currentTab].className += " finish";
-            }
-            return valid; // return the valid status
-        }
-
-        function fixStepIndicator(n) {
-            // This function removes the "active" class of all steps...
-            var i, x = document.getElementsByClassName("step");
-            for (i = 0; i < x.length; i++) {
-                x[i].className = x[i].className.replace(" active", "");
-            }
-            //... and adds the "active" class on the current step:
-            x[n].className += " active";
-        }
-    </script>
+    @include('nextBtnprevBtn')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -373,146 +310,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw.js"></script>
     <script src="https://jsuites.net/v4/jsuites.js"></script>
 
-    <script>
-        function validateAndUpload(input, max_upload) {
-            const fi = input;
-            max_uploads = max_upload * 1000;
-            // Check if any file is selected.
-            if (fi.files.length > 0) {
-                for (const i = 0; i <= fi.files.length - 1; i++) {
-
-                    const fsize = fi.files.item(i).size;
-                    const file = Math.round((fsize / 1024));
-                    // The size of the file.
-                    if (file >= max_uploads) {
-                        fi.value = "";
-                        alert("File too Big, please select a file less than "+max_upload+" mb");
-                    } else {
-                        document.getElementById('size').innerHTML = '<b>' +
-                            file + '</b> KB';
-                    }
-                }
-            }
-        }
-    </script>
-
-    <script>
-        $("#nomor_ktp").on('keyup change', function() {
-            val = $(this).val() || 0;
-            if (isNaN(val)) {
-                $(this).val("");
-            }
-        });
-        $("#submitter_phone").on('keyup change', function() {
-            val = $(this).val() || 0;
-            if (isNaN(val)) {
-                $(this).val("");
-            }
-        });
-    </script>
-
-    <script>
-        $('#district_id').on('input', function(e) {
-            $("#sub_district_id").removeAttr('disabled');
-            $("#sub_district_id").html('<option value="">--PILIH--</option>');
-        });
-
-        $('#district_id').select2({
-            ajax: {
-                url: "{{ url('users/district?') }}",
-                type: 'GET',
-                dataType: 'json',
-                delay: 300,
-                data: function(params) {
-                    var queryParameters = {
-                        name: params.term,
-                    }
-                    return queryParameters;
-                },
-                processResults: function(params) {
-                    return {
-                        results: $.map(params.data.districts, function(item) {
-                            return {
-                                text: item.name,
-                                id: item.id
-                            }
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-        $('#activity_name').select2({
-            tags: true,
-            width: 'resolve',
-        });
-        $('#submitter, #submitter_optional').keyup(function() {
-            $(this).val($(this).val().toUpperCase());
-        });
-        $('#sub_district_id').select2({
-            ajax: {
-                url: "{{ url('users/sub-district?') }}",
-                dataType: 'json',
-                type: 'GET',
-                delay: 300,
-                data: function(params) {
-                    var queryParameters = {
-                        name: params.term,
-                        district_id: $("#district_id").val(),
-                    }
-                    return queryParameters;
-                },
-                processResults: function(params) {
-                    return {
-                        results: $.map(params.data.sub_districts, function(item) {
-                            return {
-                                text: item.name,
-                                id: item.id
-                            }
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-
-        $(document).ready(function() {
-
-            if (!$("#district_id").val()) {
-                $("#sub_district_id").prop('disabled', true);
-            }
-            $(document).on('change', '#district_id', function(e) {
-                if (!$("#district_id").val()) {
-                    $("#sub_district_id").prop('disabled', true);
-                } else {
-                    $("#sub_district_id").prop('disabled', false);
-                }
-                $("#sub_district_id").val('').trigger('change');
-            });
-        });
-
-        $("#status_tanah").change(function() {
-            var val = $(this).val();
-            console.log(val);
-            if (val == 1) {
-                $('#nomor_hak').val('HM.');
-            } else if (val == 2) {
-                $('#nomor_hak').val('HGB.');
-            } else if (val == 3) {
-                $('#nomor_hak').val('HGU.');
-            } else if (val == 4) {
-                $('#nomor_hak').val('HP.');
-            } else if (val == 5) {
-                $('#nomor_hak').val('HPL.');
-            } else if (val == 6) {
-                $('#nomor_hak').val('HSRS.');
-            } else if (val == 8) {
-                $('#nomor_hak').val('TN.');
-            } else {
-                $('#nomor_hak').val('No.');
-            }
-        });
-    </script>
+    @include('validateInput')
     <script>
         var polygon = '';
 
@@ -533,12 +331,11 @@
             }
         ).addTo(map);
 
-
-
-        new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
+        const draw = new L.Draw.Polygon(map, new L.Control.Draw().options.polygon);
 
         map.on('draw:created', function(e) {
             polygon = e.layer;
+            console.log(polygon);
             map.addLayer(polygon);
             var form = $('.php-email-form'); //retrieve the form as a DOM element
             var polymarker = L.polygon(e.layer._latlngs[0]).getBounds().getCenter();
@@ -560,26 +357,49 @@
                 
                 var longitude = String(value.lng).substr(0, 10);
                 var latitude = String(value.lat).substr(0, 10);
-                celly.innerHTML = longitude;
-                cellx.innerHTML = latitude;
-                var inputlng = document.createElement('input'); //prepare a new input DOM element
-                inputlng.setAttribute('name', "polygon[longitude][]"); //set the param name
-                inputlng.setAttribute('value',  longitude); //set the value
-                inputlng.setAttribute('type', 'hidden') //set the type, like "hidden" or other
-                var inputlat = document.createElement('input'); //prepare a new input DOM element
-                inputlat.setAttribute('name', "polygon[latitude][]"); //set the param name
-                inputlat.setAttribute('value', latitude); //set the value
-                inputlat.setAttribute('type', 'hidden') //set the type, like "hidden" or other
-
-                form.append(inputlng); //append the input to the form
-                form.append(inputlat); //append the input to the form
+                celly.innerHTML = '<input type="text" name="polygon[longitude][]" onchange="checkCoordinate(this)" id="" value="'+longitude+'">';
+                cellx.innerHTML = '<input type="text" name="polygon[latitude][]" onchange="checkCoordinate(this)" id="" value="'+latitude+'">';
             });
         });
 
         function resetButton() {
             map.removeLayer(polygon);
-            new L.Draw.Polygon(map, new L.Control.Draw().options.polygon).enable();
             $('.koordinattable').find("tr:not(:first)").remove();
+        }
+        function addCoorButton() {
+            var row = table.insertRow(table.rows.length);
+            var celly = row.insertCell(0);
+            var cellx = row.insertCell(1);
+                
+            celly.innerHTML = '<input type="text" name="polygon[longitude][]" onchange="checkCoordinate(this)" id="" value="">';
+            cellx.innerHTML = '<input type="text" name="polygon[latitude][]" onchange="checkCoordinate(this)" id="" value="">';
+        }
+
+        function measurementType(e){
+            if(polygon){
+                map.removeLayer(polygon);
+            }
+            console.log()
+            if (e.value == 'INPUT') {
+                draw.disable();
+                document.getElementById("btnCoor").style.display = "block";
+                $('.koordinattable').find("tr:not(:first)").remove();
+            } else if (e.value == 'POLYGON') {
+                draw.enable();
+                document.getElementById("btnCoor").style.display = "none";
+                $('.koordinattable').find("tr:not(:first)").remove();
+            }
+        }
+
+        function checkCoordinate(e) {
+            // var latlngs = [
+            //             [110.600750, -7.5321550],
+            //             [110.601673, -7.5319636],
+            //             [110.601801, -7.5327719],
+            //             [110.600836, -7.5331548]
+            //         ];
+            // var polygon = L.polygon(latlngs, {color: 'red'});
+            // map.addLayer(polygon);
         }
     </script>
 @endpush

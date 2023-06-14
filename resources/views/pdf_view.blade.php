@@ -291,15 +291,15 @@
     <br>
     <br>
     <div style="border-style:double;border-width: 3px;">
-        <table style="margin-left: auto; margin-right:auto;width: 100%; padding:10;" border="1">
+        <table style="width: 100%; padding:10;">
             <tr>
                 @php
                     $image = @\App\Models\SketchFile::where('user_information_id', $user_information['id'])->first()->file;
                 @endphp
-                <td style="width: 50%"> <img class="img-thumbnail" width="400px"
-                        src="{{ asset('storage/' . $image) }}" alt="" srcset=""></td>
-                <td style="width: 50%">
-                    <table style="font-size: 11px;margin:auto;">
+                <th style="width: 50%;" rowspan="2"> <img class="img-thumbnail" width="500px"
+                        src="{{ asset('storage/' . $image) }}" alt="" srcset=""></th>
+                <td style="width: 50%; vertical-align: top;">
+                    <table style="font-size: 11px;margin-left:10px;" border="1">
                         <tbody>
                             <tr>
                                 <td>Id</td>
@@ -317,10 +317,12 @@
                     </table>
                 </td>
             </tr>
+            <tr>
+                <td style="vertical-align: bottom;">
+                    <img style="margin-left:10px;" src="data:image/png;base64, {!! $qrcode !!}">
+                </td>
+            </tr>
         </table>
-        <div style="margin:15px">
-            <img src="data:image/png;base64, {!! $qrcode !!}">
-        </div>
     </div>
     <br>
     <br>

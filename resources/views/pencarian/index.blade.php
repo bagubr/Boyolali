@@ -12,7 +12,7 @@
                 <form action="" method="GET" class="form-horizontal" role="form">
                     @csrf
                     <div class="input-group">
-                        <input class="form-control input-mask-date" type="text" id="form-field-mask-1" placeholder="Nomor Agenda/ Nama Pemohon/ Alamat Lokasi/ No SK" name="keyword" />
+                        <input class="form-control input-mask-date" type="text" id="form-field-mask-1" placeholder="Nomor Agenda/ Nama Pemohon/ Alamat Lokasi/ Nomor KRK" name="keyword" />
                         <span class="input-group-btn">
                             <button class="btn btn-primary" type="submit">
                                 <i class="ace-icon fa fa-search bigger-110"></i>
@@ -31,7 +31,7 @@
                                 <th>Nomor Agenda</th>
                                 <th>Nama Pemohon</th>
                                 <th>Alamat Lokasi</th>
-                                <th>No SK</th>
+                                <th>Nomor KRK</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

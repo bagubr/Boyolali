@@ -45,7 +45,7 @@ class GenerateFile extends Notification
         return (new MailMessage)->subject('Nomor Surat Keterangan KRK')
                     ->greeting('Hai '. $this->user_information->user->name)
                     ->line('Selamat KRK anda berhasil di buat silahkan download file anda di bawah ini :')
-                    ->line('Nomor SK : '. $this->user_information->nomor_krk)
+                    ->line('Nomor KRK : '. $this->user_information->nomor_krk)
                     ->action('Download Berkas', asset('storage/krks/'.$this->user_information->uuid.'.pdf'))
                     ->line('Terima kasih sudah menggunakan aplikasi kami');
     }

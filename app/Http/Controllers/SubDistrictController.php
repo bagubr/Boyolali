@@ -13,9 +13,8 @@ class SubDistrictController extends Controller
         ->where('district_id', $request->district_id)
         ->when($request->name, function ($query) use ($request)
         {
-            $query->where('name', 'ilike', '%'.$request->name.'%');
+            $query->where('name', 'like', '%'.$request->name.'%');
         })
-        ->take('10')
         ->get();
         $data = [
             'code' => 200,

@@ -119,7 +119,7 @@
                     <a href="{{ route('view-file', ['id' => $user_information->uuid]) }}"
                         class="btn btn-primary w-30 float-right mr-2 mb-2 ml-2" target="_blank">View</a>
                 @endif
-                @if ($user_information->nomor_krk)
+                @if (@$user_information->nomor_krk)
                     <a href="#" class="btn btn-success w-30 float-right mb-2" data-toggle="modal"
                         data-target="#exampleModal">Generate File</a>
                     @if (file_exists(public_path('storage/krks/' . $user_information->uuid . '.pdf')))
@@ -728,21 +728,21 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
                     <div class="card-body">
                         @php
                             $nomor = @\App\Models\UserInformation::orderBy('nomor_krk', 'desc')->first()?->nomor_krk ?? 0;
-                            
-                            $sebelumnya = @implode('/', ['650', str_pad(@explode('/', $nomor)[1]??0, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
-                            $nomor_krk = @implode('/', ['650', str_pad(@explode('/', $nomor)[1]??0 + 1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $nomor = @explode('/', $nomor)[1]??0;
+                            $sebelumnya = @implode('/', ['650', str_pad($nomor, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $nomor_krk = @implode('/', ['650', str_pad($nomor+1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
                         @endphp
                         <form action="{{ route('nomorsk-post', $user_information->id) }}" method="post">
                             @csrf
-                            <label for="">Nomor SK Sebelumnya</label>
+                            <label for="">Nomor KRK Sebelumnya</label>
                             <input type="text" class="form-control" name="nomor_krk_sebelumnya"
                                 value="{{ $sebelumnya }}" readonly>
                             @if (!$user_information->nomor_krk)
-                                <label for="">Nomor SK</label>
+                                <label for="">Nomor KRK</label>
                                 <input type="text" class="form-control" name="nomor_krk"
                                     value="{{ $nomor_krk }}">
                             @else
-                                <label for="">Nomor SK</label>
+                                <label for="">Nomor KRK</label>
                                 <input type="text" class="form-control" name="nomor_krk"
                                     value="{{ $user_information->nomor_krk }}">
                             @endif

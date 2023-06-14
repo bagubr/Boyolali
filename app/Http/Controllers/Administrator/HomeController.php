@@ -39,7 +39,7 @@ class HomeController extends Controller
         $data['total_proses_berkas'] = UserInformation::whereStatus(UserInformation::STATUS_FILING)->count();
         $data['total_proses_selesai'] = UserInformation::whereStatus(UserInformation::STATUS_CEK)->count();
         $data['total_proses_validasi'] = UserInformation::whereIn('status', UserInformation::STATUS_VALIDASI)->count();
-        $data['total_berkas_selesai'] = UserInformation::whereStatus(UserInformation::STATUS_SELESAI)->count();
+        $data['total_berkas_selesai'] = UserInformation::whereStatus(UserInformation::STATUS_CETAK)->count();
         $data['total_proses_subkor'] = UserInformation::whereStatus(UserInformation::STATUS_SUBKOR)->count();
         $data['total_proses_kabid'] = UserInformation::whereStatus(UserInformation::STATUS_KABID)->count();
         $data['total_proses_kadis'] = UserInformation::whereStatus(UserInformation::STATUS_KADIS)->count();
