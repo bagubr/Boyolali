@@ -159,12 +159,6 @@
                                         <option value="">PILIH</option>
                                         <option value="POLYGON">GAMBAR BIDANG</option>
                                         <option value="INPUT">INPUT KOORDINAT</option>
-                                        X (Longitude)	Y (Latitude)
-110.645545 -7.4925977
-110.645866 -7.4927041
-110.646006 -7.4923797
-110.645679 -7.4922786
-
                                     </select>
                                     <br>
                                     <button type="button" class="btn btn-secondary" onclick="resetButton()">Reset</button>
@@ -363,7 +357,9 @@
         });
 
         function resetButton() {
-            map.removeLayer(polygon);
+            if(polygon){
+                map.removeLayer(polygon);
+            }
             $('.koordinattable').find("tr:not(:first)").remove();
         }
         function addCoorButton() {
