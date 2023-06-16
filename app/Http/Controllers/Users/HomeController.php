@@ -52,7 +52,6 @@ class HomeController extends Controller
     public function user_information(Request $request)
     {
         try {
-        
         $data = $request->validate([
             'submitter' => 'required',
             'submitter_optional' => 'sometimes',
@@ -67,11 +66,15 @@ class HomeController extends Controller
             'submitter_phone' => 'required',
             'nomor_hak' => 'required',
             'polygon' => 'required',
+            'latitude' => 'sometimes',
+            'longitude' => 'sometimes',
+            'measurement_type' => 'required',
         ]);
         if($request->measurement_type == 'INPUT'){
             $data['latitude'] = $data['polygon']['latitude'][0];
             $data['longitude'] = $data['polygon']['longitude'][0];
         }
+
         if ($data['submitter_optional']) {
             $data['submitter'] .= ' ( ' . $data['submitter_optional'] . ' )';
         }

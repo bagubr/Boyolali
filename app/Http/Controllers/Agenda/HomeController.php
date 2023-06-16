@@ -182,7 +182,9 @@ class   HomeController extends Controller
             'land_status_id' => 'required',
             'nomor_hak' => 'required',
             'polygon' => 'sometimes|array',
+            'measurement_type' => 'required',
         ]);
+        // dd($data);
         $filter_data = Arr::except($data, ['polygon']);
         $user_information = UserInformation::whereUuid($data['uuid'])->first();
         if(isset($data['polygon'])){

@@ -49,7 +49,7 @@
         function cekstatus()
         {
             if (Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'ADMIN') {
-                if (Route::is('pencarian-detail')) {
+                if (Route::is('pencarian-detail', 'rekap-detail')) {
                     return false;
                 }
                 return true;
@@ -264,65 +264,85 @@
                     </tbody>
                 </table>
                 <div class="row">
-                    <div id="map-wrapper" style="width: 70%;
+                    <div id="map-wrapper" style="width: 60%;
                     position: relative;">
                         <div class="mt-3 mb-3" id="map"></div>
                         <div id="button-wrapper" class="card d-inline p-2"
                             style="position: absolute; top: 10px; right:10px; z-index:1000;margin:10px;">
-                            <button type="button" class="btn btn-primary" onclick="editButton()">Edit</button>
-                            <button type="button" class="btn btn-secondary" onclick="cancelButton()">Reset</button>
+                            {{-- <button type="button" class="btn btn-primary" onclick="editButton()">Edit</button> --}}
+                            {{-- <button type="button" class="badge bg-secondary text-white" onclick="cancelButton()">Reset</button> --}}
                             <div class="form-check">
                                 <input class="form-check-input" id="viewPolygon" type="checkbox" onclick="viewPolygon()"
                                     checked>
                                 <label class="form-check-label" for="flexCheckChecked">
-                                    Lihat Polygon
+                                    Bidang
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <table style="width: 30%;float:right;vertical-align: top; text-align:center;">
+                    <table style="width: 40%;float:right;vertical-align: top;">
                         <tr style="vertical-align:top; text-align:center">
                             <td>Koordinat</td>
-                        </tr>
-                        <tr style="vertical-align:top; text-align:center">
-                            <td align="center">
-                                <table class="table table-striped w-50" border="1">
-                                    <thead>
-                                        <tr>
-                                            <th>X (Longitude)</th>
-                                            <th>Y (Latitude)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($user_information->polygons as $item)
+                        </tr>   
+                        <tr style="vertical-align: top;">
+                            <td style=" padding:10px;">
+                                <center>
+                                    <table class="table table-striped w-50" border="1">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $item->latitude }}</td>
-                                                <td>{{ $item->longitude }}</td>
+                                                <th>Y (Latitude)</th>
+                                                <th>X (Longitude)</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($user_information->polygons as $item)
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" id="" value="{{ $item->latitude }}" disabled>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="" value="{{ $item->longitude }}" disabled>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </center>
+                            </td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td style=" padding:10px;">
+                                Metode Pengukuran
+                                <select name="measurement_type" id="measurement_type" onchange="measurementType(this)"
+                                    class="form-control input" required>
+                                    <option value="">PILIH</option>
+                                    <option value="POLYGON"
+                                        {{ $user_information->measurement_type == 'POLYGON' ? 'selected' : '' }}>GAMBAR BIDANG
+                                    </option>
+                                    <option value="INPUT"
+                                        {{ $user_information->measurement_type == 'INPUT' ? 'selected' : '' }}>INPUT KOORDINAT
+                                    </option>
+                                </select>
+                                <br>
+                                <button type="button" class="btn btn-secondary" onclick="cancelButton()">Reset</button>
+                                <button type="button" class="btn btn-success" style="float: right;display:none;"
+                                    id="btnCoor" onclick="addCoorButton()">Tambah Koordinat</button>
                             </td>
                         </tr>
                         <tr style="vertical-align:top; text-align:center">
                             <td class="d-none">Koordinat Baru</td>
                         </tr>
                         <tr class="koordinattable" style="vertical-align:top; text-align:center">
-                            <td class="d-none" align="center">
+                            <td align="center">
                                 <table class="table table-striped tablekoordinat w-50" border="1">
                                     <thead>
                                         <tr>
-                                            <th>X (Longitude)</th>
                                             <th>Y (Latitude)</th>
+                                            <th>X (Longitude)</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-body">
-                                        @foreach ($user_information->polygons as $item)
-                                            <tr>
-                                                <td>{{ $item->latitude }}</td>
-                                                <td>{{ $item->longitude }}</td>
-                                            </tr>
-                                        @endforeach
+
                                     </tbody>
                                 </table>
                             </td>
@@ -361,7 +381,7 @@
                         <button class="nav-link" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat"
                             type="button" role="tab" aria-controls="riwayat" aria-selected="false">Riwayat</button>
                     </li>
-                    @if (Route::is('berkas-selesai-detail'))
+                    @if (Route::is('berkas-selesai-detail', 'rekap-detail', 'pencarian-detail'))
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="nomorsk-tab" data-bs-toggle="tab" data-bs-target="#nomorsk"
                                 type="button" role="tab" aria-controls="nomorsk" aria-selected="false">Nomor
@@ -728,9 +748,9 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
                     <div class="card-body">
                         @php
                             $nomor = @\App\Models\UserInformation::orderBy('nomor_krk', 'desc')->first()?->nomor_krk ?? 0;
-                            $nomor = @explode('/', $nomor)[1]??0;
+                            $nomor = @explode('/', $nomor)[1] ?? 0;
                             $sebelumnya = @implode('/', ['650', str_pad($nomor, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
-                            $nomor_krk = @implode('/', ['650', str_pad($nomor+1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
+                            $nomor_krk = @implode('/', ['650', str_pad($nomor + 1, 4, '0', STR_PAD_LEFT), '4.3', date('Y')]);
                         @endphp
                         <form action="{{ route('nomorsk-post', $user_information->id) }}" method="post">
                             @csrf
@@ -988,6 +1008,9 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
         const longitude = window.document.querySelector("#longitude");
         var table = window.document.querySelector(".tablekoordinat");
         var DrawPolygon = new L.Draw.Polygon(map, new L.Control.Draw().options.polygon);
+        if (`{{ $user_information->measurement_type }}` == 'POLYGON') {
+            DrawPolygon.enable();
+        }
 
         L.simpleMapScreenshoter().addTo(map)
         L.tileLayer(
@@ -1006,30 +1029,17 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
 
         map.on('draw:created', function(e) {
             new_polygon = L.polygon(e.layer._latlngs).addTo(map);
-            $('td').removeClass('d-none');
+            $('.tdkoordinattable').removeClass('d-none');
             e.layer._latlngs[0].forEach(function callback(value, index) {
                 $(".koordinattable .table-body").remove();
                 var row = table.insertRow(table.rows.length);
                 var celly = row.insertCell(0);
                 var cellx = row.insertCell(1);
-                var form = $('#agenda-lokasi');
                 var longitude = String(value.lng).substr(0, 10);
                 var latitude = String(value.lat).substr(0, 10);
-                var inputlng = document.createElement('input');
-                inputlng.setAttribute('name', "polygon[longitude][]");
-                inputlng.setAttribute('value', longitude);
-                inputlng.setAttribute('id', "polygon_longitude");
-                inputlng.setAttribute('type', 'hidden');
-                var inputlat = document.createElement('input');
-                inputlat.setAttribute('name', "polygon[latitude][]");
-                inputlat.setAttribute('value', latitude);
-                inputlat.setAttribute('id', "polygon_latitude");
-                inputlat.setAttribute('type', 'hidden')
-                celly.innerHTML = longitude;
-                cellx.innerHTML = latitude;
 
-                form.append(inputlng);
-                form.append(inputlat);
+                celly.innerHTML = '<input type="hidden" name="polygon[latitude][]" id="" value="'+latitude+'"> <input value="'+latitude+'" disabled>';
+                cellx.innerHTML = '<input type="hidden" name="polygon[longitude][]" id="" value="'+longitude+'"> <input value="'+longitude+'" disabled>';
             });
         });
 
@@ -1047,12 +1057,9 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
         function cancelButton() {
             if (new_polygon) {
                 map.removeLayer(new_polygon);
-                $('input[name="polygon[longitude][]"]').remove()
-                $('input[name="polygon[latitude][]"]').remove()
             }
-            $('.koordinattable').addClass('d-none');
             $('.koordinattable').find("tr:not(:first)").remove();
-            DrawPolygon.disable();
+            DrawPolygon.enable();
         }
 
         function editButton() {
@@ -1064,6 +1071,29 @@ b. Sesuai dengan Lampiran II pada Permen ESDM No. 13 Tahun 2021 (Jarak Bebes Min
             $('.koordinattable').removeClass('d-none');
             $('.koordinattable').find("tr:not(:first)").remove();
             DrawPolygon.enable();
+        }
+
+        function measurementType(e) {
+            if (new_polygon) {
+                map.removeLayer(new_polygon);
+            }
+            if (e.value == 'INPUT') {
+                DrawPolygon.disable();
+                document.getElementById("btnCoor").style.display = "block";
+                $('.koordinattable').find("tr:not(:first)").remove();
+            } else if (e.value == 'POLYGON') {
+                DrawPolygon.enable();
+                document.getElementById("btnCoor").style.display = "none";
+                $('.koordinattable').find("tr:not(:first)").remove();
+            }
+        }
+
+        function addCoorButton() {
+            var row = table.insertRow(table.rows.length);
+            var celly = row.insertCell(0);
+            var cellx = row.insertCell(1);
+            celly.innerHTML = '<input type="text" name="polygon[latitude][]" id="" value="">';
+            cellx.innerHTML = '<input type="text" name="polygon[longitude][]" id="" value="">';
         }
     </script>
     <script>

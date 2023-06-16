@@ -166,8 +166,8 @@
                                     <table class="table koordinattable">
                                         <thead>
                                             <tr>
-                                                <th>X (Longitude)</th>
                                                 <th>Y (Latitude)</th>
+                                                <th>X (Longitude)</th>
                                             </tr>
                                         </thead>
                                         <tbody class="table-body">
@@ -351,8 +351,8 @@
                 
                 var longitude = String(value.lng).substr(0, 10);
                 var latitude = String(value.lat).substr(0, 10);
-                celly.innerHTML = '<input type="text" name="polygon[longitude][]" onchange="checkCoordinate(this)" id="" value="'+longitude+'">';
-                cellx.innerHTML = '<input type="text" name="polygon[latitude][]" onchange="checkCoordinate(this)" id="" value="'+latitude+'">';
+                celly.innerHTML = '<input type="hidden" name="polygon[latitude][]" onchange="checkCoordinate(this)" id="" value="'+latitude+'"> <input value="'+latitude+'" disabled>';
+                cellx.innerHTML = '<input type="hidden" name="polygon[longitude][]" onchange="checkCoordinate(this)" id="" value="'+longitude+'"> <input value="'+longitude+'" disabled>';
             });
         });
 
@@ -367,8 +367,8 @@
             var celly = row.insertCell(0);
             var cellx = row.insertCell(1);
                 
-            celly.innerHTML = '<input type="text" name="polygon[longitude][]" onchange="checkCoordinate(this)" id="" value="">';
-            cellx.innerHTML = '<input type="text" name="polygon[latitude][]" onchange="checkCoordinate(this)" id="" value="">';
+            celly.innerHTML = '<input type="text" name="polygon[latitude][]" onchange="checkCoordinate(this)" id="" value="">';
+            cellx.innerHTML = '<input type="text" name="polygon[longitude][]" onchange="checkCoordinate(this)" id="" value="">';
         }
 
         function measurementType(e){

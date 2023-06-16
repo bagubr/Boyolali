@@ -18,7 +18,7 @@
     <li class="nav-item {{ Route::is(Request::route()->getPrefix().'-dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('administrator-dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span>Home</span></a>
     </li>
     <!-- Heading -->
     <div class="sidebar-heading">
@@ -26,8 +26,13 @@
     </div>
     <li class="nav-item {{ Route::is('pencarian', 'pencarian-detail') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('pencarian') }}">
-            <i class="fas fa-fw fa-edit"></i>
+            <i class="fas fa-fw fa-search"></i>
             <span>Pencarian Berkas</span></a>
+    </li>
+    <li class="nav-item {{ Route::is('rekap', 'rekap-detail') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rekap') }}">
+            <i class="fas fa-fw fa-signal"></i>
+            <span>Rekap</span></a>
     </li>
 
     @if (Auth::guard('administrator')->user()->role == 'CEK' || Auth::guard('administrator')->user()->role == 'FILING' || Auth::guard('administrator')->user()->role == 'ADMIN')

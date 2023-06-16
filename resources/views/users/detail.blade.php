@@ -79,7 +79,7 @@
                             </ul>
                         </div>
                         <div class="col-lg-6 pt-4 pt-lg-0">
-                            <ul class="list-group list-group-flush card mb-3">
+                            {{-- <ul class="list-group list-group-flush card mb-3">
                                 <div class="card-header">
                                     <h2>Data Kuasa</h2>
                                 </div>
@@ -92,7 +92,7 @@
                                 <li class="list-group-item">Alamat Kuasa :
                                     <i>{{ $user_information->procuration->address ?? '-' }}</i>
                                 </li>
-                            </ul>
+                            </ul> --}}
                             <table class="table table-striped table-bordered " border="1">
                                 <tr>
                                     <th>Latitude</th>

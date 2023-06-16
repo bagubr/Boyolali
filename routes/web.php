@@ -12,6 +12,7 @@ use App\Http\Controllers\Kadis\HomeController as KadisHomeController;
 use App\Http\Controllers\Pencarian\HomeController as PencarianHomeController;
 use App\Http\Controllers\Users\HomeController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\Rekap\HomeController as RekapHomeController;
 use App\Http\Controllers\Sketch\HomeController as SketchHomeController;
 use App\Http\Controllers\SubDistrictController;
 use App\Http\Controllers\Subkor\HomeController as SubkorHomeController;
@@ -127,6 +128,10 @@ Route::prefix('administrator')->group(function () {
         Route::get('pencarian', [PencarianHomeController::class, 'index'])->name('pencarian');
         Route::get('pencarian-detail', [PencarianHomeController::class, 'detail'])->name('pencarian-detail');
         Route::get('pencarian-data', [PencarianHomeController::class, 'pencarian_data'])->name('pencarian-data');
+
+        Route::get('rekap', [RekapHomeController::class, 'index'])->name('rekap');
+        Route::get('rekap-detail', [RekapHomeController::class, 'detail'])->name('rekap-detail');
+        Route::get('rekap-data', [RekapHomeController::class, 'data'])->name('rekap-data');
     });
 });
 

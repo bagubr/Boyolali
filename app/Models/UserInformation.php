@@ -46,6 +46,7 @@ class UserInformation extends Model
         'nomor',
         'agenda_date',
         'print_date',
+        'measurement_type',
     ];
 
     protected $appends = [
