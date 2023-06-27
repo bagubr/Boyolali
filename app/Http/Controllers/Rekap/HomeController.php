@@ -95,10 +95,9 @@ class HomeController extends Controller
     function action($id)
     {
         $user_information = UserInformation::where('uuid', $id)->first();
-        $id = $user_information->id;
         if($user_information->nomor_krk){
-            return "<a href='".route('detail', ['id' => $id])."' class='badge bg-primary text-white' style='text-decoration: none;'>Detail</a><a href='".asset('storage/krks/' . $user_information->uuid . '.pdf')."' class='badge bg-success text-white' style='text-decoration: none;' target='_blank'>Download</a>";
+            return "<a href='".route('berkas-selesai-detail', ['id' => $id])."' class='badge bg-primary text-white' style='text-decoration: none;'>Detail</a><a href='".asset('storage/krks/' . $user_information->uuid . '.pdf')."' class='badge bg-success text-white' style='text-decoration: none;' target='_blank'>Download</a>";
         }
-        return "<a href='".route('detail', ['id' => $id])."' class='badge bg-primary text-white' style='text-decoration: none;'>Detail</a>";
+        return "<a href='".route('berkas-selesai-detail', ['id' => $id])."' class='badge bg-primary text-white' style='text-decoration: none;'>Detail</a>";
     }
 }

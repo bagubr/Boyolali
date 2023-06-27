@@ -28,7 +28,7 @@ class HomeController extends Controller
         $data['user_information'] = UserInformation::whereUuid($request->id)->first();
         $data['qrcode'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate('https://www.google.com/maps/search/'.substr($data['user_information']->latitude, 0, 10).','.substr($data['user_information']->longitude, 0,10)));
         $data['approval'] = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate(route('detail-approval', ['id' => $data['user_information']->uuid])));
-        // return view('pdf_view', ['user_information' => $data['user_information'], 'dasar_hukum' => $data['dasar_hukum'], 'qrcode' => $data['qrcode']]); // Lihat Hasil HTML
+        // return view('pdf_view', ['user_information' => $data['user_information'], 'dasar_hukum' => $data['dasar_hukum'], 'qrcode' => $data['qrcode'], 'approval' => $data['approval']]); // Lihat Hasil HTML
         if(!$data['user_information']->print_date){
             $data['user_information']->update(['print_date' => date('Y-m-d H:i:s')]);
         }
