@@ -126,6 +126,20 @@
                 <span>Proses Berkas</span></a>
         </li>   
     @endif
+    @if (Auth::guard('administrator')->user()->role == 'ADMIN')
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Admin
+        </div>
+        <li class="nav-item {{ Route::is('admin', 'admin-detail') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin') }}">
+                <i class="fas fa-fw fa-edit"></i>
+                <span>Daftar Admin</span></a>
+        </li>
+    @endif
 
 </ul>
 <!-- End of Sidebar -->

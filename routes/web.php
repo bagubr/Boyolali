@@ -1,6 +1,7 @@
 <?php
 
 use App\Admin\Controllers\AdministratorController;
+use App\Http\Controllers\Administrator\AdminController;
 use App\Http\Controllers\Administrator\HomeController as AdministratorHomeController;
 use App\Http\Controllers\Agenda\HomeController as AgendaHomeController;
 use App\Http\Controllers\AuthController;
@@ -132,6 +133,13 @@ Route::prefix('administrator')->group(function () {
         Route::get('rekap', [RekapHomeController::class, 'index'])->name('rekap');
         Route::get('rekap-detail', [RekapHomeController::class, 'detail'])->name('rekap-detail');
         Route::get('rekap-data', [RekapHomeController::class, 'data'])->name('rekap-data');
+
+        Route::get('admin', [AdminController::class, 'index'])->name('admin');
+        Route::get('admin-detail/{id}', [AdminController::class, 'detail'])->name('admin-detail');
+        Route::get('admin-create', [AdminController::class, 'create'])->name('admin-create');
+        Route::post('admin-post', [AdminController::class, 'post'])->name('admin-post');
+        Route::post('admin-update/{id}', [AdminController::class, 'update'])->name('admin-update');
+        Route::delete('admin-delete/{id}', [AdminController::class, 'delete'])->name('admin-delete');
     });
 });
 

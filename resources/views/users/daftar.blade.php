@@ -241,7 +241,7 @@
 
                         <div class="tab">
                             <div class="section-title">
-                                <h2>Data Berkas</h2>
+                                <h2>Data Pendukung</h2>
                             </div>
                             <div class="col-lg-12 col-md-6 portfolio-item filter-web">
                                 <table class="table table-striped">
@@ -385,17 +385,6 @@
                 document.getElementById("btnCoor").style.display = "none";
                 $('.koordinattable').find("tr:not(:first)").remove();
             }
-        }
-
-        function checkCoordinate(e) {
-            // var latlngs = [
-            //             [110.600750, -7.5321550],
-            //             [110.601673, -7.5319636],
-            //             [110.601801, -7.5327719],
-            //             [110.600836, -7.5331548]
-            //         ];
-            // var polygon = L.polygon(latlngs, {color: 'red'});
-            // map.addLayer(polygon);
         }
     </script>
 @endpush

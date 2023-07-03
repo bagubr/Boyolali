@@ -28,7 +28,7 @@
         <div class="container" data-aos="fade-up">
             @include('users.alert')
             <div class="section-title">
-                <h2>Detail Pemohon</h2>
+                <h2>Detail Permohonan KRK</h2>
                 <h3>{{ $user_information->nomor_registration }}</h3>
             </div>
             <ul id="portfolio-flters" class="d-flex justify-content-left" data-aos="fade-up" data-aos-delay="100">

@@ -10,9 +10,10 @@ class Administrator extends Authenticatable
 {
     use HasFactory;
     const ROLE_FILING = 'FILING';
-    const ROLE_CEK = 'CEK';
+    const ROLE_SUBKOR = 'SUBKOR';
     const ROLE_KABID = 'KABID';
     const ROLE_KADIS = 'KADIS';
+    const ROLE_ADMIN = 'ADMIN';
 
     protected $table = 'administrators';
     protected $fillable = [
@@ -22,10 +23,11 @@ class Administrator extends Authenticatable
     public static function role()
     {
         return [
-            'FILING' => self::ROLE_FILING,
-            'CEK' => self::ROLE_CEK,
-            'KABID' => self::ROLE_KABID,
-            'KADIS' => self::ROLE_KADIS,
+            self::ROLE_FILING => 'Petugas Agenda',
+            self::ROLE_SUBKOR => 'Subkor Pengendalian dan Pemanfaatan Tata Ruang',
+            self::ROLE_KABID => 'Kabid Tata Ruang',
+            self::ROLE_KADIS => 'Ka. DPUPR',
+            self::ROLE_ADMIN => 'Administrator',
         ];
     }
 }
