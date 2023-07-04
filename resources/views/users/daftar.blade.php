@@ -81,6 +81,9 @@
             padding: 10px;
             z-index: 400;
         }
+        .select2 {
+            width:100%!important;
+        }
     </style>
 @endpush
 @section('header')

@@ -42,6 +42,13 @@
         #dataBerkas table tbody tr td:first-child {
             width: 20%;
         }
+        .select2 {
+            width:100%!important;
+        }
+        .card-body{
+            width:100%;
+            height:auto;
+        }
     </style>
 @endpush
 @section('content')
@@ -333,7 +340,7 @@
                             <td class="d-none">Koordinat Baru</td>
                         </tr>
                         <tr class="koordinattable" style="vertical-align:top; text-align:center">
-                            <td align="center">
+                            <td align="center" style=" padding:10px;">
                                 <table class="table table-striped tablekoordinat w-50" border="1">
                                     <thead>
                                         <tr>
