@@ -39,7 +39,7 @@
                             @if ($user_informations)
                             @foreach ($user_informations as $item)
                             <tr>
-                                <td>{{ $item->iteration }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->nomor_registration }}</td>
                                 <td>{{ $item->submitter }}</td>
                                 <td>{{ $item->location_address }}</td>

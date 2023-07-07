@@ -391,8 +391,7 @@
                     @if (Route::is('berkas-selesai-detail', 'rekap-detail', 'pencarian-detail'))
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="nomorsk-tab" data-bs-toggle="tab" data-bs-target="#nomorsk"
-                                type="button" role="tab" aria-controls="nomorsk" aria-selected="false">Nomor
-                                SK</button>
+                                type="button" role="tab" aria-controls="nomorsk" aria-selected="false">Nomor KRK</button>
                         </li>
                     @endif
                 </ul>
